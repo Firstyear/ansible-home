@@ -1,0 +1,22 @@
+
+- name: Install firewalld
+  yum: name=firewalld state=latest
+
+- name: Activate firewalld
+  service: name=firewalld enabled=yes state=started
+
+- name: Remove Samba Internal
+  firewalld: zone=internal permanent=true state=disabled service=samba-client
+  notify:
+    - reload firewalld
+
+- name: Remove Samba Internal
+  firewalld: zone=internal permanent=true state=disabled service=mdns
+  notify:
+    - reload firewalld
+
+- name: Change default zone
+  shell: /usr/bin/firewall-cmd --set-default-zone=internal
+  notify:
+    - reload firewalld
+

@@ -1,0 +1,19 @@
+
+# This could be a site variable?
+
+- name: Install the amanda client
+  yum: name=amanda-client state=latest
+
+- name: Configure amanda firewall
+  firewalld: service=amanda-client zone=internal permanent=yes state=enabled #immediate=yes
+  notify:
+    - reload firewalld
+
+- name: Configure amanda service socket
+  service: name=amanda.socket enabled=yes state=started
+
+- name: Configure Amanda allowed hosts
+  copy: src=templates/var/lib/.amandahosts dest=/var/lib/.amandahosts owner=root group=root mode=0644
+    
+  
+

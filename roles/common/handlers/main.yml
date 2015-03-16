@@ -1,0 +1,8 @@
+
+- name: apply sysctl
+  shell: /usr/sbin/sysctl --system
+
+- name: reload firewalld
+  shell: /usr/bin/firewall-cmd --reload
+
+
