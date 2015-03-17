@@ -1,9 +1,9 @@
 
 - name: Install IPA Client
-  yum: name=ipa-client state=latest
+  yum: name=ipa-client state=present
 
 - name: Configure NISDOMAIN
-  copy: src=templates/etc/sysconfig/network dest=/etc/sysconfig/network owner=root group=root mode=0644
+  copy: src=etc/sysconfig/network dest=/etc/sysconfig/network owner=root group=root mode=0644
 
 
 

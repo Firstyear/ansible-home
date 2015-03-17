@@ -1,0 +1,11 @@
+
+- name: Ensure nfs is installed
+  yum: name=nfs-utils state=present
+
+- name: Configure nfs firewalld
+  firewalld: service=nfs zone=internal permanent=yes state=enabled #immediate=yes
+
+- name: Enable nfs server
+  service: name=nfs-server.service enabled=yes state=started
+
+# Should I configure the exports?

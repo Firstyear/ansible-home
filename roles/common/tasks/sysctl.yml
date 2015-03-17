@@ -1,11 +1,11 @@
 
 - name: sysctl performance tune for servers
-  copy: src=templates/etc/sysctl.d/01-uofa.conf dest=/etc/sysctl.d/01-uofa.conf owner=root group=root mode=0644
+  copy: src=etc/sysctl.d/01-uofa.conf dest=/etc/sysctl.d/01-uofa.conf owner=root group=root mode=0644
   notify:
   - apply sysctl
 
 - name: sysctl performance tune for servers
-  copy: src=templates/etc/sysctl.d/02-uofa-network-harden.conf dest=/etc/sysctl.d/02-uofa-network-harden.conf owner=root group=root mode=0644
+  copy: src=etc/sysctl.d/02-uofa-network-harden.conf dest=/etc/sysctl.d/02-uofa-network-harden.conf owner=root group=root mode=0644
   notify:
   - apply sysctl
 
