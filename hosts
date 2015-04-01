@@ -2,5 +2,7 @@
 [nfs_servers]
 lorna.ipa.blackhats.net.au
 
+[389ds-development]
+localhost
 
 
