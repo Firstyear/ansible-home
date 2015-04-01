@@ -1,0 +1,7 @@
+
+- name: Build 389ds
+  shell: chdir=/home/a1176360/development/389ds/ds/ executable=/bin/zsh make
+
+- name: Install 389ds
+  sudo: yes
+  shell: chdir=/home/a1176360/development/389ds/ds/ executable=/bin/zsh make install

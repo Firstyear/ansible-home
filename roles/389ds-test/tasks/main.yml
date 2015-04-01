@@ -1,0 +1,10 @@
+
+- name: Make sure SELinux is permissive as this is out-of-fhs
+  sudo: yes
+  shell: setenforce 0
+
+- name: Run the 389DS testing suite
+  sudo: yes
+  shell: chdir=/home/a1176360/development/389ds/ds/dirsrvtests executable=/bin/zsh PYTHONPATH=/home/a1176360/development/389ds/lib389 PREFIX=/srv py.test suites/dynamic-plugins
+
+

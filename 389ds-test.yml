@@ -1,0 +1,5 @@
+---
+- hosts: 389ds-development
+  roles:
+    - 389ds-build-install
+    - 389ds-test
