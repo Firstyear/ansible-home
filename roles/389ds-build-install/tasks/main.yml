@@ -1,7 +1,7 @@
 
 - name: Build 389ds
-  shell: chdir=/home/a1176360/development/389ds/ds/ executable=/bin/zsh make
+  shell: chdir="{{ ds_path }}" executable=/bin/zsh make
 
 - name: Install 389ds
   sudo: yes
-  shell: chdir=/home/a1176360/development/389ds/ds/ executable=/bin/zsh make install
+  shell: chdir="{{ ds_path }}" executable=/bin/zsh make install

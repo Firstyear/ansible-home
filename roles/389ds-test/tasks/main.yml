@@ -5,6 +5,6 @@
 
 - name: Run the 389DS testing suite
   sudo: yes
-  shell: chdir=/home/a1176360/development/389ds/ds/dirsrvtests executable=/bin/zsh PYTHONPATH=/home/a1176360/development/389ds/lib389 PREFIX=/srv py.test suites/dynamic-plugins
+  shell: chdir="{{ ds_path }}/dirsrvtests" executable=/bin/zsh PYTHONPATH={{ lib389_path }} PREFIX={{ prefix }} py.test suites/dynamic-plugins
 
 

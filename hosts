@@ -5,4 +5,10 @@ lorna.ipa.blackhats.net.au
 [389ds-development]
 localhost
 
+[389ds-development:vars]
+ds_path=/home/a1176360/development/389ds/ds
+lib389_path=/home/a1176360/development/389ds/lib389
+prefix=/srv
+
+
 
