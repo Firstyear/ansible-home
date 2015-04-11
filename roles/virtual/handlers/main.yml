@@ -1,0 +1,4 @@
+
+- name: wait for vm
+  action: wait_for port=22 delay=60
+

@@ -1,0 +1,8 @@
+---
+- hosts: template_servers
+  gather_facts: False
+  roles:
+    - template_generate
+    - common
+  vars_files:
+    - /home/a1176360/secure/ansible_home_secrets.yml

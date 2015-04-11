@@ -1,0 +1,13 @@
+
+- name: ovirt launch instance
+  local_action: ovirt
+    state=started
+    instance_name={{ inventory_hostname }}
+    user={{ ovirt_admin_username }}
+    password={{ ovirt_admin_password }}
+    url=https://mion.ipa.blackhats.net.au
+  notify:
+    - wait for vm
+
+- meta: flush_handlers
+

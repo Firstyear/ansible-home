@@ -6,5 +6,3 @@
   copy: src=etc/sysconfig/network dest=/etc/sysconfig/network owner=root group=root mode=0644
 
 
-
-

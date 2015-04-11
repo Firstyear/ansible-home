@@ -1,7 +1,4 @@
 
-[nfs_servers]
-lorna.ipa.blackhats.net.au
-
 [389ds-development]
 localhost
 
@@ -10,5 +7,32 @@ ds_path=/home/a1176360/development/389ds/ds
 lib389_path=/home/a1176360/development/389ds/lib389
 prefix=/srv
 
+[ipa_servers]
+alina.ipa.blackhats.net.au
+
+[amanda_servers]
+yvett.ipa.blackhats.net.au
+
+[nfs_servers]
+lorna.ipa.blackhats.net.au
+
+[deployment_servers]
+lolah.ipa.blackhats.net.au
+
+[template_servers]
+centos_7_1_1503.ipa.blackhats.net.au centos_version=7.1.1503
+
+[longst_virtual_servers:children]
+nfs_servers
+deployment_servers
+template_servers
+
+[longst_virtual_servers:vars]
+ovirt_dc=Default
+ovirt_sdomain=def_t1_nfs_master
+ovirt_cluster=Default
+centos_version=7.1.1503
+centos_mirror=mirror.internode.on.net
+ipa_domain=ipa.blackhats.net.au
 
 

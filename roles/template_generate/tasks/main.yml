@@ -1,0 +1,31 @@
+
+# Is there a way to make sure that the template exists? 
+
+- name: Ensure VM exists
+  local_action: ovirt
+    state=present
+    instance_name={{ inventory_hostname }}
+    user={{ ovirt_admin_username }}
+    password={{ ovirt_admin_password }}
+    url=https://mion.ipa.blackhats.net.au
+    resource_type=template
+    instance_type=server
+    image=blank_pxe
+    region={{ ovirt_dc }}
+    zone={{ ovirt_cluster }}
+    sdomain={{ ovirt_sdomain }}
+  notify:
+    - create boot path
+    - download boot kernel
+    - download boot initrd.img
+    - download boot upgrade.img
+    - create ks path
+    - config template kickstart
+    - config tftp menu
+    - ovirt launch instance
+
+- meta: flush_handlers
+
+# Some how wait til it's done then remove the ks?
+
+

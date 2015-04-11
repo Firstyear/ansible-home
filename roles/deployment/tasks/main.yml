@@ -1,0 +1,30 @@
+
+- name: kickstart httpd present
+  action: yum name=httpd state=present
+
+- name: kickstart tftpd present
+  action: yum name=tftp-server state=present
+
+- name: kickstart tftpd present
+  action: yum name=syslinux-tftpboot state=present
+
+- action: file state=directory path=/var/lib/tftpboot/pxelinux.cfg/
+
+- action: file state=directory path=/var/www/html/ks/
+
+- name: kickstart httpd started
+  action: service name=httpd.service enabled=yes state=started
+
+- name: kickstart tftpd started
+  action: service name=tftp.socket enabled=yes state=started
+
+- name: config tftp firewalld
+  firewalld: service=tftp zone=internal permanent=yes state=enabled #immediate=yes
+  notify:
+    - reload firewalld
+
+- name: config http firewalld
+  firewalld: service=http zone=internal permanent=yes state=enabled #immediate=yes
+  notify:
+    - reload firewalld
+
