@@ -1,8 +1,7 @@
 ---
 - hosts: deployment_servers
-  sudo: yes
-  gather_facts: False
   roles:
+    - virtual
     - common
     - deployment
   vars_files:

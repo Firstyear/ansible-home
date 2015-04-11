@@ -1,8 +1,10 @@
 
 - name: apply sysctl
+  sudo: yes
   shell: /usr/sbin/sysctl --system
 
 - name: reload firewalld
+  sudo: yes
   shell: /usr/bin/firewall-cmd --reload
 
 

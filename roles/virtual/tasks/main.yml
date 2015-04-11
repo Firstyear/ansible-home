@@ -1,3 +1,25 @@
+# Is there a way to make sure that the template exists? 
+
+- name: Ensure VM exists
+  local_action: ovirt
+    state=present
+    instance_name={{ inventory_hostname }}
+    user={{ ovirt_admin_username }}
+    password={{ ovirt_admin_password }}
+    url=https://mion.ipa.blackhats.net.au
+    resource_type=template
+    instance_type=server
+    image=centos.{{ centos_version }}.{{ ipa_domain }}
+    region={{ ovirt_dc }}
+    zone={{ ovirt_cluster }}
+    sdomain={{ ovirt_sdomain }}
+  notify:
+    - configure static network
+    - configure ipa client
+
+# If a notification happens, we need to wait for a bit for the template to deploy
+# We also need to do the post deployment config, static network, ipa join etc.
+# Until the ansible ovirt module supports cloud init, we bail and have to do it by hand
 
 - name: ovirt launch instance
   local_action: ovirt

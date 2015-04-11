@@ -1,7 +1,8 @@
 ---
-- hosts: template_servers
+- hosts: test_servers
   gather_facts: False
   roles:
-    - template_generate
+    - virtual
+    - common
   vars_files:
     - /home/a1176360/secure/ansible_home_secrets.yml

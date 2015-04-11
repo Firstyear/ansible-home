@@ -1,29 +1,46 @@
 
 - name: kickstart httpd present
+  sudo: yes
   action: yum name=httpd state=present
 
+- name: kickstart rsync present
+  sudo: yes
+  action: yum name=rsync state=present
+
+- name: kickstart createrepo present
+  sudo: yes
+  action: yum name=createrepo state=present
+
 - name: kickstart tftpd present
+  sudo: yes
   action: yum name=tftp-server state=present
 
 - name: kickstart tftpd present
+  sudo: yes
   action: yum name=syslinux-tftpboot state=present
 
 - action: file state=directory path=/var/lib/tftpboot/pxelinux.cfg/
+  sudo: yes
 
 - action: file state=directory path=/var/www/html/ks/
+  sudo: yes
 
 - name: kickstart httpd started
+  sudo: yes
   action: service name=httpd.service enabled=yes state=started
 
 - name: kickstart tftpd started
+  sudo: yes
   action: service name=tftp.socket enabled=yes state=started
 
 - name: config tftp firewalld
+  sudo: yes
   firewalld: service=tftp zone=internal permanent=yes state=enabled #immediate=yes
   notify:
     - reload firewalld
 
 - name: config http firewalld
+  sudo: yes
   firewalld: service=http zone=internal permanent=yes state=enabled #immediate=yes
   notify:
     - reload firewalld

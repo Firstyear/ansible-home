@@ -1,21 +1,26 @@
 
 - name: Install firewalld
+  sudo: yes
   yum: name=firewalld state=present
 
 - name: Activate firewalld
+  sudo: yes
   service: name=firewalld enabled=yes state=started
 
 - name: Remove Samba Internal
+  sudo: yes
   firewalld: zone=internal permanent=true state=disabled service=samba-client
   notify:
     - reload firewalld
 
 - name: Remove Samba Internal
+  sudo: yes
   firewalld: zone=internal permanent=true state=disabled service=mdns
   notify:
     - reload firewalld
 
 - name: Change default zone
+  sudo: yes
   shell: /usr/bin/firewall-cmd --set-default-zone=internal
   notify:
     - reload firewalld

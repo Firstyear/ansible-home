@@ -1,5 +1,8 @@
 ---
 - hosts: nfs_servers
-  sudo: yes
   roles:
+    - virtual
+    - common
     - nfs
+  vars_files:
+    - ~/secure/ansible_home_secrets.yml

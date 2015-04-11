@@ -20,7 +20,7 @@ lorna.ipa.blackhats.net.au
 lolah.ipa.blackhats.net.au
 
 [template_servers]
-centos_7_1_1503.ipa.blackhats.net.au centos_version=7.1.1503
+centos.7.1.1503.ipa.blackhats.net.au centos_version=7.1.1503 pxepath=os/x86_64/images/pxeboot liveospath=os/x86_64/LiveOS
 
 [longst_virtual_servers:children]
 nfs_servers

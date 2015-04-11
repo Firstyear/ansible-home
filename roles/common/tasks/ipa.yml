@@ -1,8 +1,10 @@
 
 - name: Install IPA Client
+  sudo: yes
   yum: name=ipa-client state=present
 
 - name: Configure NISDOMAIN
+  sudo: yes
   copy: src=etc/sysconfig/network dest=/etc/sysconfig/network owner=root group=root mode=0644
 
 

@@ -7,8 +7,8 @@ MENU TITLE PXE Ansible Boot Installer
 LABEL kickstart
    MENU DEFAULT
    MENU LABEL {{ inventory_hostname }} kickstart
-   KERNEL centos/{{ centos_version }}/vmlinuz
-   APPEND initrd=centos/{{ centos_version }}/initrd.img ramdisk_size=1000000 ks=http://{{ groups.deployment_servers[0] }}/ks/{{ inventory_hostname }}/ks.conf
+   KERNEL http://{{ groups.deployment_servers[0] }}/pub/centos/{{ centos_version }}/{{ pxepath }}/vmlinuz
+   APPEND initrd=http://{{ groups.deployment_servers[0] }}/pub/centos/{{ centos_version }}/{{ pxepath }}/initrd.img ramdisk_size=1000000 ks=http://{{ groups.deployment_servers[0] }}/ks/{{ inventory_hostname }}/ks.conf 
 
 LABEL bootlocal
    MENU LABEL Boot local system

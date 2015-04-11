@@ -2,3 +2,8 @@
 - name: wait for vm
   action: wait_for port=22 delay=60
 
+- name: configure static network
+  action: shell false
+
+- name: configure ipa client
+  action: shell false
