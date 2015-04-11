@@ -39,17 +39,17 @@
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
 
-- name: fake repo path
-  sudo: yes
-  action: file state=directory path=/var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
-
-- name: fake repo setup
-  sudo: yes
-  action: shell chdir=/var/www/html/pub/centos/{{ centos_version }}/os/x86_64/ createrepo -o ./ Packages
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
+#- name: fake repo path
+#  sudo: yes
+#  action: file state=directory path=/var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
+#  delegate_to: "{{ item }}"
+#  with_items: groups.deployment_servers
+#
+#- name: fake repo setup
+#  sudo: yes
+#  action: shell chdir=/var/www/html/pub/centos/{{ centos_version }}/os/x86_64/ createrepo -o ./ Packages
+#  delegate_to: "{{ item }}"
+#  with_items: groups.deployment_servers
 
 - name: create ks path
   sudo: yes
