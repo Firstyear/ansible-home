@@ -5,7 +5,7 @@
     instance_name={{ inventory_hostname }}
     user={{ ovirt_admin_username }}
     password={{ ovirt_admin_password }}
-    url=https://mion.ipa.blackhats.net.au
+    url={{ ovirt_engine }}
     region={{ ovirt_dc }}
     zone={{ ovirt_cluster }}
 
@@ -39,18 +39,6 @@
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
 
-#- name: fake repo path
-#  sudo: yes
-#  action: file state=directory path=/var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
-#  delegate_to: "{{ item }}"
-#  with_items: groups.deployment_servers
-#
-#- name: fake repo setup
-#  sudo: yes
-#  action: shell chdir=/var/www/html/pub/centos/{{ centos_version }}/os/x86_64/ createrepo -o ./ Packages
-#  delegate_to: "{{ item }}"
-#  with_items: groups.deployment_servers
-
 - name: create ks path
   sudo: yes
   action: file state=directory path=/var/www/html/ks/{{ inventory_hostname }}/
@@ -65,7 +53,7 @@
     instance_name={{ inventory_hostname }}
     user={{ ovirt_admin_username }}
     password={{ ovirt_admin_password }}
-    url=https://mion.ipa.blackhats.net.au
+    url={{ ovirt_engine }}
     resource_type=template
     instance_type=server
     image=blank_pxe
@@ -75,7 +63,19 @@
 
 - name: config template kickstart
   sudo: yes
+  action: template src=postinstall.sh dest=/var/www/html/ks/{{ inventory_hostname }}/postinstall.sh
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
+- name: config template kickstart
+  sudo: yes
   action: template src=ks.conf dest=/var/www/html/ks/{{ inventory_hostname }}/ks.conf
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
+- name: config template cloud.cfg
+  sudo: yes
+  action: template src=cloud.cfg dest=/var/www/html/ks/{{ inventory_hostname }}/cloud.cfg
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
 
@@ -96,7 +96,7 @@
     instance_name={{ inventory_hostname }}
     user={{ ovirt_admin_username }}
     password={{ ovirt_admin_password }}
-    url=https://mion.ipa.blackhats.net.au
+    url={{ ovirt_engine }}
 
 # Some how wait til it's done then remove the ks?
 

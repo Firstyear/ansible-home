@@ -22,15 +22,20 @@ lolah.ipa.blackhats.net.au
 [template_servers]
 centos.7.1.1503.ipa.blackhats.net.au centos_version=7.1.1503 pxepath=os/x86_64/images/pxeboot liveospath=os/x86_64/LiveOS
 
+[test_servers]
+deleteme.ipa.blackhats.net.au
+
 [longst_virtual_servers:children]
 nfs_servers
 deployment_servers
 template_servers
+test_servers
 
 [longst_virtual_servers:vars]
 ovirt_dc=Default
 ovirt_sdomain=def_t1_nfs_master
 ovirt_cluster=Default
+ovirt_engine=https://172.24.10.8
 centos_version=7.1.1503
 centos_mirror=mirror.internode.on.net
 ipa_domain=ipa.blackhats.net.au

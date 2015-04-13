@@ -6,16 +6,19 @@
     instance_name={{ inventory_hostname }}
     user={{ ovirt_admin_username }}
     password={{ ovirt_admin_password }}
-    url=https://mion.ipa.blackhats.net.au
+    url={{ ovirt_engine }}
     resource_type=template
     instance_type=server
     image=centos.{{ centos_version }}.{{ ipa_domain }}
     region={{ ovirt_dc }}
     zone={{ ovirt_cluster }}
     sdomain={{ ovirt_sdomain }}
+    wait_action=true
   notify:
-    - configure static network
-    - configure ipa client
+    - configure cloud init
+    #- configure ipa client
+
+- meta: flush_handlers
 
 # If a notification happens, we need to wait for a bit for the template to deploy
 # We also need to do the post deployment config, static network, ipa join etc.
@@ -27,9 +30,8 @@
     instance_name={{ inventory_hostname }}
     user={{ ovirt_admin_username }}
     password={{ ovirt_admin_password }}
-    url=https://mion.ipa.blackhats.net.au
+    url={{ ovirt_engine }}
   notify:
     - wait for vm
 
 - meta: flush_handlers
-
