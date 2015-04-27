@@ -20,10 +20,18 @@ lorna.ipa.blackhats.net.au
 lolah.ipa.blackhats.net.au
 
 [template_servers]
-centos.7.1.1503.ipa.blackhats.net.au centos_version=7.1.1503 pxepath=os/x86_64/images/pxeboot liveospath=os/x86_64/LiveOS
+centos.7.1.1503.ipa.blackhats.net.au centos_version=7.1.1503
+
+[template_servers:vars]
+pxepath=os/x86_64/images/pxeboot
+liveospath=os/x86_64/LiveOS
+ovirt_cluster=Development
 
 [test_servers]
 deleteme.ipa.blackhats.net.au
+
+[test_servers:vars]
+ovirt_cluster=Development
 
 [longst_virtual_servers:children]
 nfs_servers
@@ -33,7 +41,7 @@ test_servers
 
 [longst_virtual_servers:vars]
 ovirt_dc=Default
-ovirt_sdomain=def_t1_nfs_master
+ovirt_sdomain=def_t1_nfs_sas
 ovirt_cluster=Default
 ovirt_engine=https://172.24.10.8
 centos_version=7.1.1503

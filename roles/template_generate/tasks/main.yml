@@ -4,7 +4,7 @@
     state=absent
     instance_name={{ inventory_hostname }}
     user={{ ovirt_admin_username }}
-    password={{ ovirt_admin_password }}
+    password='{{ ovirt_admin_password }}'
     url={{ ovirt_engine }}
     region={{ ovirt_dc }}
     zone={{ ovirt_cluster }}
@@ -52,7 +52,7 @@
     state=present
     instance_name={{ inventory_hostname }}
     user={{ ovirt_admin_username }}
-    password={{ ovirt_admin_password }}
+    password="{{ ovirt_admin_password }}"
     url={{ ovirt_engine }}
     resource_type=template
     instance_type=server
@@ -95,7 +95,7 @@
     state=started
     instance_name={{ inventory_hostname }}
     user={{ ovirt_admin_username }}
-    password={{ ovirt_admin_password }}
+    password="{{ ovirt_admin_password }}"
     url={{ ovirt_engine }}
 
 # Some how wait til it's done then remove the ks?

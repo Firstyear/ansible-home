@@ -9,10 +9,10 @@
     state=cloud_initialised
     instance_name={{ inventory_hostname }}
     user={{ ovirt_admin_username }}
-    password={{ ovirt_admin_password }}
+    password="{{ ovirt_admin_password }}"
     url={{ ovirt_engine }}
     instance_hostname={{ inventory_hostname }}
-    wait_action=true
+    wait_for_state=up
 
 - name: configure ipa client
   action: shell false

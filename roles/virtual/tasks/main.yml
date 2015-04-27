@@ -5,7 +5,7 @@
     state=present
     instance_name={{ inventory_hostname }}
     user={{ ovirt_admin_username }}
-    password={{ ovirt_admin_password }}
+    password="{{ ovirt_admin_password }}"
     url={{ ovirt_engine }}
     resource_type=template
     instance_type=server
@@ -13,7 +13,7 @@
     region={{ ovirt_dc }}
     zone={{ ovirt_cluster }}
     sdomain={{ ovirt_sdomain }}
-    wait_action=true
+    wait_for_state=down
   notify:
     - configure cloud init
     #- configure ipa client
@@ -29,7 +29,7 @@
     state=started
     instance_name={{ inventory_hostname }}
     user={{ ovirt_admin_username }}
-    password={{ ovirt_admin_password }}
+    password="{{ ovirt_admin_password }}"
     url={{ ovirt_engine }}
   notify:
     - wait for vm
