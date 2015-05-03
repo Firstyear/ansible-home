@@ -1,7 +1,9 @@
 ---
-- hosts: template_servers
+- hosts: amanda_servers
   gather_facts: False
   roles:
-    - template_generate
+    - virtual
+    - common
+    - amanda
   vars_files:
     - ~/secure/ansible_home_secrets.yml

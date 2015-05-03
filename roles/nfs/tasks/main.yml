@@ -1,11 +1,18 @@
 
 - name: Ensure nfs is installed
+  sudo: yes
   yum: name=nfs-utils state=present
 
-- name: Configure nfs firewalld
-  firewalld: service=nfs zone=internal permanent=yes state=enabled #immediate=yes
+- name: Exclude from backups
+  sudo: yes
+  copy: src=exclude dest=/var/lib/amanda/exclude owner=root group=root mode=0644
 
 - name: Enable nfs server
+  sudo: yes
   service: name=nfs-server.service enabled=yes state=started
+
+- name: Configure nfs firewalld
+  sudo: yes
+  firewalld: service=nfs zone=internal permanent=true state=enabled
 
 # Should I configure the exports?

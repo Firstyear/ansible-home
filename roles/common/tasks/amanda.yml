@@ -17,5 +17,6 @@
 
 - name: Configure Amanda allowed hosts
   sudo: yes
-  copy: src=var/lib/.amandahosts dest=/var/lib/.amandahosts owner=root group=root mode=0644
+  copy: src=var/lib/amandahosts dest=/var/lib/.amandahosts owner=root group=root mode=0644
+
 

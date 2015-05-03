@@ -1,7 +1,9 @@
 ---
-- hosts: template_servers
+- hosts: email_servers
   gather_facts: False
   roles:
-    - template_generate
+    - virtual
+    - common
+    - email
   vars_files:
     - ~/secure/ansible_home_secrets.yml

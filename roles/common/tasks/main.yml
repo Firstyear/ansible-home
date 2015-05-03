@@ -2,4 +2,6 @@
 - include: sysctl.yml
 - include: firewalld.yml
 - include: ipa.yml
+
 - include: amanda.yml
+  when: "'amanda_servers' not in group_names"

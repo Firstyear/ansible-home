@@ -3,21 +3,24 @@
 localhost
 
 [389ds-development:vars]
-ds_path=/home/a1176360/development/389ds/ds
-lib389_path=/home/a1176360/development/389ds/lib389
+ds_path=~/development/389ds/ds
+lib389_path=~/development/389ds/lib389
 prefix=/srv
-
-[ipa_servers]
-alina.ipa.blackhats.net.au
 
 [amanda_servers]
 yvett.ipa.blackhats.net.au
 
-[nfs_servers]
-lorna.ipa.blackhats.net.au
-
 [deployment_servers]
 lolah.ipa.blackhats.net.au
+
+[email_servers]
+liza.ipa.blackhats.net.au
+
+[ipa_servers]
+alina.ipa.blackhats.net.au
+
+[nfs_servers]
+lorna.ipa.blackhats.net.au
 
 [template_servers]
 centos.7.1.1503.ipa.blackhats.net.au centos_version=7.1.1503
@@ -25,17 +28,16 @@ centos.7.1.1503.ipa.blackhats.net.au centos_version=7.1.1503
 [template_servers:vars]
 pxepath=os/x86_64/images/pxeboot
 liveospath=os/x86_64/LiveOS
-ovirt_cluster=Development
 
 [test_servers]
 deleteme.ipa.blackhats.net.au
 
-[test_servers:vars]
-ovirt_cluster=Development
-
 [longst_virtual_servers:children]
-nfs_servers
+amanda_servers
 deployment_servers
+email_servers
+ipa_servers
+nfs_servers
 template_servers
 test_servers
 

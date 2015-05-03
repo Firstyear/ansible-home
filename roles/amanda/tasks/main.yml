@@ -1,0 +1,46 @@
+
+- name: Install the amanda client
+  sudo: yes
+  yum: name=amanda-client state=present
+
+- name: Install the amanda server
+  sudo: yes
+  yum: name=amanda-server state=present
+
+- name: Configure amanda firewall
+  sudo: yes
+  firewalld: service=amanda-client zone=internal permanent=yes state=enabled #immediate=yes
+  notify:
+    - reload firewalld
+
+- name: Configure amanda service socket
+  sudo: yes
+  service: name=amanda.socket enabled=yes state=started
+
+- name: Configure Amanda exclusions
+  sudo: yes
+  template: src=exclude dest=/var/lib/amanda/exclude owner=root group=root mode=0644
+
+- name: Configure Amanda allowed hosts
+  sudo: yes
+  template: src=amandahosts dest=/var/lib/amanda/.amandahosts owner=amandabackup group=disk mode=0600
+
+- name: Configure disklist
+  sudo: yes
+  template: src=disklist dest=/etc/amanda/DailySet1/disklist owner=root group=root mode=0644
+
+- name: Configure amanda-client
+  sudo: yes
+  template: src=amanda-client.conf dest=/etc/amanda/DailySet1/amanda-client.conf owner=root group=root mode=0644
+
+- name: Configure amanda
+  sudo: yes
+  template: src=amanda.conf dest=/etc/amanda/DailySet1/amanda.conf owner=root group=root mode=0644
+
+- name: Cron backup job
+  sudo: yes
+  action: cron name="Run amanda DailySet1" minute="0" hour="2" job="/usr/sbin/amdump DailySet1" user="amandabackup"
+
+
+
+

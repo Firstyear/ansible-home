@@ -7,12 +7,12 @@
     user={{ ovirt_admin_username }}
     password="{{ ovirt_admin_password }}"
     url={{ ovirt_engine }}
-    resource_type=template
-    instance_type=server
-    image=centos.{{ centos_version }}.{{ ipa_domain }}
     region={{ ovirt_dc }}
     zone={{ ovirt_cluster }}
     sdomain={{ ovirt_sdomain }}
+    resource_type=template
+    instance_type=server
+    image=centos.{{ centos_version }}.{{ ipa_domain }}
     wait_for_state=down
   notify:
     - configure cloud init

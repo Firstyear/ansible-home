@@ -5,4 +5,4 @@
     - virtual
     - common
   vars_files:
-    - /home/a1176360/secure/ansible_home_secrets.yml
+    - ~/secure/ansible_home_secrets.yml

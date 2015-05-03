@@ -1,0 +1,6 @@
+{% for item in groups['amanda_servers'] %}
+{{ item }} amandabackup amdump
+{{ item }} root amidaidx amindexd amidxtaped
+{% endfor %}
+
+
