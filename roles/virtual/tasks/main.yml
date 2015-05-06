@@ -1,7 +1,5 @@
 # Is there a way to make sure that the template exists? 
 
-- include_vars: postinst.yml
-
 - name: Ensure VM exists
   local_action: ovirt
     state=present
@@ -15,26 +13,13 @@
     resource_type=template
     instance_type=server
     image=centos.{{ centos_version }}.{{ ipa_domain }}
+    timeout=1200
     wait_for_state=down
   notify:
     - configure cloud init
     #- configure ipa client
 
 - meta: flush_handlers
-
-- name: Debug
-  action: debug msg="{{ custom_script }}"
-
-- name: configure cloud init
-  local_action: ovirt
-    state=cloud_initialised
-    instance_name={{ inventory_hostname }}
-    user={{ ovirt_admin_username }}
-    password="{{ ovirt_admin_password }}"
-    url={{ ovirt_engine }}
-    instance_hostname={{ inventory_hostname }}
-    wait_for_state=up
-    custom_script="{{ custom_script }}"
 
 # If a notification happens, we need to wait for a bit for the template to deploy
 # We also need to do the post deployment config, static network, ipa join etc.
