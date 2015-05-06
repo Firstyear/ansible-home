@@ -1,8 +1,8 @@
 
-- name: wait for vm
-  action: wait_for port=22 delay=60
-
 # We can probably configure IPA as a script in cloud init. We just need to generate the local machine password first.
+
+- name: Debug
+  action: debug msg="{{ custom_script }}"
 
 - name: configure cloud init
   local_action: ovirt
@@ -13,12 +13,5 @@
     url={{ ovirt_engine }}
     instance_hostname={{ inventory_hostname }}
     wait_for_state=up
-
-- name: Test access as root
-  remote_user: root
-  #password: "{{ ipa_machine_password }}"
-  action: shell true
-
-- name: configure ipa client
-  action: shell false
+    custom_script="{{ custom_script }}"
 

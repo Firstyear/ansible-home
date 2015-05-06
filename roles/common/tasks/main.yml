@@ -1,4 +1,8 @@
 
+- name: Configure yum repos
+  sudo: yes
+  action: template src=etc/yum.repos.d/CentOS-Base.repo dest=/etc/yum.repos.d/CentOS-Base.repo owner=root group=root mode=0644
+
 - include: sysctl.yml
 - include: firewalld.yml
 - include: ipa.yml

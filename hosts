@@ -11,7 +11,8 @@ prefix=/srv
 yvett.ipa.blackhats.net.au
 
 [deployment_servers]
-lolah.ipa.blackhats.net.au
+;lolah.ipa.blackhats.net.au
+172.24.11.33
 
 [email_servers]
 liza.ipa.blackhats.net.au
@@ -24,10 +25,6 @@ lorna.ipa.blackhats.net.au
 
 [template_servers]
 centos.7.1.1503.ipa.blackhats.net.au centos_version=7.1.1503
-
-[template_servers:vars]
-pxepath=os/x86_64/images/pxeboot
-liveospath=os/x86_64/LiveOS
 
 [test_servers]
 deleteme.ipa.blackhats.net.au

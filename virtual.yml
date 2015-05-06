@@ -1,7 +1,7 @@
 ---
-- hosts: test_servers
+- hosts: longst_virtual_servers
   gather_facts: False
   roles:
-    - common
+    - virtual
   vars_files:
     - ~/secure/ansible_home_secrets.yml

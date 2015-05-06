@@ -1,0 +1,22 @@
+
+# Hostname should be getting set out of cloud init.
+
+custom_script: |
+    runcmd:
+     - '/root/postinstall.sh'
+     - '/usr/bin/nisdomainname {{ ipa_domain }}'
+     - 'echo NISDOMAIN={{ ipa_domain }} > /etc/sysconfig/network'
+     - '/usr/sbin/ipa-client-install -U --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --force-ntpd --no-dns-sshfp -p ''{{ ipa_domainadmin_username }}@{{ ipa_domain }}'' -w ''{{ ipa_domainadmin_password }}''  '
+     - 'sed -i /etc/sssd/sssd.conf -e ''s/services.*/services = nss\, pam\, ssh\, sudo/''  '
+     - 'sed -i /etc/sssd/sssd.conf -e ''s/ipa_dyndns_update/dyndns_update/''  '
+     - 'sed -i /etc/sssd/sssd.conf -e ''/dyndns_update.*/ i\\dyndns_iface = eth0''  '
+     - 'echo ''sudoers: files sss'' >> /etc/nsswitch.conf '
+     - 'systemctl restart sssd'
+    final_message: YOU MUST NOW RUN THE ANSIBLE COMMON ROLE ON THIS SYSTEM
+
+#    power_state:
+#      delay: "+5"
+#      mode: poweroff
+#      message: System ready for common role to be applied
+#      timeout: 180
+

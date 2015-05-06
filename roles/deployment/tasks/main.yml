@@ -45,3 +45,44 @@
   notify:
     - reload firewalld
 
+- name: create install mirror path
+  sudo: yes
+  action: file state=directory path=/var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
+- name: sync install mirror
+  sudo: yes
+  action: shell rsync -az --exclude='*.iso' rsync://{{ centos_mirror }}/centos/{{ centos_version }}/os/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
+- name: create updates mirror path
+  sudo: yes
+  action: file state=directory path=/var/www/html/pub/centos/{{ centos_version }}/updates/x86_64/
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
+- name: sync update mirror
+  sudo: yes
+  action: shell rsync -az rsync://{{ centos_mirror }}/centos/{{ centos_version }}/updates/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/updates/x86_64/
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
+- name: create extras mirror path
+  sudo: yes
+  action: file state=directory path=/var/www/html/pub/centos/{{ centos_version }}/extras/x86_64/
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
+- name: sync update mirror
+  sudo: yes
+  action: shell rsync -az rsync://{{ centos_mirror }}/centos/{{ centos_version }}/extras/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/extras/x86_64/
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
+- name: create ks path
+  sudo: yes
+  action: file state=directory path=/var/www/html/ks/{{ inventory_hostname }}/
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers

@@ -1,75 +1,13 @@
 
-- name: Remove the existing VM scratch template
-  local_action: ovirt
-    state=absent
-    instance_name={{ inventory_hostname }}
-    user={{ ovirt_admin_username }}
-    password='{{ ovirt_admin_password }}'
-    url={{ ovirt_engine }}
-    region={{ ovirt_dc }}
-    zone={{ ovirt_cluster }}
-
-- name: create pxeboot path
-  sudo: yes
-  action: file state=directory path=/var/www/html/pub/centos/{{ centos_version }}/{{ pxepath }}
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
-
-- name: sync pxeboot
-  sudo: yes
-  action: shell rsync -a rsync://{{ centos_mirror }}/centos/{{ centos_version }}/{{ pxepath }}/ /var/www/html/pub/centos/{{ centos_version }}/{{ pxepath }}/
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
-
-- name: create liveos path
-  sudo: yes
-  action: file state=directory path=/var/www/html/pub/centos/{{ centos_version }}/{{ liveospath }}
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
-
-- name: sync liveos
-  sudo: yes
-  action: shell rsync -a rsync://{{ centos_mirror }}/centos/{{ centos_version }}/{{ liveospath }}/ /var/www/html/pub/centos/{{ centos_version }}/{{ liveospath }}/
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
-
-- name: sync treeinfo
-  sudo: yes
-  action: shell rsync -a rsync://{{ centos_mirror }}/centos/{{ centos_version }}/os/x86_64/.treeinfo /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/.treeinfo
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
-
-- name: create ks path
-  sudo: yes
-  action: file state=directory path=/var/www/html/ks/{{ inventory_hostname }}/
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
-
-# Is there a way to make sure that the template exists? 
-
-- name: Ensure VM exists
-  local_action: ovirt
-    state=present
-    instance_name={{ inventory_hostname }}
-    user={{ ovirt_admin_username }}
-    password="{{ ovirt_admin_password }}"
-    url={{ ovirt_engine }}
-    resource_type=template
-    instance_type=server
-    image=blank_pxe
-    region={{ ovirt_dc }}
-    zone={{ ovirt_cluster }}
-    sdomain={{ ovirt_sdomain }}
-
-- name: config template kickstart
-  sudo: yes
-  action: template src=postinstall.sh dest=/var/www/html/ks/{{ inventory_hostname }}/postinstall.sh
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
-
 - name: config template kickstart
   sudo: yes
   action: template src=ks.conf dest=/var/www/html/ks/{{ inventory_hostname }}/ks.conf
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
+- name: config template postinstall
+  sudo: yes
+  action: template src=postinstall.sh dest=/var/www/html/ks/{{ inventory_hostname }}/postinstall.sh
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
 
@@ -88,6 +26,30 @@
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
 
+- name: Remove the existing VM scratch template
+  local_action: ovirt
+    state=absent
+    instance_name={{ inventory_hostname }}
+    user={{ ovirt_admin_username }}
+    password='{{ ovirt_admin_password }}'
+    url={{ ovirt_engine }}
+    region={{ ovirt_dc }}
+    zone={{ ovirt_cluster }}
+
+- name: Ensure VM exists
+  local_action: ovirt
+    state=present
+    instance_name={{ inventory_hostname }}
+    user={{ ovirt_admin_username }}
+    password="{{ ovirt_admin_password }}"
+    url={{ ovirt_engine }}
+    resource_type=template
+    instance_type=server
+    image=blank_pxe
+    region={{ ovirt_dc }}
+    zone={{ ovirt_cluster }}
+    sdomain={{ ovirt_sdomain }}
+    wait_for_state=down
 
 # This will PXE boot, build and STOP the instance
 - name: ovirt launch instance
@@ -97,6 +59,7 @@
     user={{ ovirt_admin_username }}
     password="{{ ovirt_admin_password }}"
     url={{ ovirt_engine }}
+    wait_for_state=up
 
 # Some how wait til it's done then remove the ks?
 
