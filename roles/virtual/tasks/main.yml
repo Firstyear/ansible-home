@@ -1,4 +1,8 @@
 # Is there a way to make sure that the template exists? 
+- include_vars: postinst.yml
+
+- name: Debug
+  action: debug msg="{{ custom_script }}"
 
 - name: Ensure VM exists
   local_action: ovirt
@@ -13,7 +17,7 @@
     resource_type=template
     instance_type=server
     image=centos.{{ centos_version }}.{{ ipa_domain }}
-    timeout=1200
+    timeout=180
     wait_for_state=down
   notify:
     - configure cloud init

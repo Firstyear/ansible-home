@@ -4,9 +4,12 @@
 custom_script: |
     runcmd:
      - '/root/postinstall.sh'
+     - 'systemctl restart NetworkManager'
+     - 'hostname {{ inventory_hostname }}'
      - '/usr/bin/nisdomainname {{ ipa_domain }}'
      - 'echo NISDOMAIN={{ ipa_domain }} > /etc/sysconfig/network'
-     - '/usr/sbin/ipa-client-install -U --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --force-ntpd --no-dns-sshfp -p ''{{ ipa_domainadmin_username }}@{{ ipa_domain }}'' -w ''{{ ipa_domainadmin_password }}''  '
+     - 'sleep 30'
+     - '/usr/sbin/ipa-client-install -U --debug --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --force-ntpd --no-dns-sshfp -p ''{{ ipa_domainadmin_username }}@{{ ipa_domain }}'' -w ''{{ ipa_domainadmin_password }}'' --hostname {{ inventory_hostname }}  '
      - 'sed -i /etc/sssd/sssd.conf -e ''s/services.*/services = nss\, pam\, ssh\, sudo/''  '
      - 'sed -i /etc/sssd/sssd.conf -e ''s/ipa_dyndns_update/dyndns_update/''  '
      - 'sed -i /etc/sssd/sssd.conf -e ''/dyndns_update.*/ i\\dyndns_iface = eth0''  '
@@ -15,8 +18,8 @@ custom_script: |
     final_message: YOU MUST NOW RUN THE ANSIBLE COMMON ROLE ON THIS SYSTEM
 
 #    power_state:
-#      delay: "+5"
+#      delay: "+10"
 #      mode: poweroff
 #      message: System ready for common role to be applied
-#      timeout: 180
+#      timeout: 360
 

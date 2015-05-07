@@ -1,11 +1,6 @@
 
 # We can probably configure IPA as a script in cloud init. We just need to generate the local machine password first.
 
-- include_vars: postinst.yml
-
-- name: Debug
-  action: debug msg="{{ custom_script }}"
-
 - name: configure cloud init
   local_action: ovirt
     state=cloud_initialised
