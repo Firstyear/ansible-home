@@ -11,13 +11,12 @@ prefix=/srv
 yvett.ipa.blackhats.net.au
 
 [deployment_servers]
-;lolah.ipa.blackhats.net.au
-172.24.11.33
+lolah.ipa.blackhats.net.au
 
 [email_servers]
 liza.ipa.blackhats.net.au
 
-[ipa_servers]
+[freeipa_servers]
 alina.ipa.blackhats.net.au
 
 [nfs_servers]
@@ -33,7 +32,7 @@ deleteme.ipa.blackhats.net.au
 amanda_servers
 deployment_servers
 email_servers
-ipa_servers
+freeipa_servers
 nfs_servers
 template_servers
 test_servers

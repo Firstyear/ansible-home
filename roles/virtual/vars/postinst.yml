@@ -3,12 +3,15 @@
 
 custom_script: |
     runcmd:
+     - 'setenforce 0'
      - '/root/postinstall.sh'
      - 'systemctl restart NetworkManager'
      - 'hostname {{ inventory_hostname }}'
      - '/usr/bin/nisdomainname {{ ipa_domain }}'
      - 'echo NISDOMAIN={{ ipa_domain }} > /etc/sysconfig/network'
      - 'sleep 30'
+     - 'ip a'
+     - 'ip r'
      - '/usr/sbin/ipa-client-install -U --debug --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --force-ntpd --no-dns-sshfp -p ''{{ ipa_domainadmin_username }}@{{ ipa_domain }}'' -w ''{{ ipa_domainadmin_password }}'' --hostname {{ inventory_hostname }}  '
      - 'sed -i /etc/sssd/sssd.conf -e ''s/services.*/services = nss\, pam\, ssh\, sudo/''  '
      - 'sed -i /etc/sssd/sssd.conf -e ''s/ipa_dyndns_update/dyndns_update/''  '
