@@ -2,7 +2,7 @@
 - name: initdb
   sudo: yes
   sudo_user: postgres
-  shell: /usr/bin/initdb -D /var/lib/pgsql/data/
+  shell: setenforce 0 && /usr/bin/initdb -D /var/lib/pgsql/data/ && setenforce 1
 
 - name: restart pgsql
   sudo: yes

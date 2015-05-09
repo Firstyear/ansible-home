@@ -3,9 +3,19 @@
 - name: Configure amanda service socket
   sudo: yes
   service: name=amanda.socket enabled=yes state=started
+  tags:
+    - amanda
 
 - name: Configure Amanda allowed hosts
   sudo: yes
-  copy: src=var/lib/amandahosts dest=/var/lib/amanda/.amandahosts owner=root group=root mode=0644
+  template: src=var/lib/amandahosts dest=/var/lib/amanda/.amandahosts owner=amandabackup group=disk mode=0600
+  tags:
+    - amanda
+
+- name: Ensure excludes
+  sudo: yes
+  file: state=touch path=/var/lib/amanda/exclude owner=root group=root mode=0644
+  tags:
+    - amanda
 
 

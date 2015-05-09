@@ -1,4 +1,6 @@
+# Managed by ansible
 {% for item in groups['amanda_servers'] %}
 {{ item }} amandabackup amdump
 {% endfor %}
+
 

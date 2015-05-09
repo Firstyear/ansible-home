@@ -1,5 +1,5 @@
 ---
 - hosts: longst_virtual_servers
   roles:
-    - virtual
+    #- virtual
     - common
