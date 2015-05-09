@@ -11,7 +11,6 @@ prefix=/srv
 yvett.ipa.blackhats.net.au
 
 [deployment_servers]
-lolah.ipa.blackhats.net.au
 birthday.ipa.blackhats.net.au
 
 [email_servers]
@@ -23,6 +22,10 @@ alina.ipa.blackhats.net.au
 
 [nfs_servers]
 lorna.ipa.blackhats.net.au
+
+[postgis_servers]
+#denver.ipa.blackhats.net.au
+deleteme.ipa.blackhats.net.au
 
 [template_servers]
 centos.7.ipa.blackhats.net.au centos_version=7

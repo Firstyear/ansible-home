@@ -17,10 +17,13 @@ custom_script: |
      - 'echo ''sudoers: files sss'' >> /etc/nsswitch.conf '
      - 'systemctl restart sssd'
      - 'dracut -f'
+     - 'poweroff'
     final_message: YOU MUST NOW RUN THE ANSIBLE COMMON ROLE ON THIS SYSTEM
-    power_state:
-      delay: "+10"
-      mode: poweroff
-      message: System ready for common role to be applied
-      timeout: 360
+
+# This is just too broken and unreliable.
+#
+#    power_state:
+#      mode: poweroff
+#      message: System ready for common role to be applied
+#      timeout: 600
 

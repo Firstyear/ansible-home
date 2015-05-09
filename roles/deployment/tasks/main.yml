@@ -1,4 +1,13 @@
 
+- name: Resize /var for content
+  sudo: yes
+  lvol: vg=vg00 lv=var_lv size=32g
+  notify:
+    - resize xfs
+    - remount xfs
+
+- meta: flush_handlers
+
 - name: Install mirror software
   sudo: yes
   yum: name={{ item }} state=present

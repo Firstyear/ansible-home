@@ -6,6 +6,12 @@
 - include: amanda.yml
   when: "'amanda_servers' not in group_names"
 
+- include: virtual.yml
+  when: "'longst_virtual_servers' in group_names"
+
 # Sometimes this shits it's pants, so put it last.
 - include: sysctl.yml
+
+
+
 

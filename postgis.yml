@@ -1,9 +1,9 @@
 ---
-- hosts: deployment_servers
+- hosts: postgis_servers
   gather_facts: False
   roles:
-    - virtual
-    - common
-    - deployment
+    #- virtual
+    #- common
+    - postgis
   vars_files:
     - ~/secure/ansible_home_secrets.yml
