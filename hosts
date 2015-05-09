@@ -24,8 +24,7 @@ alina.ipa.blackhats.net.au
 lorna.ipa.blackhats.net.au
 
 [postgis_servers]
-#denver.ipa.blackhats.net.au
-deleteme.ipa.blackhats.net.au
+denver.ipa.blackhats.net.au
 
 [template_servers]
 centos.7.ipa.blackhats.net.au centos_version=7
@@ -39,6 +38,7 @@ deployment_servers
 email_servers
 freeipa_servers
 nfs_servers
+postgis_servers
 template_servers
 test_servers
 

@@ -12,6 +12,8 @@
   notify:
     - initdb
 
+- meta: flush_handlers
+
 - name: Configure HBA
   sudo: yes
   template: src=pg_hba.conf dest=/var/lib/pgsql/data/pg_hba.conf owner=postgres group=postgres mode=0600
