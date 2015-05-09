@@ -52,11 +52,11 @@
 
 - name: Create backups dir
   sudo: yes
-  action: file state=directory path='/var/backups/'
+  action: file state=directory path='/var/backups/' owner='postgres' group='postgres' mode=0750
 
 - name: Cron backup job
   sudo: yes
-  action: cron name="Backup postgis insts" minute="10" hour="23" job="/usr/bin/pg_dump {{ item.name }} > /var/backups/{{ item.name }}.sql"
+  action: cron name="Backup postgis insts" minute="10" hour="23" job="/usr/bin/pg_dump {{ item.name }} > /var/backups/{{ item.name }}.sql" user="postgres"
   with_items: postgis_instances
 
 
