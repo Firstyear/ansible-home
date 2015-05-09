@@ -1,29 +1,25 @@
 
-- name: kickstart httpd present
+- name: Install mirror software
   sudo: yes
-  action: yum name=httpd state=present
+  yum: name={{ item }} state=present
+  with_items:
+   - httpd
+   - rsync
+   - createrepo
+   - tftp
+   - tftp-server
+   - syslinux-tftpboot
 
-- name: kickstart rsync present
+- name: Configure mirror paths
   sudo: yes
-  action: yum name=rsync state=present
-
-- name: kickstart createrepo present
-  sudo: yes
-  action: yum name=createrepo state=present
-
-- name: kickstart tftpd present
-  sudo: yes
-  action: yum name=tftp-server state=present
-
-- name: kickstart tftpd present
-  sudo: yes
-  action: yum name=syslinux-tftpboot state=present
-
-- action: file state=directory path=/var/lib/tftpboot/pxelinux.cfg/
-  sudo: yes
-
-- action: file state=directory path=/var/www/html/ks/
-  sudo: yes
+  action: file state=directory path={{ item }}
+  with_items:
+   - /var/lib/tftpboot/pxelinux.cfg/
+   - /var/www/html/ks/
+   - /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
+   - /var/www/html/pub/centos/{{ centos_version }}/updates/x86_64/
+   - /var/www/html/pub/centos/{{ centos_version }}/extras/x86_64/
+   - /var/www/html/pub/epel/{{ centos_version }}/x86_64/
 
 - name: kickstart httpd started
   sudo: yes
@@ -33,33 +29,18 @@
   sudo: yes
   action: service name=tftp.socket enabled=yes state=started
 
-- name: config tftp firewalld
+- name: config mirror firewalld
   sudo: yes
-  firewalld: service=tftp zone=internal permanent=yes state=enabled #immediate=yes
+  firewalld: service={{ item }} zone=internal permanent=yes state=enabled #immediate=yes
+  with_items:
+    - http
+    - tftp
   notify:
     - reload firewalld
-
-- name: config http firewalld
-  sudo: yes
-  firewalld: service=http zone=internal permanent=yes state=enabled #immediate=yes
-  notify:
-    - reload firewalld
-
-- name: create install mirror path
-  sudo: yes
-  action: file state=directory path=/var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
 
 - name: sync install mirror
   sudo: yes
   action: shell rsync -az --exclude='*.iso' rsync://{{ centos_mirror }}/centos/{{ centos_version }}/os/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
-
-- name: create updates mirror path
-  sudo: yes
-  action: file state=directory path=/var/www/html/pub/centos/{{ centos_version }}/updates/x86_64/
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
 
@@ -69,20 +50,15 @@
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
 
-- name: create extras mirror path
-  sudo: yes
-  action: file state=directory path=/var/www/html/pub/centos/{{ centos_version }}/extras/x86_64/
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
-
 - name: sync update mirror
   sudo: yes
   action: shell rsync -az rsync://{{ centos_mirror }}/centos/{{ centos_version }}/extras/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/extras/x86_64/
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
 
-- name: create ks path
+- name: sync epel mirror
   sudo: yes
-  action: file state=directory path=/var/www/html/ks/{{ inventory_hostname }}/
+  action: shell rsync -az rsync://{{ centos_mirror }}/epel/{{ centos_version }}/x86_64/ /var/www/html/pub/epel/{{ centos_version }}/x86_64/
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
+

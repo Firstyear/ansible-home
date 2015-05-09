@@ -1,4 +1,10 @@
 
+- name: create ks path
+  sudo: yes
+  action: file state=directory path=/var/www/html/ks/{{ inventory_hostname }}/
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
 - name: config template kickstart
   sudo: yes
   action: template src=ks.conf dest=/var/www/html/ks/{{ inventory_hostname }}/ks.conf

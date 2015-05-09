@@ -23,7 +23,7 @@ alina.ipa.blackhats.net.au
 lorna.ipa.blackhats.net.au
 
 [template_servers]
-centos.7.1.1503.ipa.blackhats.net.au centos_version=7.1.1503
+centos.7.ipa.blackhats.net.au centos_version=7
 
 [test_servers]
 deleteme.ipa.blackhats.net.au
@@ -42,7 +42,7 @@ ovirt_dc=Default
 ovirt_sdomain=def_t1_nfs_sas
 ovirt_cluster=Default
 ovirt_engine=https://172.24.10.8
-centos_version=7.1.1503
+centos_version=7
 centos_mirror=mirror.internode.on.net
 ipa_domain=ipa.blackhats.net.au
 

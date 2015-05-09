@@ -1,43 +1,17 @@
 
-- name: Configure kerberos firewalld
+- name: Configure IPA firewalld
   sudo: yes
-  firewalld: zone=internal permanent=true state=enabled service=kerberos
-  notify:
-    - reload firewalld
-
-- name: Configure kpasswd firewalld
-  sudo: yes
-  firewalld: zone=internal permanent=true state=enabled service=kpasswd
-  notify:
-    - reload firewalld
-
-- name: Configure ldap firewalld
-  sudo: yes
-  firewalld: zone=internal permanent=true state=enabled service=ldap
-  notify:
-    - reload firewalld
-
-- name: Configure ldaps firewalld
-  sudo: yes
-  firewalld: zone=internal permanent=true state=enabled service=ldaps
-  notify:
-    - reload firewalld
-
-- name: Configure radius firewalld
-  sudo: yes
-  firewalld: zone=internal permanent=true state=enabled service=radius
-  notify:
-    - reload firewalld
-
-- name: Configure ntp firewalld
-  sudo: yes
-  firewalld: zone=internal permanent=true state=enabled service=ntp
-  notify:
-    - reload firewalld
-
-- name: Configure dns firewalld
-  sudo: yes
-  firewalld: zone=internal permanent=true state=enabled service=dns
+  firewalld: zone=internal permanent=true state=enabled service={{ item }}
+  with_items:
+    - kerberos
+    - kpasswd
+    - ldap
+    - ldaps
+    - radius
+    - ntp
+    - dns
+    - http
+    - https
   notify:
     - reload firewalld
 

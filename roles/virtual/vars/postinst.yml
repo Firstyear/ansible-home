@@ -12,7 +12,7 @@ custom_script: |
      - 'sleep 30'
      - 'ip a'
      - 'ip r'
-     - '/usr/sbin/ipa-client-install -U --debug --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --force-ntpd --no-dns-sshfp -p ''{{ ipa_domainadmin_username }}@{{ ipa_domain }}'' -w ''{{ ipa_domainadmin_password }}'' --hostname {{ inventory_hostname }}  '
+     - '/usr/sbin/ipa-client-install -U --debug --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --force-ntpd --no-dns-sshfp -p ''{{ ipa_domainadmin_username }}'' -w ''{{ ipa_domainadmin_password }}'' --hostname {{ inventory_hostname }}  '
      - 'sed -i /etc/sssd/sssd.conf -e ''s/services.*/services = nss\, pam\, ssh\, sudo/''  '
      - 'sed -i /etc/sssd/sssd.conf -e ''s/ipa_dyndns_update/dyndns_update/''  '
      - 'sed -i /etc/sssd/sssd.conf -e ''/dyndns_update.*/ i\\dyndns_iface = eth0''  '

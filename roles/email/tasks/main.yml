@@ -1,39 +1,15 @@
 
-- name: Ensure postfix
+- name: Install mail software
   sudo: yes
-  action: yum name=postfix state=present
-
-- name: Ensure dovecot
-  sudo: yes
-  action: yum name=dovecot state=present
-
-- name: Ensure dovecot sieve
-  sudo: yes
-  action: yum name=dovecot-pigeonhole state=present
-
-- name: Ensure clamav-milter
-  sudo: yes
-  action: yum name=clamav-milter state=present
-
-- name: Ensure spamass-milter-postfix
-  sudo: yes
-  action: yum name=spamass-milter-postfix state=present
-
-- name: Ensure spamass-milter
-  sudo: yes
-  action: yum name=spamass-milter state=present
-
-- name: Ensure clamav-milter-systemd
-  sudo: yes
-  action: yum name=clamav-milter-systemd state=present
-
-- name: Ensure clamav-server
-  sudo: yes
-  action: yum name=clamav-server state=present
-
-- name: Ensure spamassassin
-  sudo: yes
-  action: yum name=spamassassin state=present
+  action: yum name={{ item }} state=present
+  with_items:
+   - postfix
+   - dovecot
+   - dovecot-pigeonhole
+   - clamav-milter
+   - spamass-milter
+   - clamav-milter-systemd
+   - spamassassin
 
 ### Now actually do some configuration.
 

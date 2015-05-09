@@ -1,11 +1,11 @@
 
-- name: Install the amanda client
-  sudo: yes
-  yum: name=amanda-client state=present
 
-- name: Install the amanda server
+- name: Install amanda software
   sudo: yes
-  yum: name=amanda-server state=present
+  yum: name={{ item }} state=present
+  with_items:
+   - amanda-client
+   - amanda-server
 
 - name: Configure amanda firewall
   sudo: yes
