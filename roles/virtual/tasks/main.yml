@@ -17,17 +17,12 @@
     resource_type=template
     instance_type=server
     image=centos.{{ centos_version }}.{{ ipa_domain }}
-    timeout=180
+    timeout=720
     wait_for_state=down
   notify:
     - configure cloud init
-    #- configure ipa client
 
 - meta: flush_handlers
-
-# If a notification happens, we need to wait for a bit for the template to deploy
-# We also need to do the post deployment config, static network, ipa join etc.
-# Until the ansible ovirt module supports cloud init, we bail and have to do it by hand
 
 - name: ovirt launch instance
   local_action: ovirt

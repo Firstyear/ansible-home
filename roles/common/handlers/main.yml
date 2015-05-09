@@ -7,4 +7,9 @@
   sudo: yes
   shell: /usr/bin/firewall-cmd --reload
 
-
+- name: rpm import keys
+  sudo: yes
+  shell: /usr/bin/rpmkeys --import /etc/pki/rpm-gpg/{{ item }}
+  with_items:
+   - RPM-GPG-KEY-EPEL-7
+   - RPM-GPG-KEY-CentOS-7

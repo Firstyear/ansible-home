@@ -1,0 +1,10 @@
+
+
+- name: Install guest software
+  sudo: yes
+  yum: name=ovirt-guest-agent-common state=present
+
+- name: Activate agent
+  sudo: yes
+  service: name=ovirt-guest-agent enabled=yes state=started
+

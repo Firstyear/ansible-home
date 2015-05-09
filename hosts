@@ -12,6 +12,7 @@ yvett.ipa.blackhats.net.au
 
 [deployment_servers]
 lolah.ipa.blackhats.net.au
+birthday.ipa.blackhats.net.au
 
 [email_servers]
 liza.ipa.blackhats.net.au
@@ -41,7 +42,7 @@ test_servers
 ovirt_dc=Default
 ovirt_sdomain=def_t1_nfs_sas
 ovirt_cluster=Default
-ovirt_engine=https://172.24.10.8
+ovirt_engine=https://mion.ipa.blackhats.net.au
 centos_version=7
 centos_mirror=mirror.internode.on.net
 ipa_domain=ipa.blackhats.net.au

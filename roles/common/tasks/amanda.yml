@@ -1,15 +1,6 @@
 
 # This could be a site variable?
 
-- name: Install the amanda client
-  sudo: yes
-  yum: name=amanda-client state=present
-
-- name: Configure amanda firewall
-  sudo: yes
-  firewalld: service=amanda-client zone=internal permanent=yes state=enabled #immediate=yes
-  notify:
-    - reload firewalld
 
 - name: Configure amanda service socket
   sudo: yes

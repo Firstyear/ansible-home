@@ -65,7 +65,8 @@
     user={{ ovirt_admin_username }}
     password="{{ ovirt_admin_password }}"
     url={{ ovirt_engine }}
-    wait_for_state=up
+    wait_for_state=down
+    timeout=3600
 
 # Some how wait til it's done then remove the ks?
 

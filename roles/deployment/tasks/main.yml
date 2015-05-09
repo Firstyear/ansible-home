@@ -58,7 +58,7 @@
 
 - name: sync epel mirror
   sudo: yes
-  action: shell rsync -az rsync://{{ centos_mirror }}/epel/{{ centos_version }}/x86_64/ /var/www/html/pub/epel/{{ centos_version }}/x86_64/
+  action: shell rsync -az --exclude='debug/*' rsync://{{ centos_mirror }}/epel/{{ centos_version }}/x86_64/ /var/www/html/pub/epel/{{ centos_version }}/x86_64/
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
 
