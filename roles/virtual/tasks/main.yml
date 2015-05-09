@@ -16,6 +16,8 @@
     sdomain={{ ovirt_sdomain }}
     resource_type=template
     instance_type=server
+    instance_cpus={{ ovirt_instance_cpus }}
+    instance_mem={{ ovirt_instance_mem }}
     image=centos.{{ centos_version }}.{{ ipa_domain }}
     timeout=720
     wait_for_state=down
