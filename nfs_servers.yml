@@ -1,6 +1,7 @@
 ---
 - hosts: nfs_servers
   roles:
+    - virtual
     - common
     - nfs
   vars_files:

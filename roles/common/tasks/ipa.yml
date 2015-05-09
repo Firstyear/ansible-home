@@ -3,4 +3,6 @@
   sudo: yes
   copy: src=etc/sysconfig/network dest=/etc/sysconfig/network owner=root group=root mode=0644
 
+### TODO: Add nsswitch, sssd and others.
+# krb5.conf? ipa ca.crt? etc.?
 

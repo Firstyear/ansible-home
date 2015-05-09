@@ -31,5 +31,16 @@
     user={{ ovirt_admin_username }}
     password="{{ ovirt_admin_password }}"
     url={{ ovirt_engine }}
+    wait_for_state=up
+    timeout=120
 
-- meta: flush_handlers
+# We are relying on this being installed by ks.
+
+- name: Install guest software
+  sudo: yes
+  yum: name=ovirt-guest-agent-common state=present
+
+- name: Activate agent
+  sudo: yes
+  service: name=ovirt-guest-agent enabled=yes state=started
+

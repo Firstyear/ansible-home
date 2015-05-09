@@ -1,6 +1,4 @@
 
-# This could be a site variable?
-
 
 - name: Configure amanda service socket
   sudo: yes

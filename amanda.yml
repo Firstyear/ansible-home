@@ -2,6 +2,7 @@
 - hosts: amanda_servers
   gather_facts: False
   roles:
+    - virtual
     - common
     - amanda
   vars_files:

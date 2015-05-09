@@ -2,6 +2,7 @@
 - hosts: freeipa_servers
   gather_facts: False
   roles:
+    - virtual
     - common
     - freeipa
   vars_files:
