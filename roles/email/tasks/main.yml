@@ -11,6 +11,24 @@
    - clamav-milter-systemd
    - spamassassin
 
+- name: config email firewalld
+  sudo: yes
+  firewalld: service={{ item }} zone=internal permanent=yes state=enabled #immediate=yes
+  with_items:
+    - smtp
+    - imaps
+  notify:
+    - reload firewalld
+
+- name: config email ports firewalld
+  sudo: yes
+  firewalld: port={{ item }} zone=internal permanent=yes state=enabled #immediate=yes
+  with_items:
+    - 143/tcp
+    - 465/tcp
+  notify:
+    - reload firewalld
+
 ### Now actually do some configuration.
 
 

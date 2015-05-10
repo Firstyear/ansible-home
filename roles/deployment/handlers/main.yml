@@ -1,5 +1,6 @@
 
 - name: reload firewalld
+  sudo: yes
   shell: /usr/bin/firewall-cmd --reload
 
 - name: resize xfs
