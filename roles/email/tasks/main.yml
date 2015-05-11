@@ -31,5 +31,12 @@
 
 ### Now actually do some configuration.
 
+# Config the email storage. Make sure the lvol is big enough.
+
+# Create SSL keys? How do we best manage this with IPA?
+
+
+# Deploy all the configs. Which ones have we changed? Maybe I need a default install
+#  to diff against.
 
 

@@ -2,8 +2,8 @@
 - hosts: email_servers
   gather_facts: False
   roles:
-    #- virtual
-    #- common
+    - virtual
+    - common
     - email
   vars_files:
     - ~/secure/ansible_home_secrets.yml
