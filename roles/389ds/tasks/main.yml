@@ -1,0 +1,22 @@
+
+- name: Install 389ds software
+  sudo: yes
+  yum: name={{ item }} state=present
+  with_items:
+   - 389-ds-base
+   - openldap-clients
+
+- name: Configure ldap firewall
+  sudo: yes
+  firewalld: service={{ item }} zone=internal permanent=yes state=enabled #immediate=yes
+  with_items:
+   - ldap
+   - ldaps
+  notify:
+    - reload firewalld
+
+
+# How do we deploy certificates from IPA effectively?
+
+# How do we deploy instances correctly?
+

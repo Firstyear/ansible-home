@@ -7,6 +7,9 @@ ds_path=~/development/389ds/ds
 lib389_path=~/development/389ds/lib389
 prefix=/srv
 
+[389ds_servers]
+victoria.ipa.blackhats.net.au
+
 [amanda_servers]
 yvett.ipa.blackhats.net.au
 
@@ -38,6 +41,7 @@ centos.7.ipa.blackhats.net.au centos_version=7
 #deleteme.ipa.blackhats.net.au
 
 [longst_virtual_servers:children]
+389ds_servers
 amanda_servers
 deployment_servers
 email_servers
@@ -53,7 +57,7 @@ ovirt_sdomain=def_t1_nfs_sas
 ovirt_cluster=Default
 ovirt_engine=https://mion.ipa.blackhats.net.au
 ovirt_instance_cpus=1
-ovirt_instance_mem=1024
+ovirt_instance_mem=768
 centos_version=7
 centos_mirror=mirror.internode.on.net
 ipa_domain=ipa.blackhats.net.au

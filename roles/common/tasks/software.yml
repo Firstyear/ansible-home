@@ -30,4 +30,6 @@
    - yum-utils
    - zsh
    - ovirt-guest-agent-common
+   - openldap-clients
+   - git
 

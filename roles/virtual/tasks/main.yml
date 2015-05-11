@@ -1,9 +1,6 @@
 # Is there a way to make sure that the template exists? 
 - include_vars: postinst.yml
 
-- name: Debug
-  action: debug msg="{{ custom_script }}"
-
 - name: Ensure VM exists
   local_action: ovirt
     state=present
