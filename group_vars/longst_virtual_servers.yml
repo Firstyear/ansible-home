@@ -1,0 +1,10 @@
+---
+ovirt_dc: Default
+ovirt_sdomain: def_t1_nfs_sas
+ovirt_cluster: Default
+ovirt_engine: https://mion.ipa.blackhats.net.au
+ovirt_instance_cpus: 1
+ovirt_instance_mem: 768
+centos_version: 7
+centos_mirror: mirror.internode.on.net
+ipa_domain: ipa.blackhats.net.au

@@ -1,5 +1,0 @@
----
-postgis_instances:
-    - name: test
-      authorised:
-        - william

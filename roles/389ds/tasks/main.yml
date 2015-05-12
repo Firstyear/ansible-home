@@ -1,4 +1,6 @@
 
+- include_vars: main.yml
+
 - name: Install 389ds software
   sudo: yes
   yum: name={{ item }} state=present
@@ -15,8 +17,40 @@
   notify:
     - reload firewalld
 
+# Deploy limits.conf
+
+- name: Deploy limits.conf
+  sudo: yes
+  template: src=limits.conf dest=/etc/security/limits.conf owner=root group=root mode=0644
+
+- name: sysctl performance tune for servers
+  template: src=03-uofa-ds-tcpkeepalive.conf dest=/etc/sysctl.d/03-uofa-ds-tcpkeepalive.conf owner=root group=root mode=0644
+  sudo: yes
+  notify:
+  - apply sysctl
+
+# How do we deploy instances correctly?
+
+#- name: Configure answer files
+#  sudo: yes
+#  template: src=ds-setup.inf dest=/root/ds-setup-{{ item }}.inf owner=root group=root mode=0644
+#  with_items: 389ds_instances
+
+# If port != 389
+## semanage port -a -t ldap_port_t -p tcp 6389
+
+#- name: Install instances
+#  sudo: yes
+#  command: creates=/etc/dirsrv/slapd-{{ item }}
+#  with_items: 389ds_instances
 
 # How do we deploy certificates from IPA effectively?
 
-# How do we deploy instances correctly?
+## Create an ipa-getcert into /etc/dirsrv/slapd-inst/alias/
+## If it exists, don't re-issue.
+
+- name: Debug instances
+  sudo: yes
+  debug: msg="389bits {{ item }}"
+  with_items: 389ds_instances
 

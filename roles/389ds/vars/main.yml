@@ -1,0 +1,6 @@
+---
+389ds_instances:
+    - name: test
+      port: 389
+      suffix: dc=example,dc=com
+

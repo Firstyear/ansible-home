@@ -1,0 +1,32 @@
+[General]
+FullMachineName = {{ inventory_hostname }}
+ServerRoot = /usr/lib64/dirsrv
+SuiteSpotGroup = nobody
+SuiteSpotUserID = nobody
+[slapd]
+AddOrgEntries = No
+AddSampleEntries = No
+HashedRootDNPwd = {SSHA}
+InstallLdifFile = none
+RootDN = cn=Directory Manager
+RootDNPwd = {{ directory_manager_password }}
+ServerIdentifier = {{ item }}
+ServerPort = 6389
+Suffix = {{ suffix }}
+bak_dir = /var/lib/dirsrv/slapd-{{ item }}/bak
+bindir = /usr/bin
+cert_dir = /etc/dirsrv/slapd-{{ item }}
+config_dir = /etc/dirsrv/slapd-{{ item }}
+datadir = /usr/share
+db_dir = /var/lib/dirsrv/slapd-{{ item }}/db
+ds_bename = userRoot
+inst_dir = /usr/lib64/dirsrv/slapd-{{ item }}
+ldif_dir = /var/lib/dirsrv/slapd-{{ item }}/ldif
+localstatedir = /var
+lock_dir = /var/lock/dirsrv/slapd-{{ item }}
+log_dir = /var/log/dirsrv/slapd-{{ item }}
+run_dir = /var/run/dirsrv
+sbindir = /usr/sbin
+schema_dir = /etc/dirsrv/slapd-{{ item }}/schema
+sysconfdir = /etc
+tmp_dir = /tmp

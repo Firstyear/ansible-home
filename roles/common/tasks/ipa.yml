@@ -3,6 +3,11 @@
   sudo: yes
   copy: src=etc/sysconfig/network dest=/etc/sysconfig/network owner=root group=root mode=0644
 
+- name: Ensure certmonger running
+  sudo: yes
+  service: name=certmonger enabled=yes state=started
+
+
 ### TODO: Add nsswitch, sssd and others.
 # krb5.conf? ipa ca.crt? etc.?
 
