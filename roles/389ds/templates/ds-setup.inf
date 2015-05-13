@@ -3,10 +3,12 @@ FullMachineName = {{ inventory_hostname }}
 ServerRoot = /usr/lib64/dirsrv
 SuiteSpotGroup = nobody
 SuiteSpotUserID = nobody
+
 [slapd]
 AddOrgEntries = No
 AddSampleEntries = No
-HashedRootDNPwd = "{{ item.hashedpw }}"
+HashedRootDNPwd = {{ item.hashedpasswd }}
+RootDNPwd = {{ item.passwd }}
 InstallLdifFile = none
 RootDN = cn=Directory Manager
 ServerIdentifier = {{ item.name }}

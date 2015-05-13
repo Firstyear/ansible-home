@@ -1,0 +1,19 @@
+
+dn: cn=RSA,cn=encryption,cn=config
+changetype: add
+objectclass: top
+objectclass: nsEncryptionModule
+nsSSLPersonalitySSL: {{ item.item.name }}
+nsSSLActivation: on
+-
+
+dn: cn=encryption,cn=config
+changetype: modify
+add: nsKeyfile
+nsKeyfile: key3.db
+-
+add: nsCertfile
+nsCertfile: cert8.db
+-
+
+

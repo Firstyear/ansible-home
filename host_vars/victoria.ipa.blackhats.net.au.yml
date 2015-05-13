@@ -1,6 +1,8 @@
 ---
 ds_instances:
     - name: test
-      port: 389
+      port: '389'
       suffix: "dc=example,dc=com"
-      hashedpw: "{SSHA512}NKfm33AXhoGyafnscXE7DsBzWhWE7Qz7fcufgTXdfug4XfY4wC4KrWixZSXGNmHXZEMvzLtrfxNhYBxED/tI4b+FaXCfwTyQ"
+      passwd: testpassword
+      hashedpasswd: "{SSHA512}ThPx/Zw/9SyJgYqZhLcarJnVKFtWRQJ5uqQYz/NOhvTrBccqHjYBjzzptY+CZwAnD4iSiV1CM6CM/cP76MFGdR5DBJcstjV8"
+
