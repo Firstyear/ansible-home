@@ -1,6 +1,23 @@
 
 - include_vars: main.yml
 
+- name: Debug instances
+  sudo: yes
+  debug: msg="389bits {{ item.name }} "
+  with_items: ds_instances
+
+- name: Test file exists
+  sudo: yes
+  action: stat path="/tmp/{{ item.name }}"
+  register: st
+  with_items: ds_instances
+
+- name: Debug stat
+  sudo: yes
+  debug: msg="389bits {{ item.changed }} {{ item.item.name }} {{ item.item.port }} {{ item.item.suffix }}  "
+  with_items: st.results
+
+
 - name: Install 389ds software
   sudo: yes
   yum: name={{ item }} state=present
@@ -48,9 +65,4 @@
 
 ## Create an ipa-getcert into /etc/dirsrv/slapd-inst/alias/
 ## If it exists, don't re-issue.
-
-- name: Debug instances
-  sudo: yes
-  debug: msg="389bits {{ item }}"
-  with_items: 389ds_instances
 

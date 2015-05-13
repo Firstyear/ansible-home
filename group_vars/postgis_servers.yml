@@ -4,7 +4,3 @@
 ovirt_instance_cpus: 2
 ovirt_instance_mem: 2048
 
-postgis_instances:
-    - name: test
-      authorised:
-        - william
