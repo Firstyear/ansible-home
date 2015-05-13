@@ -1,6 +1,4 @@
 
-- include_vars: main.yml
-
 - name: Install postgis software
   sudo: yes
   yum: name={{ item }} state=present

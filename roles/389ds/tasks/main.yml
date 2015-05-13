@@ -1,22 +1,4 @@
 
-- include_vars: main.yml
-
-- name: Debug instances
-  sudo: yes
-  debug: msg="389bits {{ item.name }} "
-  with_items: ds_instances
-
-- name: Test file exists
-  sudo: yes
-  action: stat path="/tmp/{{ item.name }}"
-  register: st
-  with_items: ds_instances
-
-- name: Debug stat
-  sudo: yes
-  debug: msg="389bits {{ item.changed }} {{ item.item.name }} {{ item.item.port }} {{ item.item.suffix }}  "
-  with_items: st.results
-
 
 - name: Install 389ds software
   sudo: yes
@@ -46,12 +28,24 @@
   notify:
   - apply sysctl
 
-# How do we deploy instances correctly?
+- name: Test file exists
+  sudo: yes
+  action: stat path="/tmp/{{ item.name }}"
+  register: st
+  with_items: ds_instances
 
-#- name: Configure answer files
-#  sudo: yes
-#  template: src=ds-setup.inf dest=/root/ds-setup-{{ item }}.inf owner=root group=root mode=0644
-#  with_items: 389ds_instances
+- name: Debug stat
+  sudo: yes
+  debug: msg="389bits {{ item.changed }} {{ item.item.name }} {{ item.item.port }} {{ item.item.suffix }} {{ item.item.hashedpw }} "
+  with_items: st.results
+
+
+- name: Configure answer files
+  sudo: yes
+  template: src=ds-setup.inf dest=/root/ds-setup-{{ item.name }}.inf owner=root group=root mode=0644
+  with_items: ds_instances
+
+
 
 # If port != 389
 ## semanage port -a -t ldap_port_t -p tcp 6389

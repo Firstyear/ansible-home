@@ -2,4 +2,5 @@
 ds_instances:
     - name: test
       port: 389
-      suffix: dc=example,dc=com
+      suffix: "dc=example,dc=com"
+      hashedpw: "{SSHA512}NKfm33AXhoGyafnscXE7DsBzWhWE7Qz7fcufgTXdfug4XfY4wC4KrWixZSXGNmHXZEMvzLtrfxNhYBxED/tI4b+FaXCfwTyQ"
