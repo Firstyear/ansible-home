@@ -3,8 +3,8 @@
 localhost
 
 [389ds-development:vars]
-ds_path=~/development/389ds/ds
-lib389_path=~/development/389ds/lib389
+ds_path=/home/a1176360/development/389ds/ds
+lib389_path=/home/a1176360/development/389ds/lib389
 prefix=/srv
 
 [389ds_servers]

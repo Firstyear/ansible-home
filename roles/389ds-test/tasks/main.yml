@@ -7,4 +7,4 @@
   sudo: yes
   shell: chdir="{{ ds_path }}/dirsrvtests" executable=/bin/zsh PYTHONPATH={{ lib389_path }} PREFIX={{ prefix }} py.test suites/dynamic-plugins
 
-
+# Add other tests?
