@@ -3,3 +3,6 @@ postgis_instances:
     - name: test
       authorised:
         - william
+    - name: newinstance
+      authorised:
+        - william

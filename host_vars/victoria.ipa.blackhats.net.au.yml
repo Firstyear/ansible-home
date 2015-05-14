@@ -2,7 +2,9 @@
 ds_instances:
     - name: test
       port: '389'
+      secureport: '636'
       suffix: "dc=example,dc=com"
       passwd: testpassword
       hashedpasswd: "{SSHA512}ThPx/Zw/9SyJgYqZhLcarJnVKFtWRQJ5uqQYz/NOhvTrBccqHjYBjzzptY+CZwAnD4iSiV1CM6CM/cP76MFGdR5DBJcstjV8"
+      nss_password: password
 

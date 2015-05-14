@@ -5,15 +5,15 @@ objectclass: top
 objectclass: nsEncryptionModule
 nsSSLPersonalitySSL: {{ item.item.name }}
 nsSSLActivation: on
--
+nsSSLToken: internal (software)
+cn: RSA
 
-dn: cn=encryption,cn=config
-changetype: modify
-add: nsKeyfile
-nsKeyfile: key3.db
+dn: cn=config
+changetype:modify
+add: nsslapd-security
+nsslapd-security: on
 -
-add: nsCertfile
-nsCertfile: cert8.db
+replace: nsslapd-secureport
+nsslapd-secureport: {{ item.item.secureport }}
 -
-
 

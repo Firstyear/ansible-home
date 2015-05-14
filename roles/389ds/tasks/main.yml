@@ -28,6 +28,12 @@
   notify:
   - apply sysctl
 
+- name: Test instance exists
+  sudo: yes
+  action: stat path="/etc/dirsrv/slapd-{{ item.name }}"
+  register: st
+  with_items: ds_instances
+
 - name: Configure answer files
   sudo: yes
   template: src=ds-setup.inf dest=/root/ds-setup-{{ item.name }}.inf owner=root group=root mode=0644
@@ -44,11 +50,7 @@
   action: shell semanage port -a -t ldap_port_t -p tcp {{ item.port }}; true
   with_items: ds_instances
 
-- name: Test instance exists
-  sudo: yes
-  action: stat path="/etc/dirsrv/slapd-{{ item.name }}"
-  register: st
-  with_items: ds_instances
+## Is there perhaps a way to enable tls automagically .. ?
 
 - name: Install instances
   sudo: yes
@@ -57,41 +59,89 @@
   with_items: st.results
   #creates=/etc/dirsrv/slapd-{{ item.item.name }}
 
-# How do we deploy certificates from IPA effectively?
-## Create an ipa-getcert into /etc/dirsrv/slapd-inst/alias/
-## If it exists, don't re-issue.
-
-- name: Deploy certificates
+- name: Remove existing nss database
   sudo: yes
-  action: command ipa-getcert request -d "/etc/dirsrv/slapd-{{ item.item.name }}/alias/" -n "{{ item.item.name }}" -g 4096 -v -w
+  action: file path="/etc/dirsrv/slapd-{{ item.item.name }}/alias/key3.db" state=absent
+  when: item.stat.exists == false
+  with_items: st.results
+
+- name: Remove existing nss database
+  sudo: yes
+  action: file path="/etc/dirsrv/slapd-{{ item.item.name }}/alias/cert8.db" state=absent
+  when: item.stat.exists == false
+  with_items: st.results
+
+- name: Remove existing nss database
+  sudo: yes
+  action: file path="/etc/dirsrv/slapd-{{ item.item.name }}/alias/secmod.db" state=absent
+  when: item.stat.exists == false
+  with_items: st.results
+
+- name: Deploy pin
+  sudo: yes
+  action: template src=pin.txt dest="/etc/dirsrv/slapd-{{ item.item.name }}/alias/pin.txt"
+  when: item.stat.exists == false
+  with_items: st.results
+
+- name: Deploy password
+  sudo: yes
+  action: template src=password.txt dest="/etc/dirsrv/slapd-{{ item.item.name }}/alias/password.txt"
+  when: item.stat.exists == false
+  with_items: st.results
+
+- name: Create new cert db
+  sudo: yes
+  action: command /usr/bin/certutil -N -f "/etc/dirsrv/slapd-{{ item.item.name }}/alias/password.txt" -d "/etc/dirsrv/slapd-{{ item.item.name }}/alias/"
   when: item.stat.exists == false
   with_items: st.results
 
 - name: Deploy certificates
   sudo: yes
-  action: command /usr/bin/certutil -d "/etc/dirsrv/slapd-{{ item.item.name }}/alias/" -A -t C,C,C -n ipaca -a -i /etc/ipa/ca.crt
+  action: command ipa-getcert request -d "/etc/dirsrv/slapd-{{ item.item.name }}/alias/" -p "/etc/dirsrv/slapd-{{ item.item.name }}/alias/password.txt" -n "{{ item.item.name }}" -I {{ item.item.name }} -g 4096 -v -w -C '/usr/bin/certutil -d "/etc/dirsrv/slapd-{{ item.item.name }}/alias/" -A -t C,C,C -n ipaca -a -i /etc/ipa/ca.crt'
   when: item.stat.exists == false
   with_items: st.results
 
-## Is there perhaps a way to enable tls automagically .. ?
+- name: Fix certificate permissions
+  sudo: yes
+  action: file path="/etc/dirsrv/slapd-{{ item.item.name }}/alias/key3.db" state=file owner=nobody group=nobody
+  when: item.stat.exists == false
+  with_items: st.results
+
+- name: Fix certificate permissions
+  sudo: yes
+  action: file path="/etc/dirsrv/slapd-{{ item.item.name }}/alias/cert8.db" state=file owner=nobody group=nobody
+  when: item.stat.exists == false
+  with_items: st.results
+
+- name: Fix certificate permissions
+  sudo: yes
+  action: file path="/etc/dirsrv/slapd-{{ item.item.name }}/alias/secmod.db" state=file owner=nobody group=nobody
+  when: item.stat.exists == false
+  with_items: st.results
 
 - name: Deploy tls template
   sudo: yes
-  action: template src=enable_tls.ldif dest="/root/enable_tls_{{ item.item.name }}.ldif"
+  action: template src=enable_tls.ldif dest="/var/lib/dirsrv/slapd-{{ item.item.name }}/ldif/enable_tls.ldif"
   when: item.stat.exists == false
   with_items: st.results
 
 - name: Apply TLS template
   sudo: yes
-  action: command /usr/bin/ldapmodify -f "/root/enable_tls_{{ item.item.name }}.ldif" -D 'cn=Directory Manager' -w "{{ item.item.passwd }}" -H "ldap://localhost:{{ item.item.port }}" -x
+  action: command /usr/bin/ldapmodify -f "/var/lib/dirsrv/slapd-{{ item.item.name }}/ldif/enable_tls.ldif" -D 'cn=Directory Manager' -w "{{ item.item.passwd }}" -H "ldap://localhost:{{ item.item.port }}" -x
+  when: item.stat.exists == false
+  with_items: st.results
+
+- name: Ensure dirsrv restarted
+  sudo: yes
+  action: service name=dirsrv@{{ item.item.name }} state=restarted
   when: item.stat.exists == false
   with_items: st.results
 
 
-# Deploy the ldif
-
-
-# Apply it
+- name: Ensure dirsrv started
+  sudo: yes
+  action: service name=dirsrv@{{ item.name }} enabled=yes state=started
+  with_items: ds_instances
 
 - name: Enable selinux
   sudo: yes

@@ -3,7 +3,7 @@
   gather_facts: False
   roles:
     #- virtual
-    #- common
+    - common
     - 389ds
   vars_files:
     - ~/secure/ansible_home_secrets.yml

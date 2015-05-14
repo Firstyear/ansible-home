@@ -31,3 +31,4 @@ sbindir = /usr/sbin
 schema_dir = /etc/dirsrv/slapd-{{ item.name }}/schema
 sysconfdir = /etc
 tmp_dir = /tmp
+
