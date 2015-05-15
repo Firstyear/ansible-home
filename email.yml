@@ -2,7 +2,7 @@
 - hosts: email_servers
   gather_facts: False
   roles:
-    - virtual
+    #- virtual
     - common
     - email
   vars_files:

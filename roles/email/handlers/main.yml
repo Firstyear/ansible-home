@@ -3,3 +3,27 @@
   sudo: yes
   shell: /usr/bin/firewall-cmd --reload
 
+- name: resize xfs
+  sudo: yes
+  shell: /usr/sbin/xfs_growfs /dev/vg00/var_lv
+
+- name: remount xfs
+  sudo: yes
+  shell: /usr/bin/mount -o remount /dev/vg00/var_lv
+
+- name: restart dovecot
+  sudo: yes
+  service: name=dovecot state=restarted
+
+- name: restart postfix
+  sudo: yes
+  service: name=postfix state=restarted
+
+- name: restart clamav-milter
+  sudo: yes
+  service: name=clamav-milter state=restarted
+
+- name: restart clamd
+  sudo: yes
+  service: name=clamd@clamsmtp state=restarted
+

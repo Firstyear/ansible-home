@@ -9,7 +9,12 @@
    - clamav-milter
    - spamass-milter
    - clamav-milter-systemd
+   - clamav-server-systemd
    - spamassassin
+
+- name: Create smtpd link
+  sudo: yes
+  action: file src=/usr/lib/systemd/system/clamd@.service dest=/etc/systemd/system/clamd@clamsmtp.service state=link
 
 - name: config email firewalld
   sudo: yes
@@ -32,6 +37,13 @@
 ### Now actually do some configuration.
 
 # Config the email storage. Make sure the lvol is big enough.
+- name: Resize /var for content
+  sudo: yes
+  lvol: vg=vg00 lv=var_lv size=10g
+  notify:
+    - resize xfs
+    - remount xfs
+
 
 # Create SSL keys? How do we best manage this with IPA?
 
@@ -39,4 +51,54 @@
 # Deploy all the configs. Which ones have we changed? Maybe I need a default install
 #  to diff against.
 
+- name: Deploy dovecot configurations
+  sudo: yes
+  template: src=dovecot/{{ item }} dest=/etc/dovecot/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - conf.d/10-auth.conf
+    - conf.d/10-mail.conf
+    - conf.d/10-master.conf
+    - conf.d/15-lda.conf
+    - conf.d/20-imap.conf
+    - conf.d/90-quota.conf
+    - conf.d/auth-ldap.conf.ext
+    - conf.d/90-sieve.conf
+    - conf.d/10-ssl.conf
+    - dovecot.conf
+    - dovecot-ldap.conf.ext
+  notify: restart dovecot
+
+- name: Deploy postfix configurations
+  sudo: yes
+  template: src=postfix/{{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - main.cf
+    - master.cf
+    - virtual_domains
+  notify: restart postfix
+
+- name: Deploy clam milter config
+  sudo: yes
+  template: src=mail/clamav-milter.conf dest=/etc/mail/clamav-milter.conf owner=root group=root mode=0644
+  notify: restart clamav-milter
+
+- name: Deploy clam config
+  sudo: yes
+  template: src=clamd.d/clamsmtp.conf dest=/etc/clamd.d/clamsmtp.conf owner=root group=root mode=0644
+  notify: restart clamd
+
+# Need a notify to restart bits ...
+
+## Still need to add clamav and spamassasin bits.
+
+- name: Enable mail services
+  sudo: yes
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - postfix
+    - dovecot
+    - spamass-milter
+    - clamav-milter
+    - clamd@clamsmtp
+  
 
