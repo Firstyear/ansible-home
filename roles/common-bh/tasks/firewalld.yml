@@ -1,0 +1,29 @@
+
+- name: Install firewalld
+  sudo: yes
+  action: yum name=firewalld state=present
+
+# Make sure we don't have iptables
+
+- name: Remove iptables scripts
+  sudo: yes
+  action: yum name=iptables-services state=absent
+
+- name: Activate firewalld
+  sudo: yes
+  service: name=firewalld enabled=yes state=started
+
+- name: Remove Samba Internal
+  sudo: yes
+  firewalld: zone=internal permanent=true state=disabled service=samba-client immediate=yes
+
+- name: Configure amanda firewall
+  sudo: yes
+  firewalld: service=amanda-client zone=internal permanent=yes state=enabled immediate=yes
+
+- name: Change default zone
+  sudo: yes
+  shell: /usr/bin/firewall-cmd --set-default-zone=internal
+  notify:
+    - reload firewalld
+

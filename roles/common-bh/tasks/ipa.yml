@@ -1,7 +1,13 @@
 
+- name: Install default software
+  sudo: yes
+  yum: name={{ item }} state=present
+  with_items:
+   - ipa-client
+
 - name: Configure NISDOMAIN
   sudo: yes
-  copy: src=etc/sysconfig/network dest=/etc/sysconfig/network owner=root group=root mode=0644
+  template: src=etc/sysconfig/network dest=/etc/sysconfig/network owner=root group=root mode=0644
 
 - name: Ensure certmonger running
   sudo: yes

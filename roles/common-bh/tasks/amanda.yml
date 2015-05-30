@@ -1,4 +1,9 @@
 
+- name: Install default software
+  sudo: yes
+  yum: name={{ item }} state=present
+  with_items:
+   - amanda-client
 
 - name: Configure amanda service socket
   sudo: yes

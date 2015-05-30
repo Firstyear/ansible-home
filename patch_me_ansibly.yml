@@ -1,4 +1,8 @@
 ---
-- hosts: all
+# We only patch virtual machines here just because of the 
+#  issues with patching vdsm
+- hosts: longst_virtual_servers
+  serial: 1
   roles:
+    - common-bh
     - patch_me

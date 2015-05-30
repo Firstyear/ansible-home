@@ -1,6 +1,11 @@
 
 - name: Patch systems
   sudo: yes
-  yum: name="*" state=latest #update_cache=yes
+  yum: name="*" state=latest update_cache=yes
+
+- name: Relabel
+  sudo: yes
+  file: path=/.autorelabel state=touch
+
 
 # Should we start a reboot here ... ?

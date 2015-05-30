@@ -95,10 +95,9 @@
   sudo: yes
   service: name={{ item }} state=started enabled=yes
   with_items:
+    - spamass-milter
+    - clamd@clamsmtp
+    - clamav-milter
     - postfix
     - dovecot
-    - spamass-milter
-    - clamav-milter
-    - clamd@clamsmtp
-  
 

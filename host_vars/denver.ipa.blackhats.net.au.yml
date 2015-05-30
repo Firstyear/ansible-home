@@ -1,4 +1,8 @@
 ---
+# There is probably a better way to do this.
+ldap_server: alina.ipa.blackhats.net.au
+ldap_user_base: cn=users,cn=accounts,dc=ipa,dc=blackhats,dc=net,dc=au
+postgis_public: enabled
 postgis_instances:
     - name: test
       authorised:
@@ -6,3 +10,5 @@ postgis_instances:
     - name: newinstance
       authorised:
         - william
+postgis_allow_networks:
+    - 172.24.0.0/16

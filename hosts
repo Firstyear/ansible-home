@@ -35,6 +35,10 @@ centos.7.ipa.blackhats.net.au centos_version=7
 #[test_servers]
 #deleteme.ipa.blackhats.net.au
 
+[vdsm_servers]
+;mion.ipa.blackhats.net.au
+172.24.10.8 centos_version=7
+
 [longst_virtual_servers:children]
 389ds_servers
 amanda_servers

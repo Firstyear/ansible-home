@@ -1,6 +1,6 @@
 
 - name: Deploy GPG keys
-  copy: src=etc/pki/rpm-gpg/{{ item }} dest=/etc/pki/rpm-gpg/{{ item }} owner=root group=root mode=0644
+  template: src=etc/pki/rpm-gpg/{{ item }} dest=/etc/pki/rpm-gpg/{{ item }} owner=root group=root mode=0644
   sudo: yes
   with_items:
    - RPM-GPG-KEY-EPEL-7
@@ -14,13 +14,11 @@
   sudo: yes
   action: template src=etc/yum.repos.d/CentOS-Base.repo dest=/etc/yum.repos.d/CentOS-Base.repo owner=root group=root mode=0644
 
+
 - name: Install default software
   sudo: yes
   yum: name={{ item }} state=present
   with_items:
-   - amanda-client
-   - ipa-client
-   - firewalld
    - gdisk
    - abrt-cli
    - nmap
@@ -29,7 +27,7 @@
    - vim
    - yum-utils
    - zsh
-   - ovirt-guest-agent-common
    - openldap-clients
    - git
+   - iotop
 
