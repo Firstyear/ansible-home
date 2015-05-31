@@ -27,7 +27,7 @@
 
 - name: config email ports firewalld
   sudo: yes
-  firewalld: port={{ item }} zone=internal permanent=yes state=enabled #immediate=yes
+  firewalld: port={{ item }} zone=internal permanent=yes state=enabled immediate=yes
   with_items:
     - 143/tcp
     - 465/tcp

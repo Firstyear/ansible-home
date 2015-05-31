@@ -29,6 +29,8 @@
 # environments on different UNIX systems.
 #
 queue_directory = /var/spool/postfix
+bounce_queue_lifetime = 28d
+maximal_queue_lifetime = 28d
 
 # The command_directory parameter specifies the location of all
 # postXXX commands.
@@ -72,7 +74,7 @@ mail_owner = postfix
 # from gethostname(). $myhostname is used as a default value for many
 # other configuration parameters.
 #
-myhostname = mail.firstyear.id.au
+#myhostname = host.domain.tld
 #myhostname = virtual.domain.tld
 
 # The mydomain parameter specifies the local internet domain name.
@@ -80,7 +82,7 @@ myhostname = mail.firstyear.id.au
 # $mydomain is used as a default value for many other configuration
 # parameters.
 #
-mydomain = firstyear.id.au
+#mydomain = domain.tld
 
 # SENDING MAIL
 # 
@@ -96,7 +98,7 @@ mydomain = firstyear.id.au
 # to recipient addresses that have no @domain part.
 #
 #myorigin = $myhostname
-myorigin = $mydomain
+#myorigin = $mydomain
 
 # RECEIVING MAIL
 
@@ -113,8 +115,7 @@ myorigin = $mydomain
 #inet_interfaces = all
 #inet_interfaces = $myhostname
 #inet_interfaces = $myhostname, localhost
-inet_interfaces = 2001:44b8:16a:11:5054:ff:fed4:a2fe, 172.24.11.17, localhost
-#inet_interfaces = localhost
+inet_interfaces = all
 
 # Enable IPv4, and IPv6 if supported
 inet_protocols = all
@@ -128,7 +129,7 @@ inet_protocols = all
 # backup MX host for other domains, otherwise mail delivery loops
 # will happen when the primary MX host is down.
 #
-proxy_interfaces = 203.122.194.109, 172.24.17.1, 2001:44b8:16a:17::1, 2001:44b8:16a:17:5054:ff:fef3:3a04
+#proxy_interfaces =
 #proxy_interfaces = 1.2.3.4
 
 # The mydestination parameter specifies the list of domains that this
@@ -248,7 +249,7 @@ unknown_local_recipient_reject_code = 550
 # only the local machine.
 # 
 #mynetworks_style = class
-#mynetworks_style = subnet
+mynetworks_style = subnet
 #mynetworks_style = host
 
 # Alternatively, you can specify the mynetworks list by hand, in
@@ -265,9 +266,6 @@ unknown_local_recipient_reject_code = 550
 #mynetworks = 168.100.189.0/28, 127.0.0.0/8
 #mynetworks = $config_directory/mynetworks
 #mynetworks = hash:/etc/postfix/network_table
-
-#Maybe this should be limited to servers?
-#mynetworks = 172.24.0.0/16, 2001:44b8:16a::/56
 
 # The relay_domains parameter restricts what destinations this system will
 # relay mail to.  See the smtpd_recipient_restrictions description in
@@ -298,7 +296,7 @@ unknown_local_recipient_reject_code = 550
 # permit_mx_backup restriction description in postconf(5).
 #
 #relay_domains = $mydestination
-#relay_domains = firstyear.id.au, ipa.firstyear.id.au, susanallin.com, fashioadventurer.com
+relay_domains = firstyear.id.au, ipa.firstyear.id.au, baysidemed.com.au
 
 # INTERNET OR INTRANET
 
@@ -350,7 +348,7 @@ unknown_local_recipient_reject_code = 550
 # 
 # Specify 0 to disable the feature. Valid delays are 0..10.
 # 
-#in_flow_delay = 1s
+in_flow_delay = 1s
 
 # ADDRESS REWRITING
 #
@@ -467,8 +465,6 @@ alias_database = hash:/etc/aliases
 # the main.cf file, otherwise the SMTP server will reject mail for    
 # non-UNIX accounts with "User unknown in local recipient table".
 #
-# Cyrus IMAP over LMTP. Specify ``lmtpunix      cmd="lmtpd"
-# listen="/var/imap/socket/lmtp" prefork=0'' in cyrus.conf.
 #mailbox_transport = lmtp:unix:/var/lib/imap/socket/lmtp
 
 # If using the cyrus-imapd IMAP server deliver local mail to the IMAP
@@ -491,8 +487,7 @@ alias_database = hash:/etc/aliases
 # how many simultaneous LMTP sessions will be permitted to the Cyrus
 # message store. 
 #
-# Cyrus IMAP via command line. Uncomment the "cyrus...pipe" and
-# subsequent line in master.cf.
+# To use the old cyrus deliver program you have to set:
 #mailbox_transport = cyrus
 
 # The fallback_transport specifies the optional transport in master.cf
@@ -677,21 +672,19 @@ manpage_directory = /usr/share/man
 # sample_directory: The location of the Postfix sample configuration files.
 # This parameter is obsolete as of Postfix 2.1.
 #
-sample_directory = /usr/share/doc/postfix/samples
+sample_directory = /usr/share/doc/postfix-2.6.6/samples
 
 # readme_directory: The location of the Postfix README files.
 #
-readme_directory = /usr/share/doc/postfix/README_FILES
+readme_directory = /usr/share/doc/postfix-2.6.6/README_FILES
 
 
-virtual_mailbox_domains = firstyear.id.au, ipa.firstyear.id.au, ipa.blackhats.net.au
-virtual_transport = dovecot
-dovecot_destination_recipient_limit = 1
- 
-smtpd_sasl_type = dovecot
-smtpd_sasl_path = private/auth
-smtpd_sasl_auth_enable = yes
-smtpd_tls_auth_only = yes
+smtpd_recipient_restrictions =   permit_mynetworks reject_unauth_destination
+relay_recipient_maps = hash:/etc/postfix/relay_recipients 
+#inet_protocols = ipv4
+
+message_size_limit = 20480000
+
 smtpd_delay_reject = yes
 smtpd_helo_required = yes
 smtpd_helo_restrictions =
@@ -699,6 +692,7 @@ smtpd_helo_restrictions =
     reject_non_fqdn_helo_hostname,
     reject_invalid_helo_hostname,
     permit
+
 smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated reject_unauth_destination reject_non_fqdn_recipient reject_unknown_recipient_domain 
 smtpd_sender_restrictions =
     permit_mynetworks,
@@ -707,18 +701,5 @@ smtpd_sender_restrictions =
     permit
 smtpd_recipient_restrictions = reject_unauth_pipelining reject_non_fqdn_recipient reject_unknown_recipient_domain permit_mynetworks permit_sasl_authenticated reject_unauth_destination permit
 
-smtpd_tls_cert_file = /etc/pki/tls/certs/mail.firstyear.id.au.crt
-smtpd_tls_key_file = /etc/pki/tls/private/mail.firstyear.id.au.key
-smtpd_tls_CAfile = /etc/ipa/ca.crt
-smtpd_tls_loglevel = 1
-smtpd_tls_security_level = may
 
-smtpd_use_tls = yes
-smtpd_tls_ciphers = high
-smtpd_tls_exclude_ciphers = aNULL, DES, 3DES, MD5, DES+MD5, RC4
-smtpd_tls_protocols = TLSv1, !SSLv2, !SSLv3
 
-#content_filter = scan:127.0.0.1:10025
-#receive_override_options = no_address_mappings
-
-smtpd_milters = unix:/run/spamass-milter/postfix/sock, unix:/run/clamav-milter/clamav-milter.socket

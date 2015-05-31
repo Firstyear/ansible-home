@@ -14,6 +14,7 @@
     - nsswitch.conf
     - pam.d/password-auth-ac
     - pam.d/system-auth-ac
+    - resolv.conf
 
 - name: Configure secure IPA configurations
   sudo: yes

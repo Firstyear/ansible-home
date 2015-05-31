@@ -1,7 +1,6 @@
 
 - include: repos.yml
 - include: firewalld.yml
-  when: "'vdsm_servers' not in group_names"
 - include: ipa.yml
 
 - include: amanda.yml
