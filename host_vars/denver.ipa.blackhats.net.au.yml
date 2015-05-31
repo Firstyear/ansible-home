@@ -1,7 +1,7 @@
 ---
 # There is probably a better way to do this.
 ldap_server: alina.ipa.blackhats.net.au
-ldap_user_base: cn=users,cn=accounts,dc=ipa,dc=blackhats,dc=net,dc=au
+ldap_user_base: cn=accounts,dc=ipa,dc=blackhats,dc=net,dc=au
 postgis_public: enabled
 postgis_instances:
     - name: test

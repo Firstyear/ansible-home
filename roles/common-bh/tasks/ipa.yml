@@ -1,9 +1,32 @@
 
+- name: Configure hostname
+  sudo: yes
+  shell: hostname {{ inventory_hostname }}
+
+- name: Configure domain names
+  sudo: yes
+  shell: /usr/bin/nisdomainname {{ ipa_domain }}
+
 - name: Install default software
   sudo: yes
   yum: name={{ item }} state=present
   with_items:
    - ipa-client
+
+- name: Test domain join
+  sudo: yes
+  action: stat path="/var/lib/ipa-client/sysrestore/sysrestore.state"
+  register: state
+
+- name: Debug would join
+  sudo: yes
+  debug: msg='{{ state }}'
+  when: state.stat.exists == false
+
+- name: Join domain
+  sudo: yes
+  shell: /usr/sbin/ipa-client-install -U --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --force-ntpd --no-dns-sshfp -p '{{ ipa_domainadmin_username }}' -w '{{ ipa_domainadmin_password }}' --hostname {{ inventory_hostname }}
+  when: state.stat.exists == false
 
 - name: Configure IPA configurations
   sudo: yes
@@ -15,6 +38,7 @@
     - pam.d/password-auth-ac
     - pam.d/system-auth-ac
     - resolv.conf
+    - hostname
 
 - name: Configure secure IPA configurations
   sudo: yes
