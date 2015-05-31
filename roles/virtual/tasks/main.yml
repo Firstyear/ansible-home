@@ -16,7 +16,7 @@
     instance_cpus={{ ovirt_instance_cpus }}
     instance_mem={{ ovirt_instance_mem }}
     image=centos.{{ centos_version }}.{{ ipa_domain }}
-    timeout=1440
+    timeout=1800
     wait_for_state=down
   notify:
     - configure cloud init

@@ -5,9 +5,21 @@
   with_items:
    - ipa-client
 
-- name: Configure NISDOMAIN
+- name: Configure IPA configurations
   sudo: yes
-  template: src=etc/sysconfig/network dest=/etc/sysconfig/network owner=root group=root mode=0644
+  template: src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - sysconfig/network
+    - openldap/ldap.conf
+    - nsswitch.conf
+    - pam.d/password-auth-ac
+    - pam.d/system-auth-ac
+
+- name: Configure secure IPA configurations
+  sudo: yes
+  template: src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
+  with_items:
+    - sssd/sssd.conf
 
 - name: Ensure certmonger running
   sudo: yes

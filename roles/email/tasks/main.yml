@@ -44,6 +44,13 @@
     - resize xfs
     - remount xfs
 
+# Config the email storage. Make sure the lvol is big enough.
+- name: Resize /var/log for logs
+  sudo: yes
+  lvol: vg=vg00 lv=var_log_lv size=6g
+  notify:
+    - resize xfs
+    - remount xfs
 
 # Create SSL keys? How do we best manage this with IPA?
 

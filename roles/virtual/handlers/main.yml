@@ -10,6 +10,6 @@
     url={{ ovirt_engine }}
     instance_hostname={{ inventory_hostname }}
     wait_for_state=down
-    timeout=720
+    timeout=1800
     custom_script="{{ custom_script }}"
 

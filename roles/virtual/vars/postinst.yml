@@ -1,11 +1,11 @@
 
 # Hostname should be getting set out of cloud init.
+#     - '/root/postinstall.sh'
+#     - 'systemctl restart NetworkManager'
 
 custom_script: |
     runcmd:
      - 'setenforce 0'
-     - '/root/postinstall.sh'
-     - 'systemctl restart NetworkManager'
      - 'hostname {{ inventory_hostname }}'
      - 'hostname > /etc/hostname'
      - '/usr/bin/nisdomainname {{ ipa_domain }}'
@@ -14,7 +14,7 @@ custom_script: |
      - 'sed -i /etc/sssd/sssd.conf -e ''s/services.*/services = nss\, pam\, ssh\, sudo/''  '
      - 'sed -i /etc/sssd/sssd.conf -e ''s/ipa_dyndns_update/dyndns_update/''  '
      - 'sed -i /etc/sssd/sssd.conf -e ''/dyndns_update.*/ i\\dyndns_iface = eth0''  '
-     - 'echo ''sudoers: files sss'' >> /etc/nsswitch.conf '
+     - 'echo ''sudoers: files sss\n'' >> /etc/nsswitch.conf '
      - 'systemctl restart sssd'
      - 'dracut -f'
      - 'poweroff'
