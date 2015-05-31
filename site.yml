@@ -1,0 +1,10 @@
+---
+# Call all other playbooks for infrastructure
+- include: 389ds.yml
+- include: amanda.yml
+- include: deployment.yml
+- include: email.yml
+- include: freeipa.yml
+- include: nfs_servers.yml
+- include: postgis.yml
+- include: vdsm.yml

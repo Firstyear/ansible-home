@@ -1,5 +1,5 @@
 ---
-- hosts: longst_virtual_servers
+- hosts: all
   #gather_facts: False
   roles:
     #- virtual

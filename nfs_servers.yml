@@ -1,5 +1,6 @@
 ---
 - hosts: nfs_servers
+  gather_facts: False
   roles:
     - virtual
     - common-bh

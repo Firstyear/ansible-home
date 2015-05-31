@@ -298,7 +298,7 @@ unknown_local_recipient_reject_code = 550
 # permit_mx_backup restriction description in postconf(5).
 #
 #relay_domains = $mydestination
-#relay_domains = firstyear.id.au, ipa.firstyear.id.au, susanallin.com, fashioadventurer.com
+relay_domains = firstyear.id.au, ipa.firstyear.id.au, susanallin.com, fashioadventurer.com
 
 # INTERNET OR INTRANET
 
@@ -695,17 +695,15 @@ smtpd_tls_auth_only = yes
 smtpd_delay_reject = yes
 smtpd_helo_required = yes
 smtpd_helo_restrictions =
-    permit_mynetworks,
     reject_non_fqdn_helo_hostname,
     reject_invalid_helo_hostname,
     permit
-smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated reject_unauth_destination reject_non_fqdn_recipient reject_unknown_recipient_domain 
+smtpd_relay_restrictions = permit_sasl_authenticated reject_unauth_destination reject_non_fqdn_recipient reject_unknown_recipient_domain 
 smtpd_sender_restrictions =
-    permit_mynetworks,
     reject_non_fqdn_sender,
     reject_unknown_sender_domain,
     permit
-smtpd_recipient_restrictions = reject_unauth_pipelining reject_non_fqdn_recipient reject_unknown_recipient_domain permit_mynetworks permit_sasl_authenticated reject_unauth_destination permit
+smtpd_recipient_restrictions = reject_unauth_pipelining reject_non_fqdn_recipient reject_unknown_recipient_domain permit_sasl_authenticated reject_unauth_destination permit
 
 smtpd_tls_cert_file = /etc/pki/tls/certs/mail.firstyear.id.au.crt
 smtpd_tls_key_file = /etc/pki/tls/private/mail.firstyear.id.au.key

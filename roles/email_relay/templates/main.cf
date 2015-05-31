@@ -688,18 +688,16 @@ message_size_limit = 20480000
 smtpd_delay_reject = yes
 smtpd_helo_required = yes
 smtpd_helo_restrictions =
-    permit_mynetworks,
     reject_non_fqdn_helo_hostname,
     reject_invalid_helo_hostname,
     permit
 
-smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated reject_unauth_destination reject_non_fqdn_recipient reject_unknown_recipient_domain 
+smtpd_relay_restrictions = permit_sasl_authenticated reject_unauth_destination reject_non_fqdn_recipient reject_unknown_recipient_domain 
 smtpd_sender_restrictions =
-    permit_mynetworks,
     reject_non_fqdn_sender,
     reject_unknown_sender_domain,
     permit
-smtpd_recipient_restrictions = reject_unauth_pipelining reject_non_fqdn_recipient reject_unknown_recipient_domain permit_mynetworks permit_sasl_authenticated reject_unauth_destination permit
+smtpd_recipient_restrictions = reject_unauth_pipelining reject_non_fqdn_recipient reject_unknown_recipient_domain permit_sasl_authenticated reject_unauth_destination permit
 
 
 
