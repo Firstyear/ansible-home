@@ -1,23 +1,19 @@
 
 custom_script: |
     runcmd:
-     #- 'hostname {{ inventory_hostname }}'
-     #- 'hostname > /etc/hostname'
-     #- '/usr/bin/nisdomainname {{ ipa_domain }}'
-     #- 'echo NISDOMAIN={{ ipa_domain }} > /etc/sysconfig/network'
-     #- '  '
-     #- 'sed -i /etc/sssd/sssd.conf -e ''s/services.*/services = nss\, pam\, ssh\, sudo/''  '
-     #- 'sed -i /etc/sssd/sssd.conf -e ''s/ipa_dyndns_update/dyndns_update/''  '
-     #- 'sed -i /etc/sssd/sssd.conf -e ''/dyndns_update.*/ i\\dyndns_iface = eth0''  '
-     #- 'echo ''sudoers: files sss\n'' >> /etc/nsswitch.conf '
-     #- 'systemctl restart sssd'
+     - 'hostname {{ inventory_hostname }}'
+     - 'hostname > /etc/hostname'
+     - '/usr/bin/nisdomainname {{ ipa_domain }}'
+     - 'echo NISDOMAIN={{ ipa_domain }} > /etc/sysconfig/network'
+     - '/usr/sbin/ipa-client-install -U --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --force-ntpd --no-dns-sshfp -p ''{{ ipa_domainadmin_username }}'' -w ''{{ ipa_domainadmin_password }}'' --hostname {{ inventory_hostname }}   '
+     - 'sed -i /etc/sssd/sssd.conf -e ''s/services.*/services = nss\, pam\, ssh\, sudo/''  '
+     - 'sed -i /etc/sssd/sssd.conf -e ''s/ipa_dyndns_update/dyndns_update/''  '
+     - 'sed -i /etc/sssd/sssd.conf -e ''/dyndns_update.*/ i\\dyndns_iface = eth0''  '
+     - 'echo ''sudoers: files sss\n'' >> /etc/nsswitch.conf '
+     - 'systemctl restart sssd'
      - 'dracut -f'
      - 'poweroff'
     final_message: YOU MUST NOW RUN THE ANSIBLE COMMON ROLE ON THIS SYSTEM
-
-# Hostname should be getting set out of cloud init.
-#     - '/root/postinstall.sh'
-#     - 'systemctl restart NetworkManager'
 
 # This is just too broken and unreliable.
 #

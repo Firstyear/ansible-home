@@ -11,12 +11,6 @@
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
 
-- name: config template postinstall
-  sudo: yes
-  action: template src=postinstall.sh dest=/var/www/html/ks/{{ inventory_hostname }}/postinstall.sh
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
-
 - name: config template cloud.cfg
   sudo: yes
   action: template src=cloud.cfg dest=/var/www/html/ks/{{ inventory_hostname }}/cloud.cfg
