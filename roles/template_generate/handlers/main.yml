@@ -1,14 +1,1 @@
 
-#TODO: This should check if the host is enrolled
-#ipa host-show ${1}.${DOMAINNAME}
-#if [ $? -eq 0 ]
-#then
-#    ipa host-del ${1}.${DOMAINNAME} --updatedns
-#fi
-#
-#ipa host-add ${1}.${DOMAINNAME} --force --no-reverse --password=${HOSTPASS}
-
-# How do we get a kinit to make this work?
-#- name: prepare ipa host
-#  action: shell
-
