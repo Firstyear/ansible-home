@@ -18,9 +18,8 @@
     image=centos.{{ centos_version }}.{{ ipa_domain }}
     timeout=1800
     wait_for_state=down
-
-#notify:
-#  - configure cloud init
+  notify:
+    - configure cloud init
 
 - meta: flush_handlers
 
