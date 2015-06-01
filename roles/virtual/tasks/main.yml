@@ -1,6 +1,8 @@
-# Is there a way to make sure that the template exists? 
+
 - include_vars: postinst.yml
 
+# Only difference to template is the name
+## image=centos.{{ centos_version }}.{{ ipa_domain }}
 - name: Ensure VM exists
   local_action: ovirt
     state=present
@@ -15,14 +17,22 @@
     instance_type=server
     instance_cpus={{ ovirt_instance_cpus }}
     instance_mem={{ ovirt_instance_mem }}
-    image=centos.{{ centos_version }}.{{ ipa_domain }}
-    timeout=1800
+    image=blank_pxe
+    timeout=3600
     wait_for_state=down
   notify:
-    - configure cloud init
+    - create ks path
+    - config template kickstart
+    - config tftp menu
+    - ovirt build instance
+    - remove template kickstart
+
+#notify:
+#  - configure cloud init
 
 - meta: flush_handlers
 
+# This will PXE boot, build and STOP the instance
 - name: ovirt launch instance
   local_action: ovirt
     state=started
@@ -31,5 +41,4 @@
     password="{{ ovirt_admin_password }}"
     url={{ ovirt_engine }}
     wait_for_state=up
-    timeout=120
-
+    timeout=7200

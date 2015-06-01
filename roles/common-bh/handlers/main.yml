@@ -8,6 +8,10 @@
   sudo: yes
   shell: /usr/bin/firewall-cmd --reload
 
+- name: restart sssd
+  sudo: yes
+  service: name=sssd state=restarted
+
 - name: rpm import keys
   sudo: yes
   shell: /usr/bin/rpmkeys --import /etc/pki/rpm-gpg/{{ item }}

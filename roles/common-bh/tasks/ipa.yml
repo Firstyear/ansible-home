@@ -45,10 +45,15 @@
   template: src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
   with_items:
     - sssd/sssd.conf
+  notify:
+    - restart sssd
 
-- name: Ensure certmonger running
+- name: Ensure services running
   sudo: yes
-  service: name=certmonger enabled=yes state=started
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - certmonger
+    - sssd
 
 
 ### TODO: Add nsswitch, sssd and others.
