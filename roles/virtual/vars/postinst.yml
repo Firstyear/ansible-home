@@ -8,7 +8,6 @@ custom_script: |
     runcmd:
     - 'echo BEGIN'
     - '/usr/sbin/ipa-client-install -U --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --force-ntpd --no-dns-sshfp -p ''{{ ipa_domainadmin_username }}'' -w ''{{ ipa_domainadmin_password }}'' --hostname {{ inventory_hostname }}'
-    - 'systemctl restart sssd'
     - 'dracut -f'
     - 'echo END'
     - 'poweroff'

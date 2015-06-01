@@ -2,7 +2,7 @@
 - include_vars: postinst.yml
 
 # Only difference to template is the name
-## image=centos.{{ centos_version }}.{{ ipa_domain }}
+#    image=blank_pxe
 - name: Ensure VM exists
   local_action: ovirt
     state=present
@@ -17,18 +17,18 @@
     instance_type=server
     instance_cpus={{ ovirt_instance_cpus }}
     instance_mem={{ ovirt_instance_mem }}
-    image=blank_pxe
+    image=centos.{{ centos_version }}.{{ ipa_domain }}
     timeout=3600
     wait_for_state=down
   notify:
-    - create ks path
-    - config template kickstart
-    - config tftp menu
-    - ovirt build instance
-    - remove template kickstart
+    - configure cloud init
 
-#notify:
-#  - configure cloud init
+#  notify:
+#    - create ks path
+#    - config template kickstart
+#    - config tftp menu
+#    - ovirt build instance
+#    - remove template kickstart
 
 - meta: flush_handlers
 
