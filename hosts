@@ -38,6 +38,10 @@ centos.7.ipa.blackhats.net.au centos_version=7
 [vdsm_servers]
 ;mion.ipa.blackhats.net.au
 172.24.10.8
+;172.24.10.5
+
+[ovirt_servers]
+172.24.10.8
 
 [longst_virtual_servers:children]
 389ds_servers

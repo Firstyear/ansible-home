@@ -17,6 +17,12 @@
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
 
+- name: config cc_runcmd.py
+  sudo: yes
+  action: template src=cc_runcmd.py dest=/var/www/html/ks/{{ inventory_hostname }}/cc_runcmd.py
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
 # Later we need a way to get the macaddr of the ovirt host.
 # This way we can do per host config
 
