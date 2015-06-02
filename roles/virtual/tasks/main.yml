@@ -17,7 +17,7 @@
     instance_type=server
     instance_cpus={{ ovirt_instance_cpus }}
     instance_mem={{ ovirt_instance_mem }}
-    image=centos.{{ centos_version }}.{{ ipa_domain }}
+    image=centos-{{ centos_version }}.{{ ipa_domain }}
     timeout=3600
     wait_for_state=down
   notify:
