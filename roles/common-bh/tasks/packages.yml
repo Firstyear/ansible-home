@@ -1,0 +1,19 @@
+
+
+- name: Install default software
+  sudo: yes
+  yum: name={{ item }} state=present
+  with_items:
+   - strace
+   - mlocate
+   - gdisk
+   - abrt-cli
+   - nmap
+   - screen
+   - setools-console
+   - vim
+   - yum-utils
+   - zsh
+   - openldap-clients
+   - git
+   - iotop

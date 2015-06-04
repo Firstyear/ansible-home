@@ -1,11 +1,12 @@
 
-[389ds-development]
-localhost
+[laptops]
+franky.ipa.blackhats.net.au
 
-[389ds-development:vars]
-ds_path=/home/a1176360/development/389ds/ds
-lib389_path=/home/a1176360/development/389ds/lib389
-prefix=/srv
+[devel-389ds:children]
+laptops
+
+[devel-freeipa:children]
+laptops
 
 [389ds_servers]
 victoria.ipa.blackhats.net.au
@@ -42,6 +43,9 @@ centos-7.ipa.blackhats.net.au centos_version=7
 
 [ovirt_servers]
 172.24.10.8
+
+[openwrt_aps]
+tplink-long.net.blackhats.net.au
 
 [longst_virtual_servers:children]
 389ds_servers

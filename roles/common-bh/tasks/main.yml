@@ -1,5 +1,5 @@
 
-- include: repos.yml
+- include: packages.yml
 - include: firewalld.yml
 - include: ipa.yml
 
@@ -9,7 +9,6 @@
 - include: virtual.yml
   when: "'longst_virtual_servers' in group_names"
 
-- include: sysctl.yml
 
 - meta: flush_handlers
 

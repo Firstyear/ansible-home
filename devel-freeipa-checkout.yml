@@ -1,0 +1,10 @@
+---
+- hosts: laptops
+  #gather_facts: False
+  roles:
+    - devel-checkout
+  vars:
+    devel_git_repo: git://git.fedorahosted.org/git/freeipa.git
+    devel_path: freeipa
+  vars_files:
+    - ~/secure/ansible_home_secrets.yml

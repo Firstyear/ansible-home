@@ -1,0 +1,42 @@
+#config wifi-device  radio0
+#	option type     mac80211
+#	option channel  11
+#	option hwmode	11g
+#	option path	'platform/qca955x_wmac'
+#	option htmode	HT20
+#	option logger_syslog_level 0
+#	option logger_stdout_level 0
+#	# REMOVE THIS LINE TO ENABLE WIFI:
+#	#option disabled 1
+#
+#config wifi-iface
+#    option device   radio0
+#    option 'network' lan
+#    option 'ssid' 'Blackhats-test'
+#    option 'mode' 'ap'
+#    option 'encryption' 'wpa2'
+#    #option 'server' '2001:44b8:16a:4::1'
+#    option 'server' '172.24.4.1'
+#    option 'port' '1812'
+#    option 'key' 'tplongst'
+#    option 'dynamic_vlan' '2'
+#    option 'vlan_file' '/etc/hostapd.vlan'
+#    option 'vlan_tagged_interface' 'eth0'
+#    option 'vlan_naming' '1'
+
+config wifi-device  radio0
+	option type     mac80211
+	option channel  11
+	option hwmode	11g
+	option path	'platform/qca955x_wmac'
+	option htmode	HT20
+	# REMOVE THIS LINE TO ENABLE WIFI:
+	option disabled 1
+
+config wifi-iface
+	option device   radio0
+	option network  lan
+	option mode     ap
+	option ssid     OpenWrt
+	option encryption none
+

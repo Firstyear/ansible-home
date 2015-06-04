@@ -1,0 +1,14 @@
+# Put your custom commands here that should be executed once
+# the system init finished. By default this file does nothing.
+
+echo "nameserver 2001:44b8:16a:16:5054:ff:fe89:97e2" > /etc/resolv.conf
+echo "nameserver 172.24.16.13" >> /etc/resolv.conf
+
+killall hostapd
+ip link set up dev wlan0
+ip link set up dev wlan1
+sleep 10
+hostapd -P /var/run/hostapd-phy0.pid -B /etc/hostapd.conf 
+
+exit 0
+

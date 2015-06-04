@@ -1,4 +1,6 @@
 
+# Should we ensure that we have a git repo?
+
 - name: Build 389ds
   shell: chdir="{{ ds_path }}" executable=/bin/zsh make
 

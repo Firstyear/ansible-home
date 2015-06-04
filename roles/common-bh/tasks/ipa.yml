@@ -11,7 +11,15 @@
   sudo: yes
   yum: name={{ item }} state=present
   with_items:
+   - freeipa-client
+  when: ansible_distribution == 'Fedora'
+
+- name: Install default software
+  sudo: yes
+  yum: name={{ item }} state=present
+  with_items:
    - ipa-client
+  when: ansible_distribution == 'CentOS'
 
 - name: Test domain join
   sudo: yes
@@ -37,8 +45,8 @@
     - nsswitch.conf
     - pam.d/password-auth-ac
     - pam.d/system-auth-ac
-    - resolv.conf
     - hostname
+    - hosts
 
 - name: Configure secure IPA configurations
   sudo: yes

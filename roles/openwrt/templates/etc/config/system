@@ -1,0 +1,23 @@
+
+config system
+	option hostname 'tplongst'
+	option timezone 'UTC'
+    option log_ip '172.24.4.1'
+    option log_port 514
+
+config timeserver 'ntp'
+	list server 'alina.ipa.blackhats.net.au'
+	option enable_server '0'
+
+config led 'led_usb'
+	option name 'USB'
+	option sysfs 'tp-link:green:usb'
+	option trigger 'usbdev'
+	option dev '1-1'
+	option interval '50'
+
+config led 'led_wlan'
+	option name 'WLAN'
+	option sysfs 'tp-link:green:wlan'
+	option trigger 'phy0tpt'
+

@@ -1,0 +1,10 @@
+
+- include: repos.yml
+- include: sysctl.yml
+
+# Should we be using this? Or letting ifup / down do it?
+- name: Configure network configurations
+  sudo: yes
+  template: src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - resolv.conf

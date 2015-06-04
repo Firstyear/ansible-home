@@ -1,0 +1,69 @@
+
+# Because this is a laptop we don't assume we have the static repos
+#  like we do for our servers
+
+# So run this *AFTER* common-bh, so that we can be guaranteed of firewalld
+## The main reason is to lock down the wifi port
+
+- name: install default laptop packages
+  sudo: yes
+  action: yum name={{ item }} state=present
+  with_items:
+    - tlp
+    - vim-nerdtree
+    - mate-desktop
+    - compiz-mate
+    - compiz-plugins-main
+    - compiz-plugins-extra
+    - compiz
+    - dconf-editor
+    - dia
+    - emerald
+    - emerald-themes
+    - emerald-themes-extra
+    - erlang
+    - evolution
+    - gimp
+    - gstreamer1-plugins-bad-free
+    - gstreamer1-plugins-base
+    - gstreamer1-plugins-base
+    - gstreamer1-plugins-good
+    - gstreamer-plugins-bad-free
+    - gstreamer-plugins-base
+    - gstreamer-plugins-good
+    - ldapvi
+    - libvirt
+    - lyx
+    - pidgin
+    - pidgin-otr
+    - pinentry-gtk
+    - python-ldap
+    - python-yubico
+    - rpm-build
+    - samba-client
+    - tftp
+    - tftp-server
+    - valgrind
+    - virt-install
+    - virt-manager
+    - vlc
+    - wireshark
+    - wireshark-gnome
+
+- name: deploy default laptop configurations
+  sudo: yes
+  action: template src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - default/tlp
+
+# Should I restart these ? 
+
+- name: ensure default laptop services
+  sudo: yes
+  action: service name={{ item }} state=started enabled=yes
+  with_items:
+    - tlp
+
+# Lock down wireless port
+
+
