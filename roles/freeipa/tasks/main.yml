@@ -1,4 +1,6 @@
 
+## Install the packages
+
 - name: Configure IPA firewalld
   sudo: yes
   firewalld: zone=internal permanent=true state=enabled service={{ item }}
@@ -15,3 +17,4 @@
   notify:
     - reload firewalld
 
+# Ensure services?

@@ -2,6 +2,7 @@
 - hosts: openwrt_aps
   gather_facts: False
   roles:
+    - common-facts
     - openwrt
   vars_files:
     - ~/secure/ansible_home_secrets.yml

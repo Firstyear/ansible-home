@@ -1,8 +1,9 @@
 ---
 - hosts: vdsm_servers
-  #gather_facts: False
+  gather_facts: False
   roles:
     #- virtual
+    - common-facts
     - common-bh
     - vdsm
   vars_files:

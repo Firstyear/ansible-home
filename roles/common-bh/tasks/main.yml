@@ -2,6 +2,8 @@
 - include: packages.yml
 - include: firewalld.yml
 - include: ipa.yml
+- include: audit.yml
+- include: kdump.yml
 
 - include: amanda.yml
   when: "'amanda_servers' not in group_names"

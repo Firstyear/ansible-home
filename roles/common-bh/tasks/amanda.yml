@@ -19,8 +19,11 @@
 
 - name: Ensure excludes
   sudo: yes
-  file: state=touch path=/var/lib/amanda/exclude owner=root group=root mode=0644
+  template: src=var/lib/amanda/exclude dest=/var/lib/amanda/exclude owner=root group=root mode=0644
   tags:
     - amanda
 
+- name: Configure amanda firewall
+  sudo: yes
+  firewalld: service=amanda-client zone=internal permanent=yes state=enabled immediate=yes
 

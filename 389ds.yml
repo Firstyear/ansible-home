@@ -3,6 +3,7 @@
   gather_facts: False
   roles:
     - virtual
+    - common-facts
     - common-bh
     - 389ds
   vars_files:

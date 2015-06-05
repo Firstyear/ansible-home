@@ -17,10 +17,6 @@
   sudo: yes
   service: name=amanda.socket enabled=yes state=started
 
-- name: Configure Amanda exclusions
-  sudo: yes
-  template: src=exclude dest=/var/lib/amanda/exclude owner=root group=root mode=0644
-
 - name: Configure Amanda allowed hosts
   sudo: yes
   template: src=amandahosts dest=/var/lib/amanda/.amandahosts owner=amandabackup group=disk mode=0600

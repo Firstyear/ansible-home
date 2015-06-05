@@ -4,16 +4,18 @@
   sudo: yes
   yum: name={{ item }} state=present
   with_items:
-   - strace
-   - mlocate
-   - gdisk
    - abrt-cli
+   - gdisk
+   - git
+   - kexec-tools
+   - iotop
    - nmap
+   - mlocate
+   - openldap-clients
+   - policycoreutils-python
    - screen
    - setools-console
+   - strace
    - vim
    - yum-utils
    - zsh
-   - openldap-clients
-   - git
-   - iotop

@@ -1,7 +1,8 @@
 ---
 - hosts: laptops
-  #gather_facts: False
+  gather_facts: False
   roles:
+    - common-facts
     - common-bh
     - common-bh-laptop
   vars_files:

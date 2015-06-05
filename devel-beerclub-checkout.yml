@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: laptops
   #gather_facts: False
   roles:
     - devel-checkout

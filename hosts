@@ -1,18 +1,28 @@
 
-[localhost]
+# I need this to sometimes be the full name of the laptop.
+# Other times I need this to be localhost.
+# Local_action in playbooks instead?
+[laptops]
 localhost
+#franky.ipa.blackhats.net.au
+## How do I apply this to Ammy without applying bh parts?
+#
+#ammy.its.adelaide.edu.au
 
 [devel-389ds:children]
-localhost
+laptops
 
 [devel-freeipa:children]
-localhost
+laptops
 
 [389ds_servers]
 victoria.ipa.blackhats.net.au
 
 [amanda_servers]
 yvett.ipa.blackhats.net.au
+
+[blog_servers]
+adara.ipa.blackhats.net.au
 
 [deployment_servers]
 birthday.ipa.blackhats.net.au
@@ -23,6 +33,11 @@ luna.ipa.blackhats.net.au
 
 [freeipa_servers]
 alina.ipa.blackhats.net.au
+
+#[irc_servers]
+## Move this to ipa.blackhats.net.au?
+# Can I even manage this?
+#fiona.firstyear.id.au
 
 [nfs_servers]
 lorna.ipa.blackhats.net.au
@@ -47,6 +62,9 @@ centos-7.ipa.blackhats.net.au centos_version=7
 [openwrt_aps]
 tplink-long.net.blackhats.net.au
 
+[rsyslog_servers]
+tammi.ipa.blackhats.net.au
+
 [longst_virtual_servers:children]
 389ds_servers
 amanda_servers
@@ -58,4 +76,7 @@ postgis_servers
 template_servers
 #test_servers
 
+[linode_servers:children]
+blog_servers
+#irc_servers
 

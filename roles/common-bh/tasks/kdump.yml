@@ -1,0 +1,12 @@
+
+- name: deploy kdump configuration
+  sudo: yes
+  template: src=etc/kdump.conf dest=/etc/kdump.conf owner=root group=root mode=0644
+  notify:
+    - restart kdump
+
+- name: ensure kdump running
+  sudo: yes
+  service: name=kdump state=started enabled=yes
+  ignore_errors: yes
+

@@ -1,0 +1,5 @@
+
+- name: Gather facts
+  sudo: yes
+  action: setup
+

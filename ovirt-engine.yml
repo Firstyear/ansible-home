@@ -1,8 +1,9 @@
 ---
 - hosts: ovirt_servers
-  #gather_facts: False
+  gather_facts: False
   roles:
     #- virtual
+    - common-facts
     - common-bh
     - ovirt-engine
   vars_files:
