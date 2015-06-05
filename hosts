@@ -1,12 +1,12 @@
 
-[laptops]
-franky.ipa.blackhats.net.au
+[localhost]
+localhost
 
 [devel-389ds:children]
-laptops
+localhost
 
 [devel-freeipa:children]
-laptops
+localhost
 
 [389ds_servers]
 victoria.ipa.blackhats.net.au

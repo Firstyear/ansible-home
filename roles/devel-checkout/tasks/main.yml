@@ -3,5 +3,5 @@
   action: file path={{ devel_root }}/{{ devel_path }} state=directory
 
 - name: devel git checkout
-  action: git repo={{ devel_git_repo }} clone=yes dest={{ devel_root }}/{{ devel_path }} remote=origin update=yes accept_hostkey=yes
+  action: git repo="{{ devel_git_repo }}" clone=yes dest={{ devel_root }}/{{ devel_path }} remote=origin update=yes accept_hostkey=yes
 

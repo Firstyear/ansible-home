@@ -4,7 +4,7 @@
   roles:
     - devel-checkout
   vars:
-    devel_git_repo: git://git.fedorahosted.org/git/freeipa.git
-    devel_path: freeipa
+    devel_git_repo: ssh://git@gitlab.adelaide.edu.au/a1176360/beerclub.git
+    devel_path: its/beerclub
   vars_files:
     - ~/secure/ansible_home_secrets.yml
