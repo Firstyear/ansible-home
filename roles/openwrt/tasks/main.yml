@@ -1,0 +1,17 @@
+
+- name: deploy openwrt configs
+  template: src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  sudo: yes
+  with_items:
+    - rc.local
+    - hostapd.vlan
+    - hostapd.conf
+    - config/dhcp
+    - config/dropbear
+    - config/firewall
+    - config/network
+    - config/system
+    - config/ubootenv
+    - config/wireless
+
+
