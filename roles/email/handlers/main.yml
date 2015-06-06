@@ -19,6 +19,12 @@
   sudo: yes
   service: name=postfix state=restarted
 
+- name: postmap
+  sudo: yes
+  shell: postmap /etc/postfix/{{ item }}
+  with_items:
+    - transport
+
 - name: restart clamav-milter
   sudo: yes
   service: name=clamav-milter state=restarted

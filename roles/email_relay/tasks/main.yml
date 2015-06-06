@@ -3,13 +3,13 @@
   sudo: yes
   action: yum name=postfix state=present
 
-- name: config email firewalld
-  sudo: yes
-  firewalld: service=smtp zone=internal permanent=yes state=enabled immediate=yes
-
-- name: config email ports firewalld
-  sudo: yes
-  firewalld: port=465/tcp zone=internal permanent=yes state=enabled immediate=yes
+#- name: config email firewalld
+#  sudo: yes
+#  firewalld: service=smtp zone=internal permanent=yes state=enabled immediate=yes
+#
+#- name: config email ports firewalld
+#  sudo: yes
+#  firewalld: port=465/tcp zone=internal permanent=yes state=enabled immediate=yes
 
 - name: Deploy postfix configurations
   sudo: yes
@@ -17,6 +17,16 @@
   with_items:
     - main.cf
   notify: restart postfix
+
+- name: Deploy postfix hash configurations
+  sudo: yes
+  template: src=etc/postfix/{{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - transport
+    - relay_recipients
+  notify:
+    - postmap
+    - restart postfix
 
 ## When some things like transport are deployed, rehash them
 

@@ -77,8 +77,16 @@
   with_items:
     - main.cf
     - master.cf
-    - virtual_domains
   notify: restart postfix
+
+- name: Deploy postfix hash configurations
+  sudo: yes
+  template: src=etc/postfix/{{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - transport
+  notify:
+    - postmap
+    - restart postfix
 
 ## When some things like transport are deployed, rehash them
 

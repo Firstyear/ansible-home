@@ -678,6 +678,7 @@ sample_directory = /usr/share/doc/postfix-2.6.6/samples
 #
 readme_directory = /usr/share/doc/postfix-2.6.6/README_FILES
 
+transport_maps = hash:/etc/postfix/transport
 
 smtpd_recipient_restrictions =   permit_mynetworks reject_unauth_destination
 relay_recipient_maps = hash:/etc/postfix/relay_recipients 

@@ -1,0 +1,12 @@
+
+- name: postmap
+  sudo: yes
+  shell: postmap /etc/postfix/{{ item }}
+  with_items:
+    - transport
+    - relay_recipients
+
+- name: restart postfix
+  sudo: yes
+  service: name=postfix state=restarted
+
