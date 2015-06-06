@@ -249,8 +249,8 @@ unknown_local_recipient_reject_code = 550
 # only the local machine.
 # 
 #mynetworks_style = class
-mynetworks_style = subnet
-#mynetworks_style = host
+#mynetworks_style = subnet
+mynetworks_style = host
 
 # Alternatively, you can specify the mynetworks list by hand, in
 # which case Postfix ignores the mynetworks_style setting.
@@ -296,7 +296,7 @@ mynetworks_style = subnet
 # permit_mx_backup restriction description in postconf(5).
 #
 #relay_domains = $mydestination
-relay_domains = firstyear.id.au, ipa.firstyear.id.au, baysidemed.com.au
+relay_domains = firstyear.id.au, ipa.firstyear.id.au, blackhats.net.au, ipa.blackhats.net.au
 
 # INTERNET OR INTRANET
 

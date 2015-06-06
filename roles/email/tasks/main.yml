@@ -18,12 +18,10 @@
 
 - name: config email firewalld
   sudo: yes
-  firewalld: service={{ item }} zone=internal permanent=yes state=enabled #immediate=yes
+  firewalld: service={{ item }} zone=internal permanent=yes state=enabled immediate=yes
   with_items:
     - smtp
     - imaps
-  notify:
-    - reload firewalld
 
 - name: config email ports firewalld
   sudo: yes
@@ -31,8 +29,6 @@
   with_items:
     - 143/tcp
     - 465/tcp
-  notify:
-    - reload firewalld
 
 ### Now actually do some configuration.
 
@@ -60,7 +56,7 @@
 
 - name: Deploy dovecot configurations
   sudo: yes
-  template: src=dovecot/{{ item }} dest=/etc/dovecot/{{ item }} owner=root group=root mode=0644
+  template: src=etc/dovecot/{{ item }} dest=/etc/dovecot/{{ item }} owner=root group=root mode=0644
   with_items:
     - conf.d/10-auth.conf
     - conf.d/10-mail.conf
@@ -77,21 +73,23 @@
 
 - name: Deploy postfix configurations
   sudo: yes
-  template: src=postfix/{{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0644
+  template: src=etc/postfix/{{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0644
   with_items:
     - main.cf
     - master.cf
     - virtual_domains
   notify: restart postfix
 
+## When some things like transport are deployed, rehash them
+
 - name: Deploy clam milter config
   sudo: yes
-  template: src=mail/clamav-milter.conf dest=/etc/mail/clamav-milter.conf owner=root group=root mode=0644
+  template: src=etc/mail/clamav-milter.conf dest=/etc/mail/clamav-milter.conf owner=root group=root mode=0644
   notify: restart clamav-milter
 
 - name: Deploy clam config
   sudo: yes
-  template: src=clamd.d/clamsmtp.conf dest=/etc/clamd.d/clamsmtp.conf owner=root group=root mode=0644
+  template: src=etc/clamd.d/clamsmtp.conf dest=/etc/clamd.d/clamsmtp.conf owner=root group=root mode=0644
   notify: restart clamd
 
 # Need a notify to restart bits ...

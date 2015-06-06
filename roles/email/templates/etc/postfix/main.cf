@@ -298,7 +298,7 @@ unknown_local_recipient_reject_code = 550
 # permit_mx_backup restriction description in postconf(5).
 #
 #relay_domains = $mydestination
-relay_domains = firstyear.id.au, ipa.firstyear.id.au, susanallin.com, fashioadventurer.com
+relay_domains = firstyear.id.au, ipa.firstyear.id.au, blackhats.net.au, ipa.blackhats.net.au
 
 # INTERNET OR INTRANET
 
@@ -684,7 +684,7 @@ sample_directory = /usr/share/doc/postfix/samples
 readme_directory = /usr/share/doc/postfix/README_FILES
 
 
-virtual_mailbox_domains = firstyear.id.au, ipa.firstyear.id.au, ipa.blackhats.net.au
+virtual_mailbox_domains = firstyear.id.au, ipa.firstyear.id.au, ipa.blackhats.net.au, blackhats.net.au
 virtual_transport = dovecot
 dovecot_destination_recipient_limit = 1
  

@@ -19,6 +19,7 @@
 - name: restart kdump
   sudo: yes
   service: name=kdump state=restarted
+  ignore_errors: yes
 
 - name: rpm import keys
   sudo: yes

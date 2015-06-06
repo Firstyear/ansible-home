@@ -3,8 +3,8 @@
 # Other times I need this to be localhost.
 # Local_action in playbooks instead?
 [laptops]
-localhost
-#franky.ipa.blackhats.net.au
+#localhost
+franky.ipa.blackhats.net.au
 ## How do I apply this to Ammy without applying bh parts?
 #
 #ammy.its.adelaide.edu.au
