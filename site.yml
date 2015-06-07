@@ -4,6 +4,7 @@
 - include: amanda.yml
 - include: deployment.yml
 - include: email.yml
+- include: email_relay.yml
 - include: freeipa.yml
 - include: nfs_servers.yml
 - include: postgis.yml

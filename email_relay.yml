@@ -3,7 +3,7 @@
   gather_facts: False
   roles:
     - common-facts
+    - common-bh
     - email_relay
-    #- common-bh
   vars_files:
     - ~/secure/ansible_home_secrets.yml

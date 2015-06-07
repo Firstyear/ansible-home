@@ -31,7 +31,6 @@ birthday.ipa.blackhats.net.au
 luna.ipa.blackhats.net.au
 
 [email_relay_servers]
-liza.ipa.blackhats.net.au
 adara.ipa.blackhats.net.au
 fiona.ipa.blackhats.net.au
 
@@ -69,6 +68,22 @@ tplink-long.net.blackhats.net.au
 [rsyslog_servers]
 tammi.ipa.blackhats.net.au
 
+
+# Amanda backup specs
+[DailySet1:children]
+389ds_servers
+amanda_servers
+deployment_servers
+email_servers
+freeipa_servers
+nfs_servers
+postgis_servers
+
+[ManualSet:children]
+laptops
+
+# Other groups
+
 [longst_virtual_servers:children]
 389ds_servers
 amanda_servers
@@ -82,5 +97,6 @@ template_servers
 
 [linode_servers:children]
 blog_servers
+email_relay_servers
 #irc_servers
 

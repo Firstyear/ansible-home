@@ -1,16 +1,21 @@
 
 - include: packages.yml
-- include: firewalld.yml
-- include: ipa.yml
 - include: audit.yml
+
+- include: firewalld.yml
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+
+- include: ipa.yml
+  when: "'linode_servers' not in group_names"
+
 - include: kdump.yml
+  when: "'linode_servers' not in group_names"
 
 - include: amanda.yml
-  when: "'amanda_servers' not in group_names"
+  when: "'amanda_servers' not in group_names and 'linode_servers' not in group_names"
 
 - include: virtual.yml
   when: "'longst_virtual_servers' in group_names"
-
 
 - meta: flush_handlers
 

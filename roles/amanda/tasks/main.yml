@@ -1,4 +1,7 @@
 
+- name: DEBUG
+  action: debug var=amanda_instances[0]['name']
+
 
 - name: Install amanda software
   sudo: yes
@@ -21,19 +24,63 @@
   sudo: yes
   template: src=amandahosts dest=/var/lib/amanda/.amandahosts owner=amandabackup group=disk mode=0600
 
-- name: Configure disklist
+- name: Configure holding disk
   sudo: yes
-  template: src=disklist dest=/etc/amanda/DailySet1/disklist owner=root group=root mode=0644
+  action: lvol vg=vg01 lv=amanda_lv size=100g
 
-- name: Configure amanda-client
+- name: Configure DailySet1 disk
   sudo: yes
-  template: src=amanda-client.conf dest=/etc/amanda/DailySet1/amanda-client.conf owner=root group=root mode=0644
+  action: lvol vg=vg02 lv=DailySet1_lv size=100g
+
+- name: Configure ManualSet disk
+  sudo: yes
+  action: lvol vg=vg02 lv=ManualSet_lv size=120g
+
+### Should create filessytems and mount these later
+
+- name: Create amanda mountpoints
+  sudo: yes
+  action: file path=/var/lib/amanda/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
+  with_items:
+    - DailySet1
+    - ManualSet
+
+- name: Create config directories
+  sudo: yes
+  action: file path=/etc/amanda/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
+  with_items:
+    - DailySet1
+    - ManualSet
 
 - name: Configure amanda
   sudo: yes
-  template: src=amanda.conf dest=/etc/amanda/DailySet1/amanda.conf owner=root group=root mode=0644
+  template: src={{ item }} dest=/etc/amanda/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - DailySet1/disklist
+    - DailySet1/amanda.conf
+    - DailySet1/amanda-client.conf
+    - ManualSet/disklist
+    - ManualSet/amanda.conf
+    - ManualSet/amanda-client.conf
 
-- name: Cron backup job
+- name: Create amanda directories
+  sudo: yes
+  action: file path=/var/lib/amanda/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
+  with_items:
+    - DailySet1/vtapes
+    - ManualSet/vtapes
+
+- name: Create vtape directories DailySet1
+  sudo: yes
+  action: file path=/var/lib/amanda/DailySet1/vtapes/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
+  with_sequence: start=1 end=35 format=slot%d
+
+- name: Create vtape directories ManualSet
+  sudo: yes
+  action: file path=/var/lib/amanda/ManualSet/vtapes/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
+  with_sequence: start=1 end=35 format=slot%d
+
+- name: Cron backup job DailySet1
   sudo: yes
   action: cron name="Run amanda DailySet1" minute="0" hour="2" job="/usr/sbin/amdump DailySet1" user="amandabackup"
 

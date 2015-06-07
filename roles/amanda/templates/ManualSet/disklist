@@ -1,10 +1,9 @@
 
-{% for item in groups['longst_virtual_servers'] %}
+{% for item in groups['ManualSet'] %}
 {{ item }} /etc comp-root-tar
 {{ item }} /home comp-root-tar
 {{ item }} /root comp-root-tar
 {{ item }} /var comp-root-tar
 
 {% endfor %}
-
 
