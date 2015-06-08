@@ -1,12 +1,16 @@
 ---
 django_git_repo: 'https://github.com/Firstyear/blogalog.git'
 django_git_branch: master
-django_app_path: /var/www/django/blogalog
+django_app_path: /var/www/django
 django_app_name: blogalog
+django_root_app_name: django_blog
 
 # These don't matter because in this example we don't pull local settings
 django_db_name: django_blogalog_db
 django_db_user: django_blogalog
 django_db_passwd: the password doesnt matter
+
+amanda_var_exclude:
+    - ./lib/sss
 
 

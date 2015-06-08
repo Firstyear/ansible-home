@@ -22,7 +22,8 @@ victoria.ipa.blackhats.net.au
 yvett.ipa.blackhats.net.au
 
 [blog_servers]
-adara.ipa.blackhats.net.au
+#adara.ipa.blackhats.net.au
+liza.ipa.blackhats.net.au
 
 [deployment_servers]
 birthday.ipa.blackhats.net.au
@@ -94,9 +95,10 @@ nfs_servers
 postgis_servers
 template_servers
 #test_servers
+blog_servers
 
 [linode_servers:children]
-blog_servers
+#blog_servers
 email_relay_servers
 #irc_servers
 

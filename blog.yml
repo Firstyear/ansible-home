@@ -2,7 +2,9 @@
 - hosts: blog_servers
   gather_facts: False
   roles:
+    #- virtual
     - common-facts
+    - common-bh-server
     - common-bh
     - generic-django-app
   vars_files:
