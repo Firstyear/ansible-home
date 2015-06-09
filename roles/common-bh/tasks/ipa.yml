@@ -1,3 +1,18 @@
+- name: Install default software
+  sudo: yes
+  yum: name={{ item }} state=present
+  with_items:
+   - freeipa-client
+   - openldap-clients
+  when: ansible_distribution == 'Fedora'
+
+- name: Install default software
+  sudo: yes
+  yum: name={{ item }} state=present
+  with_items:
+   - ipa-client
+   - openldap-clients
+  when: ansible_distribution == 'CentOS'
 
 - name: Configure hostname
   sudo: yes
@@ -7,19 +22,6 @@
   sudo: yes
   shell: /usr/bin/nisdomainname {{ ipa_domain }}
 
-- name: Install default software
-  sudo: yes
-  yum: name={{ item }} state=present
-  with_items:
-   - freeipa-client
-  when: ansible_distribution == 'Fedora'
-
-- name: Install default software
-  sudo: yes
-  yum: name={{ item }} state=present
-  with_items:
-   - ipa-client
-  when: ansible_distribution == 'CentOS'
 
 - name: Test domain join
   sudo: yes

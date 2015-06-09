@@ -1,22 +1,43 @@
 
+# Only apply this to static CentOS hosts
+- include: repos.yml
+  when: ansible_form_factor != "Notebook" and ansible_distribution == 'CentOS'
+
+# These are safe, useful, default packages for all installs
 - include: packages.yml
+
+# Enable command and etc auditing.
 - include: audit.yml
 
+# Laptop defaults
+- include: laptop.yml
+  when: ansible_form_factor == "Notebook"
+
+# Server defaults
+- include: sysctl.yml
+  when: ansible_form_factor != "Notebook" and ansible_distribution_major_version >= '7'
+
+# This will capture the laptops too
 - include: firewalld.yml
-  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version >= "7"
 
+# How do I exclude ammy here?
 - include: ipa.yml
-  when: "'linode_servers' not in group_names"
+  when: "'linode_servers' not in group_names and ansible_hostname != 'ammy'"
 
+# Potentially capture coredumps if things go bad.
 - include: kdump.yml
   when: "'linode_servers' not in group_names"
 
+# Enable the backup client on hosts that we can backup.
 - include: amanda.yml
-  when: "'amanda_servers' not in group_names and 'linode_servers' not in group_names"
+  when: "'amanda_servers' not in group_names and 'linode_servers' not in group_names and ansible_hostname != 'ammy' "
 
-- include: virtual.yml
-  when: "'longst_virtual_servers' in group_names"
+# Install guest utils on relevant hosts.
+- include: ovirt-guest.yml
+  when: ansible_product_name == "oVirt Node" and ansible_virtualization_role == "guest"
 
+# Commit everything before we continue.
 - meta: flush_handlers
 
 

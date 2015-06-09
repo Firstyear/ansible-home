@@ -1,4 +1,8 @@
 
+- name: install kdump
+  sudo: yes
+  yum: name=kexec-tools state=present
+
 - name: deploy kdump configuration
   sudo: yes
   template: src=etc/kdump.conf dest=/etc/kdump.conf owner=root group=root mode=0644

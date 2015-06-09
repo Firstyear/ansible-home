@@ -13,7 +13,7 @@
 [base]
 name=CentOS-$releasever - Base
 #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os&infra=$infra
-baseurl=http://{{ groups.deployment_servers[0] }}/pub/centos/{{ centos_version }}/os/$basearch/
+baseurl=http://{{ groups.deployment_servers[0] }}/pub/centos/{{ ansible_distribution_major_version }}/os/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
@@ -21,7 +21,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 [updates]
 name=CentOS-$releasever - Updates
 #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=updates&infra=$infra
-baseurl=http://{{ groups.deployment_servers[0] }}/pub/centos/{{ centos_version }}/updates/$basearch/
+baseurl=http://{{ groups.deployment_servers[0] }}/pub/centos/{{ ansible_distribution_major_version }}/updates/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
@@ -29,7 +29,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 [extras]
 name=CentOS-$releasever - Extras
 #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=extras&infra=$infra
-baseurl=http://{{ groups.deployment_servers[0] }}/pub/centos/{{ centos_version }}/extras/$basearch/
+baseurl=http://{{ groups.deployment_servers[0] }}/pub/centos/{{ ansible_distribution_major_version }}/extras/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
@@ -45,7 +45,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 [epel]
 name=Epen-$releasever
-baseurl=http://{{ groups.deployment_servers[0] }}/pub/epel/{{ centos_version }}/$basearch/
+baseurl=http://{{ groups.deployment_servers[0] }}/pub/epel/{{ ansible_distribution_major_version }}/$basearch/
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
 
