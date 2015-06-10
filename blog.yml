@@ -4,7 +4,6 @@
   roles:
     #- virtual
     - common-facts
-    - common-bh-server
     - common-bh
     - generic-django-app
   vars_files:
