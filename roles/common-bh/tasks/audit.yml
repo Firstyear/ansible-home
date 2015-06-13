@@ -8,6 +8,7 @@
   with_items:
     - audit/auditd.conf
     - audit/rules.d/audit.rules
+    - audisp/plugins.d/syslog.conf
   notify:
     - restart auditd
 
