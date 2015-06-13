@@ -1,13 +1,21 @@
 
 # Only apply this to static CentOS hosts
 - include: repos.yml
-  when: ansible_form_factor != "Notebook" and ansible_distribution == 'CentOS'
+  when: "ansible_form_factor != 'Notebook' and ansible_distribution == 'CentOS'"
 
 # These are safe, useful, default packages for all installs
 - include: packages.yml
 
 # Enable command and etc auditing.
 - include: audit.yml
+
+# You have to be kidding that I wouldn't run anything other
+#  than enforcing on my systems.
+- include: selinux.yml
+
+# Apply to our linodes
+- include: linode.yml
+  when: "'linode_servers' in group_names"
 
 # Laptop defaults
 - include: laptop.yml
@@ -23,7 +31,7 @@
 
 # How do I exclude ammy here?
 - include: ipa.yml
-  when: "'linode_servers' not in group_names and ansible_hostname != 'ammy'"
+  when: "'linode_servers' not in group_names and 'freeipa_servers' not in group_names and ansible_hostname != 'ammy'"
 
 # Potentially capture coredumps if things go bad.
 - include: kdump.yml

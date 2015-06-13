@@ -1,0 +1,15 @@
+
+- name: Install selinux tools
+  sudo: yes
+  action: yum name={{ item }} state=present
+  with_items:
+    - policycoreutils-python
+    - setools-console
+    - selinux-policy-targeted
+    - selinux-policy
+
+- name: Configure selinux configs
+  sudo: yes
+  template: src=etc/selinux/{{ item }} dest=/etc/selinux/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - config

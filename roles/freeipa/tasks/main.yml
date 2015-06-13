@@ -1,5 +1,14 @@
 
 ## Install the packages
+- name: Install ipa and radiusd
+  sudo: yes
+  action: yum name={{ item }} state=present
+  with_items:
+    - ipa-server
+    - ipa-server-trust-ad
+    - freeradius
+    - freeradius-utils
+    - freeradius-ldap
 
 - name: Configure IPA firewalld
   sudo: yes
@@ -16,5 +25,32 @@
     - https
   notify:
     - reload firewalld
+
+- meta: flush_handlers
+
+# Check that we have been promoted to a domain controller. /var/lib/ipa/sysrestore/sysrestore.state
+
+- name: Test domain join
+  sudo: yes
+  action: stat path="/var/lib/ipa-client/sysrestore/sysrestore.state"
+  register: state
+
+- name: Fail if not domain controller
+  sudo: yes
+  action: fail msg="You should join this machine to the Domain with ipa-replica tools"
+  when: state.stat.exists == false
+
+# Should I have my custom named config in here?
+
+- name: Ensure ipa services
+  sudo: yes
+  action: service name=ipa state=started enabled=yes
+
+- name: Configure radiusd
+  sudo: yes
+
+- name: Start radiusd
+
+
 
 # Ensure services?

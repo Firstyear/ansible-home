@@ -1,7 +1,7 @@
 
 - name: apply sysctl
   sudo: yes
-  shell: setenforce 0 && /usr/sbin/sysctl --system && setenforce 1
+  shell: /usr/sbin/sysctl --system
 # Nasty hack due to SELinux denial on sysadm_t being denid write on proc_security_t tclass=file
 
 - name: reload firewalld

@@ -10,9 +10,7 @@
    - iotop
    - nmap
    - mlocate
-   - policycoreutils-python
    - screen
-   - setools-console
    - strace
    - vim
    - yum-utils
