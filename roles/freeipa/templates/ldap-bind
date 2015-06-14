@@ -1,0 +1,3 @@
+
+	identity = "krbprincipalname=radius/lyra.ipa.blackhats.net.au@IPA.BLACKHATS.NET.AU,cn=services,cn=accounts,dc=ipa,dc=blackhats,dc=net,dc=au"
+	password = {{ radiusd_ldap_password }}
