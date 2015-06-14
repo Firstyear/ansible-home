@@ -23,8 +23,8 @@ victoria.ipa.blackhats.net.au
 yvett.ipa.blackhats.net.au
 
 [blog_servers]
-#adara.ipa.blackhats.net.au
-liza.ipa.blackhats.net.au
+adara.ipa.blackhats.net.au
+#liza.ipa.blackhats.net.au
 
 [deployment_servers]
 birthday.ipa.blackhats.net.au
@@ -39,6 +39,7 @@ cassia.ipa.blackhats.net.au
 
 [freeipa_servers]
 alina.ipa.blackhats.net.au
+liza.ipa.blackhats.net.au
 
 #[irc_servers]
 ## Move this to ipa.blackhats.net.au?

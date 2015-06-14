@@ -9,6 +9,7 @@
     - freeradius
     - freeradius-utils
     - freeradius-ldap
+    - freeradius-krb5
 
 - name: Configure IPA firewalld
   sudo: yes
@@ -44,12 +45,78 @@
 
 - name: Ensure ipa services
   sudo: yes
-  action: service name=ipa state=started enabled=yes
+  action: service name=ipa enabled=yes
 
 - name: Configure radiusd
   sudo: yes
+  action: copy src=raddb/{{ item }} dest=/etc/raddb/{{ item }} owner=root group=radiusd mode=0640
+  with_items:
+    - radiusd.conf
+    - clients.conf
+    - mods-available/ldap
+    - mods-available/eap
+    - sites-available/default
+    - sites-available/inner-tunnel
+
+- name: Configure ldap auth
+  sudo: yes
+  action: template src=ldap-bind dest=/etc/raddb/mods-enabled/ldap-bind owner=root group=radiusd mode=0640
+
+- name: Symlink mods available
+  sudo: yes
+  action: file src=/etc/raddb/mods-available/{{ item }} dest=/etc/raddb/mods-enabled/{{ item }} state=link
+  with_items:
+    - ldap
+    - eap
+
+- name: Symlink sites available
+  sudo: yes
+  action: file src=/etc/raddb/sites-available/{{ item }} dest=/etc/raddb/sites-enabled/{{ item }} state=link
+  with_items:
+    - default
+    - inner-tunnel
+
+
+# Add radiusd keys
+
+- name: Correct radius tls directory
+  sudo: yes
+  action: file path=/etc/pki/radius/ state=directory owner=radiusd group=radiusd mode=0750
+
+- name: Check radiusd keys
+  sudo: yes
+  register: crtst
+  action: stat path="/etc/pki/radius/server.pem.key"
+
+# Clean up if they don't exist
+
+- name: Deploy radiusd certificates
+  sudo: yes
+  action: command ipa-getcert request -k /etc/pki/radius/server.pem.key -f /etc/pki/radius/server.pem.crt -g 4096
+  when: crtst.stat.exists == false
+
+- name: Check dh
+  sudo: yes
+  register: dhst
+  action: stat path=/etc/pki/radius/dh
+
+- name: Create dhparams
+  sudo: yes
+  action: command openssl dhparam -outform PEM -out /etc/pki/radius/dh 2048
+  when: dhst.stat.exists == false
+
+
+- name: Fix radiusd cert permissions
+  sudo: yes
+  action: file path=/etc/pki/radius/{{ item }} owner=root group=radiusd mode=0640
+  with_items:
+    - server.pem.key
+    - server.pem.crt
+    - dh
 
 - name: Start radiusd
+  sudo: yes
+  action: service name=radiusd state=started enabled=yes
 
 
 

@@ -12,6 +12,7 @@
 # You have to be kidding that I wouldn't run anything other
 #  than enforcing on my systems.
 - include: selinux.yml
+  when: ansible_selinux.status != 'disabled'
 
 # Apply to our linodes
 - include: linode.yml
