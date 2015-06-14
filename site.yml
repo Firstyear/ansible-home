@@ -2,10 +2,12 @@
 # Call all other playbooks for infrastructure
 - include: 389ds.yml
 - include: amanda.yml
+- include: blog.yml
 - include: deployment.yml
 - include: email.yml
 - include: email_relay.yml
 - include: freeipa.yml
 - include: nfs_servers.yml
 - include: postgis.yml
+- include: rsyslog.yml
 - include: vdsm.yml
