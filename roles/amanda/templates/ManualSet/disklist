@@ -1,9 +1,9 @@
 
 {% for item in groups['ManualSet'] %}
-{{ item }} /etc comp-root-tar
-{{ item }} /home comp-root-tar
-{{ item }} /root comp-root-tar
-{{ item }} /var comp-root-tar
+{{ item }} /etc comp-root-tar-ssl
+{{ item }} /home comp-root-tar-ssl
+{{ item }} /root comp-root-tar-ssl
+{{ item }} /var comp-root-tar-ssl
 
 {% endfor %}
 

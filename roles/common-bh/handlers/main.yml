@@ -15,6 +15,7 @@
 - name: restart auditd
   sudo: yes
   service: name=auditd state=restarted
+  ignore_errors: yes
 
 - name: restart kdump
   sudo: yes
