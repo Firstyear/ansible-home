@@ -1,5 +1,10 @@
 ---
 # Call all other playbooks for infrastructure
+# Build VM's that need it first
+- include: virtual.yml
+# Then enforce common on them
+- include: common.yml
+# Now setup our various applications
 - include: 389ds.yml
 - include: amanda.yml
 - include: blog.yml
@@ -10,4 +15,4 @@
 - include: nfs_servers.yml
 - include: postgis.yml
 - include: rsyslog.yml
-- include: vdsm.yml
+#- include: vdsm.yml

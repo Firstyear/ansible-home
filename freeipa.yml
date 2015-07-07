@@ -1,6 +1,6 @@
 ---
 - hosts: freeipa_servers
-  gather_facts: False
+  #gather_facts: False
   roles:
     #- virtual
     #- common-facts

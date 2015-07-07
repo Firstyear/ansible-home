@@ -10,6 +10,20 @@
     - freeradius-utils
     - freeradius-ldap
     - freeradius-krb5
+  when: ansible_distribution != 'Fedora'
+
+## Install the packages
+- name: Install ipa and radiusd
+  sudo: yes
+  action: yum name={{ item }} state=present
+  with_items:
+    - freeipa-server
+    - freeipa-server-trust-ad
+    - freeradius
+    - freeradius-utils
+    - freeradius-ldap
+    - freeradius-krb5
+  when: ansible_distribution == 'Fedora'
 
 - name: Configure IPA firewalld
   sudo: yes

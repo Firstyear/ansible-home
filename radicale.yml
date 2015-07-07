@@ -1,10 +1,10 @@
 ---
-- hosts: 389ds_servers
+- hosts: radicale_servers
   #gather_facts: False
   roles:
     #- virtual
     #- common-facts
     #- common-bh
-    - 389ds
+    - radicale
   vars_files:
     - ~/secure/ansible_home_secrets.yml

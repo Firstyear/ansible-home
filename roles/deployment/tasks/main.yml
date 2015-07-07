@@ -40,12 +40,12 @@
 
 - name: config mirror firewalld
   sudo: yes
-  firewalld: service={{ item }} zone=internal permanent=yes state=enabled #immediate=yes
+  firewalld: service={{ item }} zone=internal permanent=yes state=enabled immediate=yes
   with_items:
     - http
     - tftp
-  notify:
-    - reload firewalld
+  #notify:
+  #  - reload firewalld
 
 - name: sync install mirror
   sudo: yes

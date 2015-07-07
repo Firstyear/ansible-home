@@ -39,7 +39,8 @@ cassia.ipa.blackhats.net.au
 
 [freeipa_servers]
 alina.ipa.blackhats.net.au
-liza.ipa.blackhats.net.au
+creampi.dev.blackhats.net.au
+#liza.ipa.blackhats.net.au
 
 #[irc_servers]
 ## Move this to ipa.blackhats.net.au?
@@ -51,6 +52,9 @@ lorna.ipa.blackhats.net.au
 
 [postgis_servers]
 denver.ipa.blackhats.net.au
+
+[radicale_servers]
+liza.ipa.blackhats.net.au
 
 [template_servers]
 centos-7.ipa.blackhats.net.au centos_version=7
@@ -70,8 +74,7 @@ centos-7.ipa.blackhats.net.au centos_version=7
 tplink-long.net.blackhats.net.au
 
 [rsyslog_servers]
-tammi.ipa.blackhats.net.au
-
+megan.ipa.blackhats.net.au
 
 # Amanda backup specs
 [DailySet1:children]
@@ -95,10 +98,11 @@ deployment_servers
 email_servers
 freeipa_servers
 nfs_servers
+rsyslog_servers
 postgis_servers
 template_servers
 #test_servers
-blog_servers
+#blog_servers
 
 [linode_servers:children]
 #blog_servers

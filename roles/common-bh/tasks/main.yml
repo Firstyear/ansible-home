@@ -46,6 +46,8 @@
 - include: ovirt-guest.yml
   when: ansible_product_name == "oVirt Node" and ansible_virtualization_role == "guest"
 
+- include: security.yml
+
 # Commit everything before we continue.
 - meta: flush_handlers
 

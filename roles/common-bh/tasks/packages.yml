@@ -4,14 +4,15 @@
   sudo: yes
   yum: name={{ item }} state=present
   with_items:
-   - abrt-cli
-   - gdisk
-   - git
-   - iotop
-   - nmap
-   - mlocate
-   - screen
-   - strace
-   - vim
-   - yum-utils
-   - zsh
+    - abrt-cli
+    - audit
+    - gdisk
+    - git
+    - iotop
+    - nmap
+    - mlocate
+    - screen
+    - strace
+    - vim
+    - yum-utils
+    - zsh

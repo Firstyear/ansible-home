@@ -1,0 +1,56 @@
+
+- name: Install radicale
+  sudo: yes
+  action: pip name=Radicale
+
+- name: Install httpd
+  sudo: yes
+  action: yum name={{ item }} state=present
+  with_items:
+    - httpd
+    - mod_nss
+    - git
+
+- name: create httpd root
+  sudo: yes
+  action: file path={{ item }} state=directory owner=root group=root mode=0755
+  with_items:
+    - /var/www/html/radicale/
+    - /var/www/radicale/
+
+- name: Create filesystem storage
+  sudo: yes
+  action: file path=/var/www/radicale/collections/ state=directory owner=apache group=apache mode=0755 setype=httpd_sys_content_rw_t
+  # SETYPE DOES NOT set permanently
+
+- name: deploy radicale wsgi
+  sudo: yes
+  action: template src=radicale.wsgi dest=/var/www/radicale/wsgi.py owner=root group=root mode=0755
+
+- name: create configuration path
+  sudo: yes
+  action: file path=/usr/share/httpd/.config/radicale owner=apache group=apache mode=0755 state=directory
+
+- name: create radicale configuration
+  sudo: yes
+  action: template src=config dest=/usr/share/httpd/.config/radicale/config owner=root group=root mode=0644
+
+- name: configure httpd
+  sudo: yes
+  action: template src=10-wsgi.conf dest=/etc/httpd/conf.modules.d/10-wsgi.conf owner=apache group=apache mode=0644
+
+- name: configure nss
+  sudo: yes
+  action: template src=nss.conf dest=/etc/httpd/conf.d/nss.conf owner=apache group=apache mode=0644
+
+- name: enable httpd
+  sudo: yes
+  action: service name=httpd state=started enabled=yes
+
+- name: config mirror firewalld
+  sudo: yes
+  firewalld: service={{ item }} zone=internal permanent=yes state=enabled immediate=yes
+  with_items:
+    - http
+    - https
+
