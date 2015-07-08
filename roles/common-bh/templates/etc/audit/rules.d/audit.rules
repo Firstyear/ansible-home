@@ -12,21 +12,22 @@
 
 #
 # Feel free to add below this line. See auditctl man page
--w /etc/ -p wa
+-w /etc/ -p wa -k etc_modification
 
 #
 # Openscap recomendations
 # scap-security-guide.noarch openscap openscap-scanner
 #oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_common --results /tmp/`hostname`-ssg-results.xml --report /tmp/`hostname`-ssg-results.html /usr/share/xml/scap/ssg/content/ssg-fedora-ds.xml
 
--w /etc/sudoers -p wa -k actions
+#-w /etc/sudoers -p wa -k actions
 
 # Make sure that no one tampers with kernel loading applications
--w /usr/sbin/insmod -p x -k modules
--w /usr/sbin/rmmod -p x -k modules
--w /usr/sbin/modprobe -p x -k modules
+# Doesn't aide cover this? Just not who, but that it did. It can raise the alert
+#-w /usr/sbin/insmod -p x -k modules
+#-w /usr/sbin/rmmod -p x -k modules
+#-w /usr/sbin/modprobe -p x -k modules
 
--w /etc/selinux/ -p wa -k MAC-policy
+#-w /etc/selinux/ -p wa -k MAC-policy
 
 # Detect login log tampering
 -w /var/log/faillog -p wa -k logins
@@ -36,38 +37,43 @@
 -w /var/log/wtmp -p wa -k session
 
 # audit_time_rules
--a always,exit -F arch=b32 -S stime -S adjtimex -S settimeofday -S clock_settime -k audit_time_rules
--a always,exit -F arch=b64 -S stime -S adjtimex -S settimeofday -S clock_settime -k audit_time_rules
--w /etc/localtime -p wa -k audit_time_rules
+## REMOVE STIME ON RHEL
+#-a always,exit -F arch=b32 -S stime -S adjtimex -S settimeofday -S clock_settime -k audit_time_rules
+#-a always,exit -F arch=b64 -S stime -S adjtimex -S settimeofday -S clock_settime -k audit_time_rules
+#-w /etc/localtime -p wa -k audit_time_rules
 
 # audit_rules_usergroup_modification
--w /etc/group -p wa -k audit_rules_usergroup_modification
--w /etc/passwd -p wa -k audit_rules_usergroup_modification
--w /etc/gshadow -p wa -k audit_rules_usergroup_modification
--w /etc/shadow -p wa -k audit_rules_usergroup_modification
--w /etc/security/opasswd -p wa -k audit_rules_usergroup_modification
+#-w /etc/group -p wa -k audit_rules_usergroup_modification
+#-w /etc/passwd -p wa -k audit_rules_usergroup_modification
+#-w /etc/gshadow -p wa -k audit_rules_usergroup_modification
+#-w /etc/shadow -p wa -k audit_rules_usergroup_modification
+#-w /etc/security/opasswd -p wa -k audit_rules_usergroup_modification
 
 # audit_rules_networkconfig_modification
 -a always,exit -F arch=b32 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
 -a always,exit -F arch=b64 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
--w /etc/issue -p wa -k audit_rules_networkconfig_modification
--w /etc/issue.net -p wa -k audit_rules_networkconfig_modification
--w /etc/hosts -p wa -k audit_rules_networkconfig_modification
--w /etc/sysconfig/network -p wa -k audit_rules_networkconfig_modification
+#-w /etc/issue -p wa -k audit_rules_networkconfig_modification
+#-w /etc/issue.net -p wa -k audit_rules_networkconfig_modification
+#-w /etc/hosts -p wa -k audit_rules_networkconfig_modification
+#-w /etc/sysconfig/network -p wa -k audit_rules_networkconfig_modification
 
--a always,exit -F arch=b32 -S chmod -S chown -S fchmod -S fchmodat -S fchown -S fchownat -S fremovexattr -S fsetxattr -S lchown -S lremovexattr -S lsetxattr -S removexattr -S setxattr -F auid>=500 -F auid!=4294967295 -k perm_mod
+# Perhaps remove the uid limits on some of these actions? We often get attacked via services, not users.
+
+#-a always,exit -F arch=b32 -S chmod -S chown -S fchmod -S fchmodat -S fchown -S fchownat -S fremovexattr -S fsetxattr -S lchown -S lremovexattr -S lsetxattr -S removexattr -S setxattr -F auid>=500 -F auid!=4294967295 -k perm_mod
 -a always,exit -F arch=b32 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -k access
 -a always,exit -F arch=b32 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access
--a always,exit -F arch=b32 -S mount -F auid>=500 -F auid!=4294967295 -k export
 -a always,exit -F arch=b32 -S rmdir -S unlink -S unlinkat -S rename -S renameat -F auid>=500 -F auid!=4294967295 -k delete
+# This rule is more useful on a workstation with automount ...
+#-a always,exit -F arch=b32 -S mount -F auid>=500 -F auid!=4294967295 -k export
 -a always,exit -F arch=b32 -S init_module -S delete_module -k modules
 
 
--a always,exit -F arch=b64 -S chmod -S chown -S fchmod -S fchmodat -S fchown -S fchownat -S fremovexattr -S fsetxattr -S lchown -S lremovexattr -S lsetxattr -S removexattr -S setxattr -F auid>=500 -F auid!=4294967295 -k perm_mod
+#-a always,exit -F arch=b64 -S chmod -S chown -S fchmod -S fchmodat -S fchown -S fchownat -S fremovexattr -S fsetxattr -S lchown -S lremovexattr -S lsetxattr -S removexattr -S setxattr -F auid>=500 -F auid!=4294967295 -k perm_mod
 -a always,exit -F arch=b64 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EACCES -F auid>=500 -F auid!=4294967295 -k access
 -a always,exit -F arch=b64 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EPERM -F auid>=500 -F auid!=4294967295 -k access
--a always,exit -F arch=b64 -S mount -F auid>=500 -F auid!=4294967295 -k export
 -a always,exit -F arch=b64 -S rmdir -S unlink -S unlinkat -S rename -S renameat -F auid>=500 -F auid!=4294967295 -k delete
+# This rule is more useful on a workstation with automount ...
+#-a always,exit -F arch=b64 -S mount -F auid>=500 -F auid!=4294967295 -k export
 -a always,exit -F arch=b64 -S init_module -S delete_module -k modules
 
 # This setting means you need a reboot to changed audit rules.
