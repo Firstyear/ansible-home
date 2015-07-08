@@ -1,8 +1,4 @@
 
-- name: reload firewalld
-  sudo: yes
-  shell: /usr/bin/firewall-cmd --reload
-
 - name: resize xfs
   sudo: yes
   shell: /usr/sbin/xfs_growfs /dev/vg00/var_lv

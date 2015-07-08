@@ -44,8 +44,6 @@
   with_items:
     - http
     - tftp
-  #notify:
-  #  - reload firewalld
 
 - name: sync install mirror
   sudo: yes

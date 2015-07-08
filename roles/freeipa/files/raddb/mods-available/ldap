@@ -17,7 +17,8 @@ ldap {
 	#	e.g. server = "ldap1.example.org,ldap2.example.org"
 	#
 	#  Otherwise, it will use just one server.
-	server = "alina.ipa.blackhats.net.au"
+    ### We make the assumption of running RADIUSD on the same machine as IPA
+	server = "{{ inventory_hostname }}"
 
 	#  Port to connect on, defaults to 389. Setting this to
 	#  636 will enable LDAPS if start_tls (see below) is not

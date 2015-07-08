@@ -27,7 +27,7 @@
 
 - name: Configure IPA firewalld
   sudo: yes
-  firewalld: zone=internal permanent=true state=enabled service={{ item }}
+  firewalld: zone=internal permanent=true state=enabled service={{ item }} immediate=true
   with_items:
     - kerberos
     - kpasswd
@@ -38,8 +38,6 @@
     - dns
     - http
     - https
-  notify:
-    - reload firewalld
 
 - meta: flush_handlers
 

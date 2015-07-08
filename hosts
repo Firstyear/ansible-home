@@ -37,6 +37,7 @@ adara.ipa.blackhats.net.au
 fiona.ipa.blackhats.net.au
 cassia.ipa.blackhats.net.au
 
+# The primary DC MUST BE FIRST
 [freeipa_servers]
 alina.ipa.blackhats.net.au
 creampi.dev.blackhats.net.au

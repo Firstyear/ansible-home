@@ -9,12 +9,10 @@
 
 - name: Configure ldap firewall
   sudo: yes
-  firewalld: service={{ item }} zone=internal permanent=yes state=enabled #immediate=yes
+  firewalld: service={{ item }} zone=internal permanent=yes state=enabled immediate=yes
   with_items:
    - ldap
    - ldaps
-  notify:
-    - reload firewalld
 
 # Deploy limits.conf
 
