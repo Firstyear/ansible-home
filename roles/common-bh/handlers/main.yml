@@ -29,3 +29,7 @@
    - RPM-GPG-KEY-EPEL-7
    - RPM-GPG-KEY-CentOS-7
 
+- name: newaliases
+  sudo: yes
+  shell: /usr/bin/newaliases
+

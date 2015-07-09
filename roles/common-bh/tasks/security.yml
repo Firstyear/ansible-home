@@ -5,6 +5,14 @@
   with_items:
     - login.defs
 
+- name: deploy aliases
+  sudo: yes
+  action: template src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - aliases
+  notify:
+    - newaliases
+
 - name: deploy ssh configurations
   sudo: yes
   action: template src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
