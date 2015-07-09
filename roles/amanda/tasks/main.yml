@@ -12,9 +12,7 @@
 
 - name: Configure amanda firewall
   sudo: yes
-  firewalld: service=amanda-client zone=internal permanent=yes state=enabled #immediate=yes
-  notify:
-    - reload firewalld
+  firewalld: service=amanda-client zone=internal permanent=yes state=enabled immediate=yes
 
 - name: Configure amanda service socket
   sudo: yes

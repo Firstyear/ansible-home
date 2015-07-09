@@ -24,7 +24,7 @@
 #uris = ldap://alina.ipa.firstyear.id.au 
 #uris = ldap:///dc%3Dipa%2Cdc%3Dfirstyear%2Cdc%3Did%2Cdc%3Dau
 #uris = ldap:///dc%3Dipa%2Cdc%3Dblackhats%2Cdc%3Did%2Cdc%3Dau
-uris = ldap://alina.ipa.blackhats.net.au
+uris = ldap://{{ groups.freeipa_servers[0] }}
 
 # Distinguished Name - the username used to login to the LDAP server.
 # Leave it commented out to bind anonymously (useful with auth_bind=yes).
@@ -112,7 +112,8 @@ scope = onelevel
 # There are also other special fields which can be returned, see
 # http://wiki2.dovecot.org/UserDatabase/ExtraFields
 #user_attrs = homeDirectory=home,uidNumber=uid,gidNumber=gid
-user_attrs = %u=user
+#user_attrs = %u=user
+user_attrs = uid=user
 #user_attrs = mail=user
 
 # Filter for user lookup. Some variables can be used (see
@@ -130,6 +131,7 @@ user_filter = (&(objectClass=posixAccount)(mail=%u))
 # http://wiki2.dovecot.org/PasswordDatabase/ExtraFields
 #pass_attrs = uid=user,userPassword=password
 pass_attrs = %u=user
+#pass_attrs = uid=user
 
 # If you wish to avoid two LDAP lookups (passdb + userdb), you can use
 # userdb prefetch instead of userdb ldap in dovecot.conf. In that case you'll
@@ -142,7 +144,8 @@ pass_attrs = %u=user
 pass_filter = (&(objectClass=posixAccount)(mail=%u))
 
 # Attributes and filter to get a list of all users
-iterate_attrs = mail=user
+#iterate_attrs = mail=user
+iterate_attrs = uid=user
 iterate_filter = (objectClass=posixAccount)
 
 # Default password scheme. "{scheme}" before password overrides this.

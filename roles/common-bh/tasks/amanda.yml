@@ -23,6 +23,7 @@
   tags:
     - amanda
 
+# This should touch the file instead?
 - name: Ensure excludes
   sudo: yes
   template: src=var/lib/amanda/exclude dest=/var/lib/amanda/exclude owner=root group=root mode=0644
