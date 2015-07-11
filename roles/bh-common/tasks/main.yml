@@ -6,13 +6,12 @@
 # These are safe, useful, default packages for all installs
 - include: packages.yml
 
-# Enable command and etc auditing.
-- include: audit.yml
+- include: security.yml
 
 # You have to be kidding that I wouldn't run anything other
 #  than enforcing on my systems.
-- include: selinux.yml
-  when: ansible_selinux.status != 'disabled'
+#- include: selinux.yml
+#  when: ansible_selinux.status != 'disabled'
 
 # Apply to our linodes
 - include: linode.yml
@@ -45,8 +44,6 @@
 # Install guest utils on relevant hosts.
 - include: ovirt-guest.yml
   when: ansible_product_name == "oVirt Node" and ansible_virtualization_role == "guest"
-
-- include: security.yml
 
 # Commit everything before we continue.
 - meta: flush_handlers

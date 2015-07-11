@@ -2,16 +2,18 @@
   sudo: yes
   yum: name={{ item }} state=present
   with_items:
-   - freeipa-client
-   - openldap-clients
+    - freeipa-client
+    - openldap-clients
+    - chrony
   when: ansible_distribution == 'Fedora'
 
 - name: Install default software
   sudo: yes
   yum: name={{ item }} state=present
   with_items:
-   - ipa-client
-   - openldap-clients
+    - ipa-client
+    - openldap-clients
+    - chrony
   when: ansible_distribution == 'CentOS'
 
 - name: Configure hostname

@@ -14,7 +14,7 @@
 
 - name: restart auditd
   sudo: yes
-  service: name=auditd state=restarted
+  command: /usr/sbin/auditctl -R /etc/audit/rules.d/audit.rules
   ignore_errors: yes
 
 - name: restart kdump

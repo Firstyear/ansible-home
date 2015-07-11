@@ -11,7 +11,3 @@ django_db_type: sqlite
 #django_db_user: django_blogalog
 #django_db_passwd: the password doesnt matter
 
-amanda_var_exclude:
-    - ./lib/sss
-
-
