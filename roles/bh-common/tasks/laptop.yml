@@ -52,7 +52,7 @@
 
 - name: deploy default laptop configurations
   sudo: yes
-  action: template src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  action: template src=laptop/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     - default/tlp
 

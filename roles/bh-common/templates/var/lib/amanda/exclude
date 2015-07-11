@@ -1,5 +1,0 @@
-{% if amanda_var_exclude is defined %}
-{% for item in amanda_var_exclude %}
-{{ item }}
-{% endfor %}
-{% endif %}

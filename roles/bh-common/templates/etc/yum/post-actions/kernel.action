@@ -1,2 +1,0 @@
-kernel*:remove:grubby --grub -o /boot/grub/menu.lst --remove-kernel=/boot/vmlinuz-$ver-$rel.$arch
-kernel*:install:grubby --grub -o /boot/grub/menu.lst --add-kernel /boot/vmlinuz-$ver-$rel.$arch --args "root=/dev/xvda" --title "Centos 7 ($ver-$rel.$arch)" --initrd=/boot/initramfs-$ver-$rel.$arch.img --copy-default --make-default

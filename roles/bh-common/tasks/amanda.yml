@@ -13,20 +13,20 @@
 
 - name: Configure Amanda allowed hosts
   sudo: yes
-  template: src=var/lib/amandahosts dest=/var/lib/amanda/.amandahosts owner=amandabackup group=disk mode=0600
+  template: src=amanda/amandahosts dest=/var/lib/amanda/.amandahosts owner=amandabackup group=disk mode=0600
   tags:
     - amanda
 
 - name: Configure Amanda public key
   sudo: yes
-  template: src=var/lib/amanda/backup-pubkey.pem dest=/var/lib/amanda/backup-pubkey.pem owner=amandabackup group=disk mode=0600
+  template: src=amanda/backup-pubkey.pem dest=/var/lib/amanda/backup-pubkey.pem owner=amandabackup group=disk mode=0600
   tags:
     - amanda
 
 # This should touch the file instead?
 - name: Ensure excludes
   sudo: yes
-  template: src=var/lib/amanda/exclude dest=/var/lib/amanda/exclude owner=root group=root mode=0644
+  template: src=amanda/exclude dest=/var/lib/amanda/exclude owner=root group=root mode=0644
   tags:
     - amanda
 

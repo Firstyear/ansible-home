@@ -1,13 +1,26 @@
+- name: ensure auditd running
+  sudo: yes
+  service: name=auditd state=started enabled=yes
+
+- name: deploy audit configurations
+  sudo: yes
+  template: src=security/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0640
+  with_items:
+    - audit/auditd.conf
+    - audit/rules.d/audit.rules
+    - audisp/plugins.d/syslog.conf
+  notify:
+    - restart auditd
 
 - name: deploy security configurations
   sudo: yes
-  action: template src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  action: template src=security/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     - login.defs
 
 - name: deploy aliases
   sudo: yes
-  action: template src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  action: template src=security/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     - aliases
   notify:
@@ -15,6 +28,6 @@
 
 - name: deploy ssh configurations
   sudo: yes
-  action: template src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  action: template src=security/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     - ssh/sshd_config

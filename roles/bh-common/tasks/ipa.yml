@@ -42,7 +42,7 @@
 
 - name: Configure IPA configurations
   sudo: yes
-  template: src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  template: src=ipa/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     - sysconfig/network
     - openldap/ldap.conf
@@ -55,7 +55,7 @@
 
 - name: Configure secure IPA configurations
   sudo: yes
-  template: src=etc/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
+  template: src=ipa/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
   with_items:
     - sssd/sssd.conf
   notify:
