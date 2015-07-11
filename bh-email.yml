@@ -1,10 +1,10 @@
 ---
-- hosts: nfs_servers
+- hosts: email_servers
   #gather_facts: False
   roles:
     #- virtual
     #- common-facts
     #- common-bh
-    - nfs
+    - bh-email
   vars_files:
     - ~/secure/ansible_home_secrets.yml

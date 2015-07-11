@@ -1,10 +1,9 @@
 ---
-- hosts: vdsm_servers
+- hosts: test_servers
   gather_facts: False
   roles:
-    #- virtual
-    - common-facts
-    - common-bh
-    - vdsm
+    - bh-ovirt-guest
+    - bh-common-facts
+    - bh-common
   vars_files:
     - ~/secure/ansible_home_secrets.yml

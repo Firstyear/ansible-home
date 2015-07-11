@@ -1,10 +1,10 @@
 ---
-- hosts: amanda_servers
+- hosts: rsyslog_servers
   #gather_facts: False
   roles:
     #- virtual
     #- common-facts
     #- common-bh
-    - amanda
+    - bh-rsyslog
   vars_files:
     - ~/secure/ansible_home_secrets.yml

@@ -1,10 +1,10 @@
 ---
-- hosts: rsyslog_servers
+- hosts: nfs_servers
   #gather_facts: False
   roles:
     #- virtual
     #- common-facts
     #- common-bh
-    - rsyslog
+    - bh-nfs-fy
   vars_files:
     - ~/secure/ansible_home_secrets.yml

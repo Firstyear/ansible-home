@@ -1,0 +1,26 @@
+
+- name: Install oscap
+  sudo: yes
+  action: yum state=present name={{ item }}
+  with_items:
+    - openscap
+    - openscap-scanner
+    - scap-security-guide
+
+
+- name: Run fedora oscap scan
+  sudo: yes
+  action: command /usr/bin/oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_common --results /tmp/ssg-results.xml --report /tmp/ssg-results.html /usr/share/xml/scap/ssg/content/ssg-fedora-ds.xml
+  when: ansible_distribution == 'Fedora'
+  ignore_errors: True
+
+- name: Run EL oscap scan
+  sudo: yes
+  action: command /usr/bin/oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_common --results /tmp/ssg-results.xml --report /tmp/ssg-results.html /usr/share/xml/scap/ssg/content/ssg-rhel7-ds.xml
+  when: ansible_distribution != 'Fedora' and ansible_os_famile == "Redhat"
+  ignore_errors: True
+
+- name: Fetch results
+  sudo: yes
+  action: fetch src=/tmp/ssg-results.html dest=/tmp/scap-{{ inventory_hostname }}.html flat=true
+

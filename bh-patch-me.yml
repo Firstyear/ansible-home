@@ -4,6 +4,6 @@
 - hosts: longst_virtual_servers
   serial: 1
   roles:
-    - common-facts
-    - common-bh
-    - patch_me
+    - bh-common-facts
+    - bh-common
+    - bh-patch-me

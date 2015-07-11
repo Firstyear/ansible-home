@@ -1,9 +1,9 @@
 ---
-- hosts: test_servers
+- hosts: all
   gather_facts: False
   roles:
-    - virtual
-    - common-facts
-    - common-bh
+    #- virtual
+    - bh-common-facts
+    - bh-common
   vars_files:
     - ~/secure/ansible_home_secrets.yml

@@ -1,9 +1,10 @@
 ---
-- hosts: all
+- hosts: ovirt_servers
   gather_facts: False
   roles:
     #- virtual
-    - common-facts
-    - common-bh
+    - bh-common-facts
+    - bh-common
+    - ovirt-engine
   vars_files:
     - ~/secure/ansible_home_secrets.yml

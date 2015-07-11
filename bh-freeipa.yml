@@ -5,6 +5,6 @@
     #- virtual
     #- common-facts
     #- common-bh
-    - freeipa
+    - bh-freeipa
   vars_files:
     - ~/secure/ansible_home_secrets.yml

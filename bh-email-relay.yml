@@ -1,10 +1,9 @@
 ---
-- hosts: deployment_servers
+- hosts: email_relay_servers
   #gather_facts: False
   roles:
-    #- virtual
     #- common-facts
     #- common-bh
-    - deployment
+    - bh-email-relay
   vars_files:
     - ~/secure/ansible_home_secrets.yml

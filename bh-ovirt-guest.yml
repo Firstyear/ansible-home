@@ -2,6 +2,6 @@
 - hosts: longst_virtual_servers
   gather_facts: False
   roles:
-    - virtual
+    - bh-ovirt-guest
   vars_files:
     - ~/secure/ansible_home_secrets.yml

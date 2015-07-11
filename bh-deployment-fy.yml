@@ -1,10 +1,10 @@
 ---
-- hosts: 389ds_servers
+- hosts: deployment_servers
   #gather_facts: False
   roles:
     #- virtual
     #- common-facts
     #- common-bh
-    - 389ds
+    - bh-deployment-fy
   vars_files:
     - ~/secure/ansible_home_secrets.yml

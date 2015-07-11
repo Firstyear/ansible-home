@@ -1,0 +1,18 @@
+---
+# Call all other playbooks for infrastructure
+# Build VM's that need it first
+- include: bh-ovirt-guest.yml
+# Then enforce common on them
+- include: bh-common.yml
+# Now setup our various applications
+#- include: bh-389ds.yml
+- include: bh-amanda-fy.yml
+- include: bh-blog-fy.yml
+- include: bh-deployment-fy.yml
+- include: bh-email.yml
+- include: bh-email-relay.yml
+- include: bh-freeipa.yml
+- include: bh-nfs-fy.yml
+- include: bh-postgis.yml
+- include: bh-rsyslog.yml
+#- include: vdsm.yml
