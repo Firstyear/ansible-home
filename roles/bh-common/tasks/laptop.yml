@@ -16,6 +16,7 @@
     - compiz-plugins-main
     - compiz-plugins-extra
     - compiz
+    - cowsay
     - dconf-editor
     - dia
     - emerald

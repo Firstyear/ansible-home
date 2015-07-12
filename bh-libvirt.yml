@@ -1,0 +1,4 @@
+---
+- hosts: libvirt_servers
+  roles:
+    - bh-libvirt

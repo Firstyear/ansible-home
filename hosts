@@ -43,6 +43,10 @@ alina.ipa.blackhats.net.au
 creampi.dev.blackhats.net.au
 #liza.ipa.blackhats.net.au
 
+[libvirt_servers]
+lucy.ipa.blackhats.net.au
+
+
 #[irc_servers]
 ## Move this to ipa.blackhats.net.au?
 # Can I even manage this?
@@ -76,6 +80,10 @@ tplink-long.net.blackhats.net.au
 
 [rsyslog_servers]
 megan.ipa.blackhats.net.au
+
+[pxeinstall_servers:children]
+# We can double define hosts if needed.
+libvirt_servers
 
 # Amanda backup specs
 [DailySet1:children]

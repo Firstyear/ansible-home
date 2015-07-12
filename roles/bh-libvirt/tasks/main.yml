@@ -1,0 +1,35 @@
+
+# We leave the complexity of network configuration to by hand sadly.
+
+- name: Ensure libvirtd filesystems
+  sudo: yes
+  action: lvol vg=vg00 lv=var_lib_libvirt_lv size=200G state=present
+
+- name: Ensure filesystem
+  sudo: yes
+  action: filesystem fstype=xfs dev=/dev/mapper/vg00-var_lib_libvirt_lv
+
+- name: Mount filesystem
+  sudo: yes
+  action: mount name=/var/lib/libvirt src=/dev/mapper/vg00-var_lib_libvirt_lv fstype=xfs state=mounted
+
+- name: Deploy polkit rules
+  sudo: yes
+  action: template src=99-libvirt.rules dest=/etc/polkit-1/rules.d/99-libvirt.rules owner=root group=root mode=0644
+
+- name: Install libvirt
+  sudo: yes
+  action: yum name={{ item }} state=present
+  with_items:
+    - libvirt
+    - libvirt-python
+    - qemu-kvm
+    - qemu-img
+
+- name: Libvirt service
+  sudo: yes
+  action: service name={{ item }} state=started enabled=yes
+  with_items:
+    - libvirt-guests
+    - libvirtd
+

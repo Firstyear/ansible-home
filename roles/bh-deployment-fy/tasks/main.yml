@@ -12,12 +12,13 @@
   sudo: yes
   yum: name={{ item }} state=present
   with_items:
-   - httpd
-   - rsync
-   - createrepo
-   - tftp
-   - tftp-server
-   - syslinux-tftpboot
+    - httpd
+    - rsync
+    - createrepo
+    - tftp
+    - tftp-server
+    - syslinux-tftpboot
+    - ipxe-bootimgs
 
 - name: Configure mirror paths
   sudo: yes

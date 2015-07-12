@@ -26,7 +26,7 @@
 # This should touch the file instead?
 - name: Ensure excludes
   sudo: yes
-  template: path=/var/lib/amanda/exclude state=touch owner=amandabackup group=disk mode=0600
+  file: path=/var/lib/amanda/exclude state=touch owner=amandabackup group=disk mode=0600
   tags:
     - amanda
 

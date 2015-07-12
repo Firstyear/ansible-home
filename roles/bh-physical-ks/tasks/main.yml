@@ -1,0 +1,31 @@
+
+
+- name: create ks path
+  sudo: yes
+  action: file state=directory path=/var/www/html/ks/{{ inventory_hostname }}/
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
+- name: config template kickstart
+  sudo: yes
+  action: template src=ks.conf dest=/var/www/html/ks/{{ inventory_hostname }}/ks.conf
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
+#- name: config template cloud.cfg
+#  sudo: yes
+#  action: template src=cloud.cfg dest=/var/www/html/ks/{{ inventory_hostname }}/cloud.cfg
+#  delegate_to: "{{ item }}"
+#  with_items: groups.deployment_servers
+
+### You need a way to get the machine MAC address so you can do per host boot menus
+
+- name: config tftp menu
+  sudo: yes
+  action: template src=default dest=/var/lib/tftpboot/pxelinux.cfg/01-{{ mac_addr_hyphen }}
+  delegate_to: "{{ item }}"
+  with_items: groups.deployment_servers
+
+# Later we need a way to get the macaddr of the ovirt host.
+# This way we can do per host config
+
