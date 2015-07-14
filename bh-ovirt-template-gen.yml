@@ -2,6 +2,6 @@
 - hosts: template_servers
   gather_facts: False
   roles:
-    - template_generate
+    - bh-ovirt-template-gen
   vars_files:
     - ~/secure/ansible_home_secrets.yml

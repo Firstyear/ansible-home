@@ -50,8 +50,8 @@
     region={{ ovirt_dc }}
     zone={{ ovirt_cluster }}
     sdomain={{ ovirt_sdomain }}
-    wait_for_state=down
-    gather_facts=true
+    async=false
+    #gather_facts=true
 
 - name: config tftp menu
   sudo: yes

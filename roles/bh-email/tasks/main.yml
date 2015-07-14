@@ -66,6 +66,7 @@
     - conf.d/90-quota.conf
     - conf.d/auth-ldap.conf.ext
     - conf.d/90-sieve.conf
+    - conf.d/90-plugin.conf
     - conf.d/10-ssl.conf
     - dovecot.conf
     - dovecot-ldap.conf.ext
