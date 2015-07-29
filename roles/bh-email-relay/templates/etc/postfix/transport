@@ -295,6 +295,8 @@
 
 william@blackhats.net.au    relay:mail.firstyear.id.au
 firstyear@blackhats.net.au  relay:mail.firstyear.id.au
+william-backup@blackhats.net.au relay:mail.firstyear.id.au
+operahouse@blackhats.net.au relay:mail.firstyear.id.au
 firstyear.id.au             relay:mail.firstyear.id.au
 .firstyear.id.au            relay:mail.firstyear.id.au
 ipa.blackhats.net.au        relay:mail.firstyear.id.au

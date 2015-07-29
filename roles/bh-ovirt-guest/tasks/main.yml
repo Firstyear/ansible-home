@@ -28,7 +28,7 @@
 #    - config template kickstart
 #    - config tftp menu
 #    - ovirt build instance
-#    - remove template kickstart
+##    - remove template kickstart
 
 - meta: flush_handlers
 

@@ -64,8 +64,8 @@ liza.ipa.blackhats.net.au
 [template_servers]
 centos-7.ipa.blackhats.net.au centos_version=7
 
-#[test_servers]
-#deleteme.ipa.blackhats.net.au
+[test_servers]
+deleteme.ipa.blackhats.net.au
 
 [vdsm_servers]
 ;mion.ipa.blackhats.net.au
