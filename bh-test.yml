@@ -3,7 +3,7 @@
   gather_facts: False
   roles:
     - bh-ovirt-guest
-    - bh-common-facts
-    - bh-common
+    #- bh-common-facts
+    #- bh-common
   vars_files:
     - ~/secure/ansible_home_secrets.yml

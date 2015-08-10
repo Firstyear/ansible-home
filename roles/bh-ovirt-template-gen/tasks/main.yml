@@ -46,11 +46,11 @@
     resource_type=template
     instance_type=server
     image=blank_pxe
-    timeout=1440
+    poll_timeout=3600
     region={{ ovirt_dc }}
     zone={{ ovirt_cluster }}
     sdomain={{ ovirt_sdomain }}
-    async=false
+    wait_for_state=down
     #gather_facts=true
 
 - name: config tftp menu
@@ -68,7 +68,7 @@
     password="{{ ovirt_admin_password }}"
     url={{ ovirt_engine }}
     wait_for_state=down
-    timeout=7200
+    poll_timeout=14400
 
 # Some how wait til it's done then remove the ks?
 

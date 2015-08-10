@@ -110,7 +110,7 @@ nfs_servers
 rsyslog_servers
 postgis_servers
 template_servers
-#test_servers
+test_servers
 #blog_servers
 
 [linode_servers:children]
