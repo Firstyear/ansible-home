@@ -26,13 +26,13 @@
   sudo: yes
   action: lvol vg=vg01 lv=amanda_lv size=140g
 
-- name: Configure DailySet1 disk
-  sudo: yes
-  action: lvol vg=vg02 lv=DailySet1_lv size=100g
-
-- name: Configure ManualSet disk
-  sudo: yes
-  action: lvol vg=vg02 lv=ManualSet_lv size=140g
+#- name: Configure DailySet1 disk
+#  sudo: yes
+#  action: lvol vg=vg02 lv=DailySet1_lv size=100g
+#
+#- name: Configure ManualSet disk
+#  sudo: yes
+#  action: lvol vg=vg02 lv=ManualSet_lv size=140g
 
 ### Should create filessytems and mount these later
 

@@ -4,6 +4,8 @@
   yum: name={{ item }} state=present
   with_items:
     - amanda-client
+  tags:
+    - amanda
 
 - name: Configure amanda service socket
   sudo: yes
@@ -34,10 +36,15 @@
 - name: Configure amanda firewall
   sudo: yes
   firewalld: service=amanda-client zone=internal permanent=yes state=disabled immediate=yes
+  tags:
+    - amanda
 
 - name: Configure amanda specific firewall
   sudo: yes
-  firewalld: zone=internal permanent=yes state=enabled immediate=yes rich_rule='rule family="ipv6" source address="{{ item }}" service name="amanda-client" accept'
+  firewalld: zone=internal permanent=yes state=enabled immediate=yes rich_rule='rule family="ipv6" source address="2001:44b8:16a:11:5054:ff:feba:574" port port="10080" protocol="tcp" accept'
+  #rule family="ipv6" source address="2001:44b8:16a:11:5054:ff:feba:574" service name="amanda-client" accept
+  tags:
+    - amanda
   # Is there a way to generate these ips out of the amanda hosts?
-  with_items:
-    - 2001:44b8:16a:11:5054:ff:feba:574/128
+  #with_items:
+  #  - 2001:44b8:16a:11:5054:ff:feba:574
