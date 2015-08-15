@@ -24,7 +24,7 @@
 #uris = ldap://alina.ipa.firstyear.id.au 
 #uris = ldap:///dc%3Dipa%2Cdc%3Dfirstyear%2Cdc%3Did%2Cdc%3Dau
 #uris = ldap:///dc%3Dipa%2Cdc%3Dblackhats%2Cdc%3Did%2Cdc%3Dau
-uris = ldap://{{ groups.freeipa_servers[0] }}
+uris = ldap://{{ groups.freeipa_servers[1] }}
 
 # Distinguished Name - the username used to login to the LDAP server.
 # Leave it commented out to bind anonymously (useful with auth_bind=yes).

@@ -3,14 +3,29 @@
   sudo: yes
   action: yum name={{ item }} state=present
   with_items:
-   - postfix
-   - dovecot
-   - dovecot-pigeonhole
-   - clamav-milter
-   - spamass-milter
-   - clamav-milter-systemd
-   - clamav-server-systemd
-   - spamassassin
+    - postfix
+    - dovecot
+    - dovecot-pigeonhole
+    - clamav-milter
+    - spamass-milter
+    - spamass-milter-postfix
+    - clamav-milter-systemd
+    - clamav-server-systemd
+    - clamav-scanner
+    - clamav-scanner-systemd
+    - spamassassin
+
+- name: Create vmail user
+  sudo: yes
+  action: user name=vmail uid=1000
+
+- name: Alter postfix user
+  sudo: yes
+  action: user name=postfix append=yes groups=clamilt,sa-milt
+
+- name: Alter clamscan user
+  sudo: yes
+  action: user name=clamscan append=yes groups=clamilt
 
 - name: Create smtpd link
   sudo: yes
@@ -39,6 +54,7 @@
   notify:
     - resize xfs
     - remount xfs
+  when: "'linode_servers' not in group_names"
 
 # Config the email storage. Make sure the lvol is big enough.
 - name: Resize /var/log for logs
@@ -47,12 +63,19 @@
   notify:
     - resize xfs
     - remount xfs
+  when: "'linode_servers' not in group_names"
 
+- name: Create clamscan log dir
+  sudo: yes
+  action: file path=/var/log/clamd.scan state=directory mode=0755 owner=clamscan group=clamscan
 # Create SSL keys? How do we best manage this with IPA?
 
+- name: Deploy certificates
+  sudo: yes
+  action: command ipa-getcert request -k /etc/pki/tls/private/mail.firstyear.id.au.key -f /etc/pki/tls/certs/mail.firstyear.id.au.crt -I mail.firstyear.id.au -g 4096 -w
+  ignore_errors: yes
 
-# Deploy all the configs. Which ones have we changed? Maybe I need a default install
-#  to diff against.
+# Deploy all the configs.
 
 - name: Deploy dovecot configurations
   sudo: yes
@@ -100,6 +123,10 @@
   sudo: yes
   template: src=etc/clamd.d/clamsmtp.conf dest=/etc/clamd.d/clamsmtp.conf owner=root group=root mode=0644
   notify: restart clamd
+
+- name: Deploy learn spam script
+  sudo: yes
+  template: src=learn.sh dest=/root/learn.sh owner=root group=root mode=0750
 
 # Need a notify to restart bits ...
 

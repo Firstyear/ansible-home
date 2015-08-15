@@ -39,7 +39,7 @@
 
 # Enable the backup client on hosts that we can backup.
 - include: amanda.yml
-  when: "'amanda_servers' not in group_names and 'linode_servers' not in group_names and ansible_hostname != 'ammy' "
+  when: "'amanda_servers' not in group_names and ansible_hostname != 'ammy' "
 
 # Install guest utils on relevant hosts.
 - include: ovirt-guest.yml

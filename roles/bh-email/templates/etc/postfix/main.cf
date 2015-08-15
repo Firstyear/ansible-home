@@ -113,7 +113,8 @@ myorigin = $mydomain
 #inet_interfaces = all
 #inet_interfaces = $myhostname
 #inet_interfaces = $myhostname, localhost
-inet_interfaces = 2001:44b8:16a:11:5054:ff:fed4:a2fe, 172.24.11.17, localhost
+#inet_interfaces = 2001:44b8:16a:11:5054:ff:fed4:a2fe, 172.24.11.17, localhost
+inet_interfaces = {{ ansible_default_ipv6.address }}, {{ ansible_default_ipv4.address }}, localhost
 #inet_interfaces = localhost
 
 # Enable IPv4, and IPv6 if supported
@@ -128,7 +129,7 @@ inet_protocols = all
 # backup MX host for other domains, otherwise mail delivery loops
 # will happen when the primary MX host is down.
 #
-proxy_interfaces = 203.122.194.109, 172.24.17.1, 2001:44b8:16a:17::1, 2001:44b8:16a:17:5054:ff:fef3:3a04
+#proxy_interfaces = 203.122.194.109, 172.24.17.1, 2001:44b8:16a:17::1, 2001:44b8:16a:17:5054:ff:fef3:3a04
 #proxy_interfaces = 1.2.3.4
 
 # The mydestination parameter specifies the list of domains that this

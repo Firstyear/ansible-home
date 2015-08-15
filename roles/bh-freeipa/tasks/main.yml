@@ -10,6 +10,8 @@
     - freeradius-utils
     - freeradius-ldap
     - freeradius-krb5
+    - bind
+    - bind-dyndb-ldap
   when: ansible_distribution != 'Fedora'
 
 ## Install the packages
@@ -23,6 +25,8 @@
     - freeradius-utils
     - freeradius-ldap
     - freeradius-krb5
+    - bind
+    - bind-dyndb-ldap
   when: ansible_distribution == 'Fedora'
 
 - name: Configure IPA firewalld
@@ -38,6 +42,23 @@
     - dns
     - http
     - https
+  when: "'linode_servers' not in group_names"
+
+- name: Configure limited IPA firewalld
+  sudo: yes
+  #firewalld: zone=internal permanent=true state=enabled service={{ item }} immediate=true
+  firewalld: zone=internal permanent=yes state=enabled immediate=yes rich_rule='rule family="ipv6" source address="2001:44b8:16a:16:5054:ff:fe89:97e2" service name="{{ item }}" accept'
+  with_items:
+    - kerberos
+    - kpasswd
+    - ldap
+    - ldaps
+    - radius
+    - ntp
+    - dns
+    - http
+    - https
+  when: "'linode_servers' in group_names"
 
 - meta: flush_handlers
 
