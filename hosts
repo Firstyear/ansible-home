@@ -42,7 +42,7 @@ cassia.ipa.blackhats.net.au
 [freeipa_servers]
 alina.ipa.blackhats.net.au
 ariel.ipa.blackhats.net.au
-creampi.dev.blackhats.net.au
+#creampi.dev.blackhats.net.au
 #liza.ipa.blackhats.net.au
 
 [libvirt_servers]
@@ -95,7 +95,7 @@ deployment_servers
 email_servers
 freeipa_servers
 nfs_servers
-postgis_servers
+#postgis_servers
 
 [ManualSet:children]
 laptops
