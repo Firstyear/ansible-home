@@ -31,7 +31,8 @@
 
 # How do I exclude ammy here?
 - include: ipa.yml
-  when: "'linode_servers' not in group_names and 'freeipa_servers' not in group_names and ansible_hostname != 'ammy'"
+  when: "'freeipa_servers' not in group_names"
+  #when: "'linode_servers' not in group_names and 'freeipa_servers' not in group_names and ansible_hostname != 'ammy'"
 
 # Potentially capture coredumps if things go bad.
 - include: kdump.yml

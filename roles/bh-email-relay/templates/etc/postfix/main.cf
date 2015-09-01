@@ -699,11 +699,12 @@ smtpd_sender_restrictions =
     permit
 smtpd_recipient_restrictions = reject_unauth_pipelining reject_non_fqdn_recipient reject_unknown_recipient_domain permit_sasl_authenticated reject_unauth_destination permit
 
-#smtpd_tls_cert_file = /etc/pki/tls/certs/mail.firstyear.id.au.crt
-#smtpd_tls_key_file = /etc/pki/tls/private/mail.firstyear.id.au.key
-#smtpd_tls_CAfile = /etc/ipa/ca.crt
-#smtpd_tls_loglevel = 1
+smtpd_tls_cert_file = /etc/pki/tls/certs/mail.firstyear.id.au.crt
+smtpd_tls_key_file = /etc/pki/tls/private/mail.firstyear.id.au.key
+smtpd_tls_CAfile = /etc/ipa/ca.crt
+smtpd_tls_loglevel = 1
 smtpd_tls_security_level = may
+smtp_tls_security_level = may
 
 #smtpd_use_tls = yes
 #smtpd_tls_ciphers = high

@@ -1,14 +1,14 @@
 
 - name: configure cloud init
   local_action: ovirt
-    state=cloud_initialised
+    state=cloud-init
     instance_name={{ inventory_hostname }}
     user={{ ovirt_admin_username }}
     password="{{ ovirt_admin_password }}"
     url={{ ovirt_engine }}
-    instance_hostname={{ inventory_hostname }}
+    instance_host_name={{ inventory_hostname }}
     wait_for_state=down
-    timeout=1800
+    poll_timeout=1800
     custom_script="{{ custom_script }}"
 
 - name: create ks path

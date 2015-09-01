@@ -30,7 +30,7 @@ adara.ipa.blackhats.net.au
 birthday.ipa.blackhats.net.au
 
 [email_servers]
-luna.ipa.blackhats.net.au
+#luna.ipa.blackhats.net.au
 ariel.ipa.blackhats.net.au
 
 [email_relay_servers]

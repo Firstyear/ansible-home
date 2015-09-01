@@ -47,17 +47,19 @@
 - name: Configure limited IPA firewalld
   sudo: yes
   #firewalld: zone=internal permanent=true state=enabled service={{ item }} immediate=true
-  firewalld: zone=internal permanent=yes state=enabled immediate=yes rich_rule='rule family="ipv6" source address="2001:44b8:16a:16:5054:ff:fe89:97e2" service name="{{ item }}" accept'
-  with_items:
-    - kerberos
-    - kpasswd
-    - ldap
-    - ldaps
-    - radius
-    - ntp
-    - dns
-    - http
-    - https
+  firewalld: zone=internal permanent=yes state=enabled immediate=yes rich_rule='rule family="ipv6" source address="{{ item[1] }}" service name="{{ item[0] }}" accept'
+  with_nested:
+    - [ 'kerberos', 'kpasswd', 'ldap', 'ldaps', 'radius', 'ntp', 'dns', 'http', 'https' ]
+    - [ '2001:44b8:16a:16:5054:ff:fe89:97e2', '2a01:7e00::f03c:91ff:fe84:9e3e', '2400:8901::f03c:91ff:fe98:4593', '2a01:7e00::f03c:91ff:feae:5d82' ]
+  when: "'linode_servers' in group_names"
+
+- name: Configure limited IPA firewalld
+  sudo: yes
+  #firewalld: zone=internal permanent=true state=enabled service={{ item }} immediate=true
+  firewalld: zone=internal permanent=yes state=enabled immediate=yes rich_rule='rule family="ipv4" source address="{{ item[1] }}" service name="{{ item[0] }}" accept'
+  with_nested:
+    - [ 'kerberos', 'kpasswd', 'ldap', 'ldaps', 'radius', 'ntp', 'dns', 'http', 'https' ]
+    - [ '176.58.111.213' ]
   when: "'linode_servers' in group_names"
 
 - meta: flush_handlers

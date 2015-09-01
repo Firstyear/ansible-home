@@ -52,12 +52,17 @@
     sdomain={{ ovirt_sdomain }}
     wait_for_state=down
     #gather_facts=true
+  register: ovirt_guest_data
+
+- name: Debug
+  debug: msg="{{ ovirt_guest_data.instance_data }}"
+
 
 - name: config tftp menu
   sudo: yes
   action: template src=default dest=/var/lib/tftpboot/pxelinux.cfg/01-{{ item.machyphen }}
   delegate_to: "{{ groups.deployment_servers[0] }}"
-  with_items: hostvars[inventory_hostname]['ovirt_guest_nics']
+  with_items: ovirt_guest_data.instance_data['ovirt_guest_nics']
 
 # This will PXE boot, build and STOP the instance
 - name: ovirt launch instance

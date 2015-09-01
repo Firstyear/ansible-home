@@ -19,26 +19,36 @@
 - name: Configure hostname
   sudo: yes
   shell: hostname {{ inventory_hostname }}
+  tags:
+    - ipa
 
 - name: Configure domain names
   sudo: yes
-  shell: /usr/bin/nisdomainname {{ ipa_domain }}
+  shell: /bin/nisdomainname {{ ipa_domain }}
+  tags:
+    - ipa
 
 
 - name: Test domain join
   sudo: yes
   action: stat path="/var/lib/ipa-client/sysrestore/sysrestore.state"
   register: state
+  tags:
+    - ipa
 
 - name: Debug would join
   sudo: yes
   debug: msg='{{ state }}'
   when: state.stat.exists == false
+  tags:
+    - ipa
 
 - name: Join domain
   sudo: yes
-  shell: /usr/sbin/ipa-client-install -U --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --no-dns-sshfp -p '{{ ipa_domainadmin_username }}' -w '{{ ipa_domainadmin_password }}' --hostname {{ inventory_hostname }}
+  shell: /usr/sbin/ipa-client-install -U --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --no-dns-sshfp -p '{{ ipa_domainadmin_username }}' -w '{{ ipa_domainadmin_password }}' --hostname {{ inventory_hostname }} --server={{ groups.freeipa_servers[1] }}
   when: state.stat.exists == false
+  tags:
+    - ipa
 
 # Need to add chrony to this
 
@@ -54,6 +64,8 @@
     - hostname
     - hosts
     - chrony.conf
+  tags:
+    - ipa
 
 - name: Configure secure IPA configurations
   sudo: yes
@@ -62,10 +74,14 @@
     - sssd/sssd.conf
   notify:
     - restart sssd
+  tags:
+    - ipa
 
 - name: Disable NTP
   sudo: yes
   service: name=ntpd enabled=no state=stopped
+  tags:
+    - ipa
 
 - name: Ensure services running
   sudo: yes
@@ -74,6 +90,8 @@
     - chronyd
     - certmonger
     - sssd
+  tags:
+    - ipa
 
 
 ### TODO: Add nsswitch, sssd and others.

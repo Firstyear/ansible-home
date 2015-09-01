@@ -2,7 +2,8 @@
 - hosts: test_servers
   gather_facts: False
   roles:
-    - bh-ovirt-guest
+    - test
+    #- bh-ovirt-guest
     #- bh-common-facts
     #- bh-common
   vars_files:
