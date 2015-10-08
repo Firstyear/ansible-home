@@ -7,5 +7,11 @@
   sudo: yes
   file: path=/.autorelabel state=touch
 
+- name: reboot
+  sudo: yes
+  action: command shutdown -r now "Ansible patch me"
+  async: 0
+  poll: 0
+  ignore_errors: true
 
 # Should we start a reboot here ... ?
