@@ -42,6 +42,7 @@
     - python-yubico
     - rpm-build
     - samba-client
+    - squid
     - tftp
     - tftp-server
     - torbrowser-launcher
@@ -57,6 +58,8 @@
   action: template src=laptop/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     - default/tlp
+    - dnf/dnf.conf
+    - squid/squid.conf
 
 # Should I restart these ? 
 
@@ -65,6 +68,19 @@
   action: service name={{ item }} state=started enabled=yes
   with_items:
     - tlp
+    - squid
 
-# Lock down wireless port
+
+# Add docker0 to trusted zone
+
+- name: Change default zone
+  sudo: yes
+  shell: /usr/bin/firewall-cmd --permanent --zone=trusted --add-interface=docker0
+  notify:
+    - reload firewalld
+
+# ADd ssh and squid to trusted
+- name: Add squid
+  sudo: yes
+  firewalld: zone=trusted permanent=true state=enabled service=squid immediate=yes
 
