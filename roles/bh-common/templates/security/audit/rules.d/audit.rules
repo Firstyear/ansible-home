@@ -32,12 +32,12 @@
 #-a always,exit -F arch=b64 -S stime -S adjtimex -S settimeofday -S clock_settime -k audit_time_rules
 
 # audit_rules_networkconfig_modification
--a always,exit -F arch=b32 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
--a always,exit -F arch=b64 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
+#-a always,exit -F arch=b32 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
+#-a always,exit -F arch=b64 -S sethostname -S setdomainname -k audit_rules_networkconfig_modification
 
 # Audit kernel module manipulation
--a always,exit -F arch=b32 -S init_module -S delete_module -k modules
--a always,exit -F arch=b64 -S init_module -S delete_module -k modules
+#-a always,exit -F arch=b32 -S init_module -S delete_module -k modules
+#-a always,exit -F arch=b64 -S init_module -S delete_module -k modules
 
 ################################################################################
 # These are super paranoid rules at this point. Only use if you are willing to take

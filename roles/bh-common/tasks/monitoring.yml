@@ -1,0 +1,10 @@
+- name: Install snmp
+  sudo: yes
+  yum: name={{ item }} state=present
+  with_items:
+    - net-snmp
+    - net-snmp-utils
+
+- name: Start snmp
+  sudo: yes
+  service: name=snmpd enabled=yes state=started

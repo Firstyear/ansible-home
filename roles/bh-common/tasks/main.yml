@@ -1,3 +1,6 @@
+- name: Update timezone
+  sudo: yes
+  action: command ln -sf ../usr/share/zoneinfo/Australia/Brisbane localtime
 
 # Only apply this to static CentOS hosts
 - include: repos.yml
@@ -45,6 +48,8 @@
 # Install guest utils on relevant hosts.
 - include: ovirt-guest.yml
   when: ansible_product_name == "oVirt Node" and ansible_virtualization_role == "guest"
+
+- include: monitoring.yml
 
 # Commit everything before we continue.
 - meta: flush_handlers
