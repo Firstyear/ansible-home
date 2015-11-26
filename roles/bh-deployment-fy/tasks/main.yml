@@ -25,6 +25,7 @@
   action: file state=directory path={{ item }}
   with_items:
    - /var/lib/tftpboot/pxelinux.cfg/
+   - /var/lib/tftpboot/openbsd/5.8/amd64/
    - /var/www/html/ks/
    - /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
    - /var/www/html/pub/centos/{{ centos_version }}/updates/x86_64/
@@ -69,4 +70,13 @@
   action: shell rsync -az --exclude='debug/*' rsync://{{ centos_mirror }}/epel/{{ centos_version }}/x86_64/ /var/www/html/pub/epel/{{ centos_version }}/x86_64/
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
+
+- name: sync Openbsd PXE mirror
+  sudo: yes
+  action: shell rsync -az rsync://{{ centos_mirror }}/openbsd/5.8/amd64/{{ item }} /var/lib/tftpboot/openbsd/5.8/amd64/{{ item }}
+  with_items:
+    - pxeboot
+    - bsd
+    - bsd.mp
+    - bsd.rd
 

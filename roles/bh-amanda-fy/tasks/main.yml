@@ -78,6 +78,7 @@
   action: file path=/var/lib/amanda/ManualSet/vtapes/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
   with_sequence: start=1 end=35 format=slot%d
 
+# This needs to change .... We need to make a cronjob *per* host I think ..., but we need to stagger times.
 - name: Cron backup job DailySet1
   sudo: yes
   action: cron name="Run amanda DailySet1" minute="0" hour="2" job="/usr/sbin/amdump DailySet1" user="amandabackup"
