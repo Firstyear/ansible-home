@@ -1,0 +1,10 @@
+---
+- hosts: nfs_servers
+  #gather_facts: False
+  roles:
+    #- virtual
+    #- common-facts
+    #- common-bh
+    - bh-gitolite
+  vars_files:
+    - ~/secure/ansible_home_secrets.yml

@@ -1,0 +1,12 @@
+
+- name: Install gitosis
+  sudo: yes
+  action: yum name={{ item }} state=present
+  with_items:
+    - git
+    - gitolite3
+
+
+# Change the home dir to /var/lib/export/gitolite
+# Do the install
+
