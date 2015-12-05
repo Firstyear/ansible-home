@@ -1,14 +1,31 @@
 
+# This file fucking shits it's pants, but ohh well, at least it's documented.
+
 - name: Ensure nfs is installed
   sudo: yes
-  yum: name=nfs-utils state=present
+  action: yum name=nfs-utils state=present
 
 - name: Enable nfs server
   sudo: yes
-  service: name=nfs-server.service enabled=yes state=started
+  action: service name=nfs-server.service enabled=yes state=started
 
 - name: Configure nfs firewalld
   sudo: yes
-  firewalld: service=nfs zone=internal permanent=true state=enabled
+  action: firewalld service=nfs zone=internal permanent=true state=enabled
 
-# Should I configure the exports?
+# We are lazy: Fuck it, put on samba too :)
+
+- name: Ensure samba is installed
+  sudo: yes
+  action: yum name={{ item }} state=present
+  with_items:
+    - samba
+    - samba-client
+    - sssd-libwbclient
+
+# Then follow http://www.freeipa.org/page/Howto/Integrating_a_Samba_File_Server_With_IPA
+
+
+- name: Configure nfs firewalld
+  sudo: yes
+  action: firewalld service=samba zone=internal permanent=true state=enabled

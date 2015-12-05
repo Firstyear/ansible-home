@@ -88,6 +88,9 @@ megan.ipa.blackhats.net.au
 libvirt_servers
 
 # Amanda backup specs
+[DailySet1]
+amelea.net.blackhats.net.au
+
 [DailySet1:children]
 389ds_servers
 amanda_servers
