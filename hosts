@@ -45,8 +45,8 @@ ariel.ipa.blackhats.net.au
 #creampi.dev.blackhats.net.au
 #liza.ipa.blackhats.net.au
 
-[libvirt_servers]
-lucy.ipa.blackhats.net.au
+#[libvirt_servers]
+#lucy.ipa.blackhats.net.au
 
 
 #[irc_servers]

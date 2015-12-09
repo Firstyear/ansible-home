@@ -1,0 +1,7 @@
+
+- name: Debug
+  debug: msg="{{ item }}"
+  with_nested:
+    - [ 'a', 'b' ]
+    - [ '1', '2', '3' ]
+

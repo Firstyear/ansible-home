@@ -18,7 +18,7 @@ ldap {
 	#
 	#  Otherwise, it will use just one server.
     ### We make the assumption of running RADIUSD on the same machine as IPA
-	server = "{{ inventory_hostname }}"
+	server = "alina.ipa.blackhats.net.au"
 
 	#  Port to connect on, defaults to 389. Setting this to
 	#  636 will enable LDAPS if start_tls (see below) is not
@@ -404,16 +404,16 @@ ldap {
 	#
 	pool {
 		# Number of connections to start
-		start = 1
+		start = 2
 
 		# Minimum number of connections to keep open
-		min = 1
+		min = 2
 
 		# Maximum number of connections
 		#
 		# If these connections are all in use and a new one
 		# is requested, the request will NOT get a connection.
-		max = 20
+		max = 40
 
 		# Spare connections to be left idle
 		#
@@ -427,11 +427,11 @@ ldap {
 		uses = 0
 
 		# The lifetime (in seconds) of the connection
-		lifetime = 30
+		lifetime = 0
 
 		# idle timeout (in seconds).  A connection which is
 		# unused for this length of time will be closed.
-		idle_timeout = 15
+		idle_timeout = 0
 
 		# NOTE: All configuration settings are enforced.  If a
 		# connection is closed because of "idle_timeout",

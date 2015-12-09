@@ -1,4 +1,0 @@
----
-- hosts: devel-389ds
-  roles:
-    - devel-389ds-build-install
