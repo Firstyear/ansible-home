@@ -2,9 +2,9 @@
 - hosts: test_servers
   gather_facts: False
   roles:
-    - test
     #- bh-ovirt-guest
     #- bh-common-facts
     #- bh-common
+    - bh-ovirt-guest-from-ks
   vars_files:
     - ~/secure/ansible_home_secrets.yml

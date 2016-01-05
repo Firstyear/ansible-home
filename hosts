@@ -83,9 +83,9 @@ tplink-long.net.blackhats.net.au
 [rsyslog_servers]
 megan.ipa.blackhats.net.au
 
-[pxeinstall_servers:children]
+#[pxeinstall_servers:children]
 # We can double define hosts if needed.
-libvirt_servers
+#libvirt_servers
 
 # Amanda backup specs
 [DailySet1]
