@@ -24,35 +24,24 @@ yvett.ipa.blackhats.net.au
 
 [blog_servers]
 adara.ipa.blackhats.net.au
-#liza.ipa.blackhats.net.au
 
 [deployment_servers]
 birthday.ipa.blackhats.net.au
 
 [email_servers]
-#luna.ipa.blackhats.net.au
 ariel.ipa.blackhats.net.au
 
 [email_relay_servers]
 adara.ipa.blackhats.net.au
-fiona.ipa.blackhats.net.au
 cassia.ipa.blackhats.net.au
 
 # The primary DC MUST BE FIRST
 [freeipa_servers]
 alina.ipa.blackhats.net.au
 ariel.ipa.blackhats.net.au
-#creampi.dev.blackhats.net.au
-#liza.ipa.blackhats.net.au
 
 #[libvirt_servers]
 #lucy.ipa.blackhats.net.au
-
-
-#[irc_servers]
-## Move this to ipa.blackhats.net.au?
-# Can I even manage this?
-#fiona.firstyear.id.au
 
 [nfs_servers]
 lorna.ipa.blackhats.net.au
@@ -123,7 +112,5 @@ test_servers
 ariel.ipa.blackhats.net.au
 
 [linode_servers:children]
-#blog_servers
 email_relay_servers
-#irc_servers
 

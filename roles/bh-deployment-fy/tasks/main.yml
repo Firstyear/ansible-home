@@ -1,7 +1,7 @@
 
 - name: Resize /var for content
   sudo: yes
-  lvol: vg=vg00 lv=var_lv size=32g
+  lvol: vg=vg00 lv=var_lv size=48g
   notify:
     - resize xfs
     - remount xfs
@@ -59,7 +59,7 @@
   delegate_to: "{{ item }}"
   with_items: groups.deployment_servers
 
-- name: sync update mirror
+- name: sync extras mirror
   sudo: yes
   action: shell rsync -az rsync://{{ centos_mirror }}/centos/{{ centos_version }}/extras/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/extras/x86_64/
   delegate_to: "{{ item }}"
