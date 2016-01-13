@@ -2,14 +2,23 @@
 - name: create ks path
   sudo: yes
   action: file state=directory path=/var/www/html/ks/{{ inventory_hostname }}/
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
+  delegate_to: "{{ groups.deployment_servers[0] }}"
+  #with_items: groups.deployment_servers
+  #ignore_errors: yes
 
 - name: config template kickstart
   sudo: yes
   action: template src=ks.conf dest=/var/www/html/ks/{{ inventory_hostname }}/ks.conf
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
+  delegate_to: "{{ groups.deployment_servers[0] }}"
+  #with_items: groups.deployment_servers
+  #ignore_errors: yes
+
+- name: config tftp menu
+  sudo: yes
+  action: template src=default dest=/var/lib/tftpboot/pxelinux.cfg/default
+  delegate_to: "{{ groups.deployment_servers[0] }}"
+  #with_items: groups.deployment_servers
+  #ignore_errors: yes
 
 - name: Ensure VM exists
   local_action: ovirt
@@ -21,20 +30,14 @@
     resource_type=template
     instance_type=server
     image=blank_pxe
-    poll_timeout=3600
     region={{ ovirt_dc }}
     zone={{ ovirt_cluster }}
     sdomain={{ ovirt_sdomain }}
+    poll_timeout=3600
     wait_for_state=down
     #gather_facts=true
     #register: ovirt_guest_data
 
-
-- name: config tftp menu
-  sudo: yes
-  action: template src=default dest=/var/lib/tftpboot/pxelinux.cfg/default
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
 
 #- name: config tftp menu
 #  sudo: yes

@@ -42,7 +42,6 @@
     - python-yubico
     - rpm-build
     - samba-client
-    - squid
     - tftp
     - tftp-server
     - torbrowser-launcher
@@ -68,8 +67,6 @@
   action: service name={{ item }} state=started enabled=yes
   with_items:
     - tlp
-    - squid
-
 
 # Add docker0 to trusted zone
 
@@ -78,9 +75,4 @@
   shell: /usr/bin/firewall-cmd --permanent --zone=trusted --add-interface=docker0
   notify:
     - reload firewalld
-
-# ADd ssh and squid to trusted
-- name: Add squid
-  sudo: yes
-  firewalld: zone=trusted permanent=true state=enabled service=squid immediate=yes
 

@@ -45,7 +45,7 @@
 
 - name: Join domain
   sudo: yes
-  shell: /usr/sbin/ipa-client-install -U --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --no-dns-sshfp -p '{{ ipa_domainadmin_username }}' -w '{{ ipa_domainadmin_password }}' --hostname {{ inventory_hostname }} --server={{ groups.freeipa_servers[1] }}
+  shell: echo '{{ ipa_domainadmin_password }}' | kinit {{ ipa_domainadmin_username }}@IPA.BLACKHATS.NET.AU  && /usr/sbin/ipa-client-install -U --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --no-dns-sshfp -p '{{ ipa_domainadmin_username }}' -w '{{ ipa_domainadmin_password }}' --hostname {{ inventory_hostname }} --server={{ groups.freeipa_servers[0] }}
   when: state.stat.exists == false
   tags:
     - ipa

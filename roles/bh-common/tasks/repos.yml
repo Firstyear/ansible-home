@@ -12,6 +12,11 @@
 
 # We should alter this based on where it's linode or not
 
+- name: Configure yum proxy
+  sudo: yes
+  action: template src=repos/yum.conf dest=/etc/yum.conf owner=root group=root mode=0644
+  when: "'linode_servers' not in group_names"
+
 - name: Configure yum local repos
   sudo: yes
   action: template src=repos/yum.repos.d/CentOS-Base.repo dest=/etc/yum.repos.d/CentOS-Base.repo owner=root group=root mode=0644

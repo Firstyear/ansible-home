@@ -1,10 +1,11 @@
 
 - name: Resize /var for content
   sudo: yes
-  lvol: vg=vg00 lv=var_lv size=48g
+  lvol: vg=vg00 lv=var_lv size=10g
   notify:
     - resize xfs
     - remount xfs
+  ignore_errors: yes
 
 - meta: flush_handlers
 
@@ -19,6 +20,14 @@
     - tftp-server
     - syslinux-tftpboot
     - ipxe-bootimgs
+    - squid
+
+- name: deploy configuration
+  sudo: yes
+  action: template src={{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - squid/squid.conf
+    - firewalld/services/squid.xml
 
 - name: Configure mirror paths
   sudo: yes
@@ -27,10 +36,11 @@
    - /var/lib/tftpboot/pxelinux.cfg/
    - /var/lib/tftpboot/openbsd/5.8/amd64/
    - /var/www/html/ks/
-   - /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
-   - /var/www/html/pub/centos/{{ centos_version }}/updates/x86_64/
-   - /var/www/html/pub/centos/{{ centos_version }}/extras/x86_64/
-   - /var/www/html/pub/epel/{{ centos_version }}/x86_64/
+   - /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/images/pxeboot/
+
+- name: kickstart squid started
+  sudo: yes
+  action: service name=squid.service enabled=yes state=started
 
 - name: kickstart httpd started
   sudo: yes
@@ -40,36 +50,51 @@
   sudo: yes
   action: service name=tftp.socket enabled=yes state=started
 
+# This is too fiddly to make work, so you may need to restart by hand :( 
+#- name: reload firewalld (Else squid breaks)
+#  sudo: yes
+#  action: service name=firewalld.service enabled=yes state=reloaded
+
 - name: config mirror firewalld
   sudo: yes
   firewalld: service={{ item }} zone=internal permanent=yes state=enabled immediate=yes
   with_items:
     - http
     - tftp
+    - squid
 
-- name: sync install mirror
+- name: sync pxeboot mirror
   sudo: yes
-  action: shell rsync -az --exclude='*.iso' rsync://{{ centos_mirror }}/centos/{{ centos_version }}/os/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
+  #action: shell rsync -az --exclude='*.iso' rsync://{{ centos_mirror }}/centos/{{ centos_version }}/os/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
+  action: shell rsync -avz --exclude='*.iso' rsync://{{ centos_mirror }}/centos/{{ centos_version }}/os/x86_64/images/pxeboot/ /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/images/pxeboot/
+  #delegate_to: "{{ item }}"
+  #with_items: groups.deployment_servers
 
-- name: sync update mirror
+- name: sync treeinfo
   sudo: yes
-  action: shell rsync -az rsync://{{ centos_mirror }}/centos/{{ centos_version }}/updates/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/updates/x86_64/
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
+  action: shell rsync -avz --exclude='*.iso' rsync://{{ centos_mirror }}/centos/{{ centos_version }}/os/x86_64/.treeinfo /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/.treeinfo
 
-- name: sync extras mirror
+- name: sync LiveOS
   sudo: yes
-  action: shell rsync -az rsync://{{ centos_mirror }}/centos/{{ centos_version }}/extras/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/extras/x86_64/
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
+  action: shell rsync -avz --exclude='*.iso' rsync://{{ centos_mirror }}/centos/{{ centos_version }}/os/x86_64/LiveOS/ /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/LiveOS/
 
-- name: sync epel mirror
-  sudo: yes
-  action: shell rsync -az --exclude='debug/*' rsync://{{ centos_mirror }}/epel/{{ centos_version }}/x86_64/ /var/www/html/pub/epel/{{ centos_version }}/x86_64/
-  delegate_to: "{{ item }}"
-  with_items: groups.deployment_servers
+#- name: sync update mirror
+#  sudo: yes
+#  action: shell rsync -az rsync://{{ centos_mirror }}/centos/{{ centos_version }}/updates/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/updates/x86_64/
+#  delegate_to: "{{ item }}"
+#  with_items: groups.deployment_servers
+#
+#- name: sync extras mirror
+#  sudo: yes
+#  action: shell rsync -az rsync://{{ centos_mirror }}/centos/{{ centos_version }}/extras/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/extras/x86_64/
+#  delegate_to: "{{ item }}"
+#  with_items: groups.deployment_servers
+#
+#- name: sync epel mirror
+#  sudo: yes
+#  action: shell rsync -az --exclude='debug/*' rsync://{{ centos_mirror }}/epel/{{ centos_version }}/x86_64/ /var/www/html/pub/epel/{{ centos_version }}/x86_64/
+#  delegate_to: "{{ item }}"
+#  with_items: groups.deployment_servers
 
 - name: sync Openbsd PXE mirror
   sudo: yes

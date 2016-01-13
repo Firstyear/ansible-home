@@ -26,6 +26,7 @@ yvett.ipa.blackhats.net.au
 adara.ipa.blackhats.net.au
 
 [deployment_servers]
+tempproxy.dev.blackhats.net.au
 birthday.ipa.blackhats.net.au
 
 [email_servers]
