@@ -33,8 +33,8 @@
     region={{ ovirt_dc }}
     zone={{ ovirt_cluster }}
     sdomain={{ ovirt_sdomain }}
-    poll_timeout=3600
-    wait_for_state=down
+    #poll_timeout=3600
+    #wait_for_state=down
     #gather_facts=true
     #register: ovirt_guest_data
 
