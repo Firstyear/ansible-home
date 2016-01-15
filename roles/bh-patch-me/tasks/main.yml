@@ -10,7 +10,7 @@
 - name: reboot
   sudo: yes
   action: command shutdown -r now "Ansible patch me"
-  async: 0
+  async: 1
   poll: 0
   ignore_errors: true
 

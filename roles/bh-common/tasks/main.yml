@@ -2,15 +2,15 @@
   sudo: yes
   action: command ln -sf ../usr/share/zoneinfo/Australia/Brisbane localtime
 
+# Add new aliases ...
+
+
 # Only apply this to static CentOS hosts
 - include: repos.yml
   when: "ansible_form_factor != 'Notebook' and ansible_distribution == 'CentOS'"
 
 # These are safe, useful, default packages for all installs
 - include: packages.yml
-
-- include: security.yml
-
 # You have to be kidding that I wouldn't run anything other
 #  than enforcing on my systems.
 #- include: selinux.yml
@@ -53,5 +53,8 @@
 
 # Commit everything before we continue.
 - meta: flush_handlers
+
+# Do this last as we may lock ourselves out.
+- include: security.yml
 
 

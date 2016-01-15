@@ -125,9 +125,13 @@
   template: src=etc/clamd.d/clamsmtp.conf dest=/etc/clamd.d/clamsmtp.conf owner=root group=root mode=0644
   notify: restart clamd
 
-- name: Deploy learn spam script
+- name: Deploy mail scripts
   sudo: yes
-  template: src=learn.sh dest=/root/learn.sh owner=root group=root mode=0750
+  template: src={{ item }} dest=/root/{{ item }} owner=root group=root mode=0750
+  with_items:
+    - learn.sh
+    - mailbox-rollover.sh
+
 
 # Need a notify to restart bits ...
 

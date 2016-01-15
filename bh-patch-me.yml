@@ -5,5 +5,5 @@
   serial: 1
   roles:
     - bh-common-facts
-    - bh-common
     - bh-patch-me
+    #- bh-common
