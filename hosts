@@ -26,9 +26,8 @@ yvett.ipa.blackhats.net.au
 adara.ipa.blackhats.net.au
 
 [deployment_servers]
-tempproxy.dev.blackhats.net.au
 elise.ipa.blackhats.net.au
-172.24.11.47
+tempproxy.dev.blackhats.net.au
 #birthday.ipa.blackhats.net.au
 
 [development_servers]

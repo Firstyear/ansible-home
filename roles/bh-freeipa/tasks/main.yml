@@ -29,6 +29,10 @@
     - bind-dyndb-ldap
   when: ansible_distribution == 'Fedora'
 
+- name: Configure DNS firewall for all masters.
+  sudo: yes
+  firewalld: zone=internal permanent=true state=enabled service=dns immediate=true
+
 - name: Configure IPA firewalld
   sudo: yes
   firewalld: zone=internal permanent=true state=enabled service={{ item }} immediate=true
@@ -39,7 +43,6 @@
     - ldaps
     - radius
     - ntp
-    - dns
     - http
     - https
   when: "'linode_servers' not in group_names"
@@ -49,7 +52,7 @@
   #firewalld: zone=internal permanent=true state=enabled service={{ item }} immediate=true
   firewalld: zone=internal permanent=yes state=enabled immediate=yes rich_rule='rule family="ipv6" source address="{{ item[1] }}" service name="{{ item[0] }}" accept'
   with_nested:
-    - [ 'kerberos', 'kpasswd', 'ldap', 'ldaps', 'radius', 'ntp', 'dns', 'http', 'https' ]
+    - [ 'kerberos', 'kpasswd', 'ldap', 'ldaps', 'radius', 'ntp', 'http', 'https' ]
     - [ '2001:44b8:2155:2c00::/56', '2a01:7e00::f03c:91ff:fe84:9e3e', '2400:8901::f03c:91ff:fe98:4593', '2a01:7e00::f03c:91ff:feae:5d82' ]
   when: "'linode_servers' in group_names"
 
@@ -58,7 +61,7 @@
   #firewalld: zone=internal permanent=true state=enabled service={{ item }} immediate=true
   firewalld: zone=internal permanent=yes state=enabled immediate=yes rich_rule='rule family="ipv4" source address="{{ item[1] }}" service name="{{ item[0] }}" accept'
   with_nested:
-    - [ 'kerberos', 'kpasswd', 'ldap', 'ldaps', 'radius', 'ntp', 'dns', 'http', 'https' ]
+    - [ 'kerberos', 'kpasswd', 'ldap', 'ldaps', 'radius', 'ntp', 'http', 'https' ]
     - [ '176.58.111.213' ]
   when: "'linode_servers' in group_names"
 

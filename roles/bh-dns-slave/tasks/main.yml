@@ -1,0 +1,19 @@
+
+- name: Install bind
+  sudo: yes
+  action: yum name=bind state=present
+
+# Deploy the configs here
+- name: deploy configs
+  sudo: yes
+  action: template src={{ item }} dest=/etc/{{ item }} owner=root group=named mode=0640
+  with_items:
+    - named.conf
+
+- name: Enable dns services
+  sudo: yes
+  action: service name=named state=started enabled=yes
+
+- name: config dns firewall
+  sudo: yes
+  action: firewalld service=dns zone=internal permanent=yes state=enabled immediate=yes

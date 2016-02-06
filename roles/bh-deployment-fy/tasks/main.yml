@@ -51,9 +51,11 @@
   action: service name=tftp.socket enabled=yes state=started
 
 # This is too fiddly to make work, so you may need to restart by hand :( 
-#- name: reload firewalld (Else squid breaks)
-#  sudo: yes
-#  action: service name=firewalld.service enabled=yes state=reloaded
+- name: reload firewalld (Else squid breaks)
+  sudo: yes
+  action: service name=firewalld.service enabled=yes state=restarted
+  async: 60
+  poll: 10
 
 - name: config mirror firewalld
   sudo: yes

@@ -1,0 +1,9 @@
+---
+- hosts: email_relay_servers
+  #gather_facts: False
+  roles:
+    #- common-facts
+    #- common-bh
+    - bh-dns-slave
+  vars_files:
+    - ~/secure/ansible_home_secrets.yml
