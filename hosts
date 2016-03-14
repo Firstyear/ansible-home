@@ -27,7 +27,7 @@ adara.ipa.blackhats.net.au
 
 [deployment_servers]
 elise.ipa.blackhats.net.au
-tempproxy.dev.blackhats.net.au
+#tempproxy.dev.blackhats.net.au
 #birthday.ipa.blackhats.net.au
 
 [development_servers]

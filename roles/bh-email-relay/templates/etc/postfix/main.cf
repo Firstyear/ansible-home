@@ -29,8 +29,8 @@
 # environments on different UNIX systems.
 #
 queue_directory = /var/spool/postfix
-bounce_queue_lifetime = 28d
-maximal_queue_lifetime = 28d
+bounce_queue_lifetime = 56d
+maximal_queue_lifetime = 56d
 
 # The command_directory parameter specifies the location of all
 # postXXX commands.
@@ -296,7 +296,7 @@ mynetworks_style = host
 # permit_mx_backup restriction description in postconf(5).
 #
 #relay_domains = $mydestination
-relay_domains = firstyear.id.au, ipa.firstyear.id.au, blackhats.net.au, ipa.blackhats.net.au, dev.blackhats.net.au
+relay_domains = firstyear.id.au, ipa.firstyear.id.au, blackhats.net.au, ipa.blackhats.net.au, dev.blackhats.net.au, runlevelone.net, artofgeek.net, lavu.net
 
 # INTERNET OR INTRANET
 
@@ -706,9 +706,11 @@ smtpd_tls_loglevel = 1
 smtpd_tls_security_level = may
 smtp_tls_security_level = may
 
+
+
 #smtpd_use_tls = yes
-#smtpd_tls_ciphers = high
-#smtpd_tls_exclude_ciphers = aNULL, DES, 3DES, MD5, DES+MD5, RC4
-#smtpd_tls_protocols = TLSv1, !SSLv2, !SSLv3
+smtpd_tls_ciphers = high
+smtpd_tls_exclude_ciphers = aNULL, DES, 3DES, MD5, DES+MD5, RC4
+smtpd_tls_protocols = TLSv1, !SSLv2, !SSLv3
 
 

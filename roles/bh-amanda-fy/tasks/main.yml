@@ -1,8 +1,4 @@
 
-- name: DEBUG
-  action: debug var=amanda_instances[0]['name']
-
-
 - name: Install amanda software
   sudo: yes
   yum: name={{ item }} state=present
@@ -22,9 +18,9 @@
   sudo: yes
   template: src=amandahosts dest=/var/lib/amanda/.amandahosts owner=amandabackup group=disk mode=0600
 
-- name: Configure holding disk
-  sudo: yes
-  action: lvol vg=vg01 lv=amanda_lv size=140g
+#- name: Configure holding disk
+#  sudo: yes
+#  action: lvol vg=vg01 lv=amanda_lv size=300g
 
 #- name: Configure DailySet1 disk
 #  sudo: yes
