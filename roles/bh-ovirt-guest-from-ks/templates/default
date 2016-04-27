@@ -12,5 +12,5 @@ LABEL bootlocal
 LABEL kickstart {{ centos_version }}
    MENU LABEL {{ inventory_hostname }} kickstart
    KERNEL http://{{ groups.deployment_servers[0] }}/pub/centos/{{ centos_version }}/os/x86_64/images/pxeboot/vmlinuz
-   APPEND initrd=http://{{ groups.deployment_servers[0] }}/pub/centos/{{ centos_version }}/os/x86_64/images/pxeboot/initrd.img ramdisk_size=1000000 ks=http://{{ groups.deployment_servers[0] }}/ks/{{ inventory_hostname }}/ks.conf stage2=http://{{ groups.deployment_servers[0] }}/pub/centos/{{ centos_version }}/os/x86_64/ proxy=http://{{ groups.deployment_servers[0] }}:3128 cmdline
+   APPEND initrd=http://{{ groups.deployment_servers[0] }}/pub/centos/{{ centos_version }}/os/x86_64/images/pxeboot/initrd.img ramdisk_size=1000000 ks=http://{{ groups.deployment_servers[0] }}/ks/{{ inventory_hostname }}/ks.conf stage2=http://{{ groups.deployment_servers[0] }}/pub/centos/{{ centos_version }}/os/x86_64/ proxy=http://{{ groups.deployment_servers[0] }}:3128 cmdline sshd=1
 

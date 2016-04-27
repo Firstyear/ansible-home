@@ -5,6 +5,22 @@
     - net-snmp
     - net-snmp-utils
 
+- name: Deploy snmp configuration.
+  sudo: yes
+  template: src=monitoring/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
+  with_items:
+    - snmp/snmpd.conf
+
 - name: Start snmp
   sudo: yes
-  service: name=snmpd enabled=yes state=started
+  service: name=snmpd enabled=yes state=restarted
+
+- name: Configure snmp specific firewall
+  sudo: yes
+  firewalld: zone=internal permanent=yes state=enabled immediate=yes rich_rule='rule family="ipv6" source address="2001:44b8:2155:2c11:5054:ff:feba:574" port port="161" protocol="tcp" accept'
+  #rule family="ipv6" source address="2001:44b8:2155:2c11:5054:ff:feba:574" service name="amanda-client" accept
+  tags:
+    - snmp
+  # Is there a way to generate these ips out of the amanda hosts?
+  #with_items:
+  #  - 2001:44b8:2155:2c11:5054:ff:feba:574
