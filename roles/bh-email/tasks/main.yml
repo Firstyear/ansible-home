@@ -125,6 +125,10 @@
   template: src=etc/clamd.d/clamsmtp.conf dest=/etc/clamd.d/clamsmtp.conf owner=root group=root mode=0644
   notify: restart clamd
 
+- name: Deploy spamassassin
+  sudo: yes
+  template: src=etc/mail/spamassassin/local.cf dest=/etc/mail/spamassassin/local.cf owner=root group=root mode=0644
+
 - name: Deploy mail scripts
   sudo: yes
   template: src={{ item }} dest=/root/{{ item }} owner=root group=root mode=0750

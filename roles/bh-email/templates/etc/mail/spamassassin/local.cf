@@ -1,0 +1,20 @@
+# These values can be overridden by editing ~/.spamassassin/user_prefs.cf 
+# (see spamassassin(1) for details)
+
+# These should be safe assumptions and allow for simple visual sifting
+# without risking lost emails.
+
+required_hits 5
+report_safe 0
+rewrite_header Subject [SPAM]
+use_bayes 1
+dns_available yes
+required_score 3.5
+
+bayes_expiry_max_db_size 300000
+
+trusted_networks 59.167.222.212
+trusted_networks 2001:44b8:2155:2c00::/56
+trusted_networks 139.162.14.225
+trusted_networks 2400:8901::f03c:91ff:fee4:8e71
+
