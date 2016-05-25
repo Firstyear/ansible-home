@@ -21,6 +21,7 @@
     - syslinux-tftpboot
     - ipxe-bootimgs
     - squid
+    - nfs-utils
 
 - name: deploy configuration
   sudo: yes
@@ -28,6 +29,8 @@
   with_items:
     - squid/squid.conf
     - firewalld/services/squid.xml
+    - exports
+    - sysconfig/nfs
 
 - name: Configure mirror paths
   sudo: yes
@@ -37,6 +40,7 @@
    - /var/lib/tftpboot/openbsd/5.8/amd64/
    - /var/www/html/ks/
    - /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/images/pxeboot/
+   - /var/www/html/pub/freebsd/10.3/amd64/
 
 - name: kickstart squid started
   sudo: yes
@@ -49,6 +53,10 @@
 - name: kickstart tftpd started
   sudo: yes
   action: service name=tftp.socket enabled=yes state=started
+
+- name: kickstart nfs started
+  sudo: yes
+  action: service name=nfs-server.service enabled=yes state=started
 
 # This is too fiddly to make work, so you may need to restart by hand :( 
 - name: reload firewalld (Else squid breaks)
@@ -64,6 +72,17 @@
     - http
     - tftp
     - squid
+    - nfs
+    - mountd
+    - rpc-bind
+
+- name: nfsv3 firewalld
+  sudo: yes
+  firewalld: port=20049-20052/tcp zone=internal permanent=yes state=enabled immediate=yes
+
+- name: nfsv3 firewalld
+  sudo: yes
+  firewalld: port=20049-20052/udp zone=internal permanent=yes state=enabled immediate=yes
 
 - name: sync pxeboot mirror
   sudo: yes
@@ -106,4 +125,10 @@
     - bsd
     - bsd.mp
     - bsd.rd
+
+- name: sync FreeBSD PXE mirror
+  sudo: yes
+  action: shell rsync -az rsync://{{ centos_mirror }}/freebsd/releases/amd64/amd64/ISO-IMAGES/10.3/{{ item }} /var/www/html/pub/freebsd/10.3/amd64/{{ item }}
+  with_items:
+    - FreeBSD-10.3-RELEASE-amd64-bootonly.iso
 
