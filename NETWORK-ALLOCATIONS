@@ -1,0 +1,17 @@
+
+# Allocated
+172.24.0.0/16 Firstyear
+172.20.0.0/16 Micolous
+
+# Potentially allocated
+172.26.0.0/16 Kleinig
+172.25.0.0/16 gm
+172.28.0.0/16 ----
+
+# Sub allocations
+172.29.0.0/20 Nextyear
+# HostMin:	172.24.0.1
+# HostMax:	172.24.15.254
+
+# next - 172.29.16.0
+
