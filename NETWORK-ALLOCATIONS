@@ -15,3 +15,13 @@
 
 # next - 172.29.16.0
 
+
+# Special: Site-to-Site layer
+
+172.29.240.1/20
+
+# Within this, we us /30's between sites.
+
+Ny <-> fy 172.29.240.1/30
+
+

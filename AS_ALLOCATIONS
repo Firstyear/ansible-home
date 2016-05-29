@@ -1,0 +1,8 @@
+# As numbers are allowed for internal use with the AS range:
+
+64512 <-> 65535
+
+64523 - Firstyear
+64524 - Firstyear
+64525 - Nextyear
+
