@@ -86,6 +86,7 @@ megan.ipa.blackhats.net.au
 # Amanda backup specs
 [DailySet1]
 amelea.net.blackhats.net.au
+mikoto.net.blackhats.net.au
 
 [DailySet1:children]
 389ds_servers

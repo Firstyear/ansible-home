@@ -128,7 +128,6 @@
 - name: Deploy spamassassin config
   sudo: yes
   template: src=etc/mail/spamassassin/local.cf dest=/etc/mail/spamassassin/local.cf owner=root group=root mode=0644
-  notify: restart clamav-milter
 
 - name: Deploy mail scripts
   sudo: yes
