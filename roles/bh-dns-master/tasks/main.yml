@@ -9,7 +9,12 @@
   action: template src={{ item }} dest=/etc/{{ item }} owner=root group=named mode=0640
   with_items:
     - named.conf
-  notify: restart named
+
+# We need to make sure the shitty version of named isn't starting.
+- name: Disable dns pkcs11 services
+  sudo: yes
+  action: service name=named-pkcs11 state=stopped enabled=no
+  ignore_errors: yes
 
 - name: Enable dns services
   sudo: yes
@@ -18,3 +23,4 @@
 - name: config dns firewall
   sudo: yes
   action: firewalld service=dns zone=internal permanent=yes state=enabled immediate=yes
+

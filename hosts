@@ -26,10 +26,22 @@ ariel.ipa.blackhats.net.au patch_day=sat
 adara.ipa.blackhats.net.au patch_day=fri
 cassia.ipa.blackhats.net.au patch_day=fri
 
+[dns_slave_servers]
+adara.ipa.blackhats.net.au patch_day=thu
+cassia.ipa.blackhats.net.au patch_day=fri
+ariel.ipa.blackhats.net.au patch_day=sat
+alina.ipa.blackhats.net.au patch_day=sun
+
 # The primary DC MUST BE FIRST
 [freeipa_servers]
 alina.ipa.blackhats.net.au patch_day=sun
 ariel.ipa.blackhats.net.au patch_day=sat
+
+[dns_master_servers]
+tokiha.prd.blackhats.net.au patch_day=sun
+
+[ds_servers]
+tokiha.prd.blackhats.net.au patch_day=sun
 
 # [libvirt_servers]
 # mion.ipa.blackhats.net.au
@@ -60,6 +72,7 @@ deployment_servers
 email_servers
 freeipa_servers
 nfs_servers
+ds_servers
 
 [ManualSet:children]
 laptops
@@ -74,7 +87,7 @@ email_servers
 freeipa_servers
 nfs_servers
 rsyslog_servers
-
+ds_servers
 
 [linode_servers]
 ariel.ipa.blackhats.net.au

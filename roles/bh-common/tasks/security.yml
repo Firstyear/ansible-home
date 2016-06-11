@@ -26,12 +26,14 @@
   with_items:
     - login.defs
 
-- name: deploy aliases
+- name: deploy postfix aliases
   sudo: yes
   action: template src=security/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     - aliases
+    - postfix/generic
   notify:
+    - postmap generic
     - newaliases
 
 - name: deploy ssh configurations

@@ -1,0 +1,5 @@
+
+- name: restart named
+  sudo: yes
+  action: service name=named state=restarted
+

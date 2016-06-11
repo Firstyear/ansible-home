@@ -40,6 +40,10 @@
   sudo: yes
   shell: /usr/bin/newaliases
 
+- name: postmap generic
+  sudo: yes
+  shell: /usr/sbin/postmap /etc/postfix/generic
+
 - name: rebuild grub2
   sudo: yes
   shell: grub2-mkconfig -o /boot/grub2/grub.cfg

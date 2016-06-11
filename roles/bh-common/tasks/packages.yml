@@ -6,6 +6,7 @@
   with_items:
     - abrt-cli
     - audit
+    - bind-utils
     - gdisk
     - git
     - iotop

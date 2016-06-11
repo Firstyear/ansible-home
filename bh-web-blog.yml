@@ -1,0 +1,6 @@
+---
+- hosts: blog_servers
+  roles:
+    - bh-web-blog
+  vars_files:
+    - ~/secure/ansible_home_secrets.yml
