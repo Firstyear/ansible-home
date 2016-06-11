@@ -46,8 +46,8 @@
   when: "'amanda_servers' not in group_names and ansible_hostname != 'ammy' "
 
 # Install guest utils on relevant hosts.
-- include: ovirt-guest.yml
-  when: ansible_product_name == "oVirt Node" and ansible_virtualization_role == "guest"
+- include: libvirt-guest.yml
+  when: ansible_virtualization_role == "guest"
 
 - include: monitoring.yml
 

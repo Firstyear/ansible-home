@@ -33,3 +33,7 @@
   sudo: yes
   shell: /usr/bin/newaliases
 
+- name: rebuild grub2
+  sudo: yes
+  shell: grub2-mkconfig -o /boot/grub2/grub.cfg
+
