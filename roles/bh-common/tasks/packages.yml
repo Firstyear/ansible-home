@@ -16,3 +16,13 @@
     - vim
     - yum-utils
     - zsh
+
+- name: Install HP software
+  sudo: yes
+  yum: name={{ item }} state=present
+  with_items:
+    - hponcfg
+    - hpacucli
+    - hpvca
+    - lm_sensors
+  when: "'hp_servers' in group_names"

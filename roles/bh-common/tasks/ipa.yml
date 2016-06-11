@@ -2,7 +2,7 @@
   sudo: yes
   yum: name={{ item }} state=present
   with_items:
-    - freeipa-client
+    # - freeipa-client
     - openldap-clients
     - chrony
   when: ansible_distribution == 'Fedora'
@@ -11,7 +11,7 @@
   sudo: yes
   yum: name={{ item }} state=present
   with_items:
-    - ipa-client
+    # - ipa-client
     - openldap-clients
     - chrony
   when: ansible_distribution == 'CentOS'
@@ -19,80 +19,62 @@
 - name: Configure hostname
   sudo: yes
   shell: hostname {{ inventory_hostname }}
-  tags:
-    - ipa
 
 - name: Configure domain names
   sudo: yes
   shell: /bin/nisdomainname {{ ipa_domain }}
-  tags:
-    - ipa
 
-
-- name: Test domain join
-  sudo: yes
-  action: stat path="/var/lib/ipa-client/sysrestore/sysrestore.state"
-  register: state
-  tags:
-    - ipa
-
-- name: Debug would join
-  sudo: yes
-  debug: msg='{{ state }}'
-  when: state.stat.exists == false
-  tags:
-    - ipa
-
-- name: Join domain
-  sudo: yes
-  shell: echo '{{ ipa_domainadmin_password }}' | kinit {{ ipa_domainadmin_username }}@IPA.BLACKHATS.NET.AU  && /usr/sbin/ipa-client-install -U --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --no-dns-sshfp -p '{{ ipa_domainadmin_username }}' -w '{{ ipa_domainadmin_password }}' --hostname {{ inventory_hostname }} --server={{ groups.freeipa_servers[0] }}
-  when: state.stat.exists == false
-  tags:
-    - ipa
-
-# Need to add chrony to this
-
-- name: Configure IPA configurations
-  sudo: yes
-  template: src=ipa/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
-  with_items:
-    - sysconfig/network
-    - openldap/ldap.conf
-    - nsswitch.conf
-    - pam.d/password-auth-ac
-    - pam.d/system-auth-ac
-    - hostname
-    - hosts
-    - chrony.conf
-  tags:
-    - ipa
-
-- name: Configure secure IPA configurations
-  sudo: yes
-  template: src=ipa/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
-  with_items:
-    - sssd/sssd.conf
-  notify:
-    - restart sssd
-  tags:
-    - ipa
-
-- name: Disable NTP
-  sudo: yes
-  service: name=ntpd enabled=no state=stopped
-  tags:
-    - ipa
-
-- name: Ensure services running
-  sudo: yes
-  service: name={{ item }} enabled=yes state=started
-  with_items:
-    - chronyd
-    - certmonger
-    - sssd
-  tags:
-    - ipa
-
+# - name: Test domain join
+#   sudo: yes
+#   action: stat path="/var/lib/ipa-client/sysrestore/sysrestore.state"
+#   register: state
+# 
+# - name: Debug would join
+#   sudo: yes
+#   debug: msg='{{ state }}'
+#   when:
+#     - state.stat.exists == false
+# 
+# - name: Join domain
+#   sudo: yes
+#   shell: echo '{{ ipa_domainadmin_password }}' | kinit {{ ipa_domainadmin_username }}@IPA.BLACKHATS.NET.AU  && /usr/sbin/ipa-client-install -U --force-join --domain {{ ipa_domain }} --enable-dns-updates --mkhomedir --no-dns-sshfp -p '{{ ipa_domainadmin_username }}' -w '{{ ipa_domainadmin_password }}' --hostname {{ inventory_hostname }} --server={{ groups.freeipa_servers[0] }}
+#   when: state.stat.exists == false
+# 
+# # Need to add chrony to this
+# 
+# - name: Configure IPA configurations
+#   sudo: yes
+#   template: src=ipa/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+#   with_items:
+#     - sysconfig/network
+#     - openldap/ldap.conf
+#     - nsswitch.conf
+#     - pam.d/password-auth-ac
+#     - pam.d/system-auth-ac
+#     - hostname
+#     - hosts
+#     - chrony.conf
+# 
+# - name: Configure secure IPA configurations
+#   sudo: yes
+#   template: src=ipa/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
+#   with_items:
+#     - sssd/sssd.conf
+#   notify:
+#     - restart sssd
+# 
+# - name: Disable NTP
+#   sudo: yes
+#   service: name=ntpd enabled=no state=stopped
+# 
+# - name: Ensure services running
+#   sudo: yes
+#   service: name={{ item }} enabled=yes state=started
+#   with_items:
+#     - chronyd
+#     - certmonger
+#     - sssd
+# 
 
 ### TODO: Add nsswitch, sssd and others.
 # krb5.conf? ipa ca.crt? etc.?

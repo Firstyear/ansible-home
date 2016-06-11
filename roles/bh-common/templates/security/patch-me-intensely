@@ -1,0 +1,628 @@
+#!/usr/bin/env python
+import sys
+import os
+import re
+if (sys.version_info[0] == 2 and sys.version_info[1] >= 4) or sys.version_info[0] == 3:
+    import subprocess
+    import signal
+    import inspect
+    from syslog import syslog
+
+def signal_handler(signal, frame):
+    sys.stderr.write("\n+++++\nPatching intensely. I can't let you do that.\n+++++\n")
+
+#### TODO
+# Some tasks need better error handling and notification to the team.
+# Looking mainly at yum install and sservice start
+
+INTENSELY = 'intensely'
+SOFTLY = 'softly'
+
+class PatchMeIntensely(object):
+    warnings = False
+
+    patch_me_naming_conventions = {
+        INTENSELY : {
+            's1' : 'intensely',
+            's2' : 'intensifies',
+            'com' : 'complete'
+        }, 
+        SOFTLY : {
+            's1' : 'softly',
+            's2' : 'softens',
+            'com' : 'complete'
+        },
+    }
+    # These excludes should be in functions.
+    _EXCLUDE = []
+    _MINVER = 5
+    major = 0
+    minor = 0
+    model = None
+    raid_model = []
+    ilo_model = None
+    
+    hp_components = ['bios', 'iLO', 'raid', 'drive']
+
+    pre_service_set = []
+    post_service_set = []
+    pre_package_set = []
+    post_package_set = []
+
+    remove_package_set = []
+    install_package_set = []
+
+    stop_service_set = []
+    start_service_set = []
+    enable_service_set = []
+    disable_service_set = []
+
+    # satellite_config_set = []
+
+    hp_bios_firmware_map = {}
+    hp_raid_firmware_map = {}
+    hp_ilo_firmware_map = {
+        'iLO2' : None,
+        'iLO3' : None,
+        'iLO4' : 'hp-firmware-ilo4',
+    }
+
+    duplicate_clean = False
+    duplicate_ignore = ['kernel-firmware']
+
+    def __init__(self, debug, dryrun, root, firmwareonly, name):
+        self.debug = debug
+        self.dryrun = dryrun
+        self.root = root
+        self.firmwareonly = firmwareonly
+        self.naming = self.patch_me_naming_conventions[name]
+
+    def log(self, message, err=False, ver=False):
+        # We log through this so that we can redirect it easily.
+        try:
+            syslog(message)
+        except:
+            pass
+        if (self.debug is True or ver is True) and err is False:
+            print(message)
+        elif err:
+            sys.stderr.write('%s\n' % message)
+
+    def _prep_str_list(self, arr, delim):
+        l = ""
+        if len(arr) > 0:
+            for e in arr:
+                l += "%s%s" % (e, delim)
+            l = l[:-1]
+        return l
+
+    def _get_stack_function(self):
+        """
+        DO MAGIC TO GET THE NAME OF THE CALLING PARENT.
+        NO REALLY DON'T EVER TOUCH THIS.
+        """
+        stack = inspect.stack()
+        element = stack[2]
+        return element[3]
+
+    def _run_command(self, command, ignore=False):
+        """
+        In newer python versions, we have subprocess.check_output, but we can't
+        rely on this as that needs python 2.7. So we fake it with popen
+        """
+        fn = self._get_stack_function()
+        msg = "%s %s -> RUNNING" % (fn, command)
+        msg = msg.replace('\n', '')
+        self.log(msg, ver=True)
+
+        output = ''
+        proc = subprocess.Popen(command, shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdoutdata, stderrdata = proc.communicate()
+        # In some circumstances we may want to use this, but I think we probably just ignore it ...?
+        code = proc.returncode
+        #Anything non 0 should go into a dict of things for the admin to check
+        # We also need a way to mask some codes, IE hpsetup returns 2 if already updateded I think
+        #if code == 0:
+        #    self.log("%s %s -> %s" % (fn, command, code))
+        #    self.log(stdoutdata)
+        #    self.log(stderrdata)
+        #else:
+        msg = "%s %s -> %s" % (fn, command, code)
+        msg = msg.replace('\n', '')
+        if code == 0 or ignore is True:
+            self.log(msg, ver=True)
+            self.log(stdoutdata)
+            self.log(stderrdata)
+        elif ignore is False and code != 0:
+            if self.warnings is False:
+                self.log("ERROR: Setting fail code", err=True)
+                self.warnings = True
+            self.log("WARNING in %s" % msg, err=True)
+            self.log(stdoutdata, err=True)
+            self.log(stderrdata, err=True)
+        return stdoutdata, stderrdata
+
+    def _info_rhel_version(self):
+        """
+        Determine the systems redhat version.
+        This could be done with lsb_release but we can't guarantee it's installed
+        """
+        release = None
+        line = ''
+        try:
+            f = open('/etc/redhat-release')
+            line = f.readline()
+        finally:
+            f.close()
+        values = re.findall("\d+", line)
+        # major, minor = re.findall("\d+", line)
+        self.major = int(values[0])
+        self.minor = int(values[1])
+        ### Arguably, this could actually be else where ....
+        if self.major < self._MINVER:
+            sys.stderr.write("We don't support less than EL%s\n" % self._MINVER)
+            sys.exit(0)
+        self.arch, stdoutdata = self._run_command("arch")
+        self.arch = self.arch.strip()
+        self.log("Version, Major %s, Minor %s, Arch %s" % (self.major, self.minor, self.arch))
+
+    def _info_hostname(self):
+        """
+        Get the system hostname.
+        """
+        self.hostname, stdoutdata = self._run_command("hostname")
+        self.hostname = self.hostname.strip()
+        self.log("HOSTNAME: %s" % self.hostname, ver=True)
+
+    def _info_running_services(self):
+        service_set = []
+        result, err = self._run_command("/sbin/chkconfig --list | grep on")
+        if self.major >= 7:
+            sresult, serr = self._run_command("systemctl list-unit-files | grep enabled")
+            result += sresult
+        for line in result.split('\n'):
+            if line == '':
+                continue
+            service_set.append(line.split()[0])
+        if self.debug:
+            self.log("_info_running_services : %s" % service_set)
+        return service_set
+
+    def _info_packages(self):
+        """
+        Get an list of packages without version in them so we can better diff
+        the sets at the end.
+        """
+        package_set = []
+        result, err = self._run_command('rpm -qa --qf "%{NAME}\n"')
+        for line in result.split('\n'):
+            if line == '':
+                continue
+            package_set.append(line)
+        if self.debug:
+            self.log("_info_packages : %s" % package_set)
+        return package_set
+
+    def _info_hardware(self):
+        """
+        Determine hardware and platform details.
+        This will determine if vmware tools, or other vendor specifics
+        are needed to be installed.
+        """
+        self.platform = 'GENERIC'
+        self.model = 'GENERIC'
+        if not os.path.exists('/usr/sbin/dmidecode'):
+            sys.stderr.write('DMIDecode does not exist. Installing, but will treate as generic hardware this run\n')
+            self.install_package_set.append('dmidecode')
+        if not self.root:
+            product, err = self._run_command('/usr/sbin/dmidecode -s system-product-name')
+            if product.startswith('ProLiant'):
+                self.platform = 'HP'
+                self.model = product.replace('ProLiant ', '').strip()
+                stdoutdata, stderrdata = self._run_command("lspci -v | grep -A 10 -i raid | grep Subsystem")
+                for line in stdoutdata.split('\n'):
+                    if len(line) > 0:
+                        self.raid_model.append(line.split()[-1])
+                stdoutdata, stderrdata = self._run_command("lspci -v | grep -A 10 'Integrated Lights-Out Standard Management' | grep 'Subsystem'")
+                for line in stdoutdata.split('\n'):
+                    if len(line) > 0:
+                        self.ilo_model = line.split()[-1]
+            elif product.startswith('VMware'):
+                self.platform = 'VMWARE'
+        else:
+            sys.stderr.write('If non-root, we cant use dmidecode. Assume generic\n')
+        self.log('platform : %s' % self.platform)
+        self.log('model : %s' % self.model)
+        self.log('raid models : %s' % self.raid_model)
+        self.log('ilo : %s' % self.ilo_model)
+
+    def _prep_yum_reconfigure(self):
+        """
+        Reconfigure the yum command. This mainly is needed on EL7.
+        This also lets us avoid un-needed package removal of kernels.
+        """
+        if not self.dryrun:
+            self._run_command("sed -i /etc/yum.conf -e 's/installonly_limit.*/installonly_limit=2/'")
+            if self.major == 7:
+                self._run_command("sed -i /etc/yum.conf -e 's/debuglevel.*/debuglevel=2/'")
+
+    def _prep_yum_clean(self):
+        """
+        Clean out stale yum metadata
+        """
+        if not self.dryrun:
+            self._run_command("/usr/bin/yum clean all")
+
+    def _prep_yum_inconsistent(self):
+        dupes = False
+        stdoutdata, stderrdata = self._run_command('yum -d 0 check duplicates', ignore=True)
+        for line in stdoutdata.split('\n'):
+            if line.strip() != '':
+                pkg = line.split()[0]
+                ### Surely there is a better way to do this ...
+                bail = False
+                for ignore in self.duplicate_ignore:
+                    if pkg.startswith(ignore):
+                        bail = True
+                if bail:
+                    continue
+                dupes = True
+                self.log("Duplicate package : %s " % pkg)
+        if dupes:
+            self.log("Automatically correcting duplicates", err=True)
+            self.log("THIS RUN WILL PROBABLY FAIL AT SOME STAGE", err=True)
+            if 'yum-utils' in self.pre_package_set:
+                self.duplicate_clean = True
+        if 'yum-utils' not in self.pre_package_set:
+            self.install_package_set.append('yum-utils')
+
+    def _prep_yum_exclusions(self):
+        """
+        Prepare our exclusion set for yum --exclude.
+        
+        This will be inserted to every yum command AFTER this point.
+        """
+        self.yum_exclude = ""
+        if len(self._EXCLUDE) > 0:
+            self.yum_exclude = "--exclude=" + self._prep_str_list(self._EXCLUDE, ',')
+        if self.debug:
+            self.log('Will exclude : %s' % self.yum_exclude)
+
+    def _prep_service_rhnsd(self):
+        """
+        Make sure we restart rhnsd after an update.
+        """
+        self.stop_service_set.append('rhnsd')
+        self.stop_service_set.append('osad')
+        self.start_service_set.append('rhnsd')
+        self.start_service_set.append('osad')
+
+    def _prep_hp_firmware_maps(self):
+        stdoutdata, stderrdata = self._run_command("yum search -d 2 hp-firmware-system | grep -e '^hp-firmware-system'")
+        for line in stdoutdata.split('\n'):
+            try:
+                pkgname, data = line.split(':')
+                pkgname = pkgname.strip()
+                data = data.strip()
+                data = data.replace('HP ProLiant ', '')
+                data = data.split('(')[0]
+                for key in data.split('/'):
+                    self.hp_bios_firmware_map[key.strip()] = pkgname
+            except ValueError:
+                pass
+        self.log(self.hp_bios_firmware_map)
+        # How do we map raid? there are some key terms we can remove from the package name, and then check against the lspci ...
+        stdoutdata, stderrdata = self._run_command("yum search -d 2 hp-firmware-smartarray | grep -e '^hp-firmware-smartarray'")
+        for line in stdoutdata.split('\n'):
+            if 'expander' in line:
+                continue
+            try:
+                pkgname, data = line.split(':')
+                pkgname = pkgname.strip()
+                data = data.strip()
+                data = data.replace('Smart Array ', '')
+                data = data.replace(' and ', '')
+                data = data.replace('firmware', '')
+                data = data.replace(',', '')
+                for key in data.split():
+                    self.hp_raid_firmware_map[key.strip()] = pkgname
+            except ValueError:
+                pass
+        self.log(self.hp_raid_firmware_map)
+
+
+    def _prep_hp(self):
+        # Generate the bios firmware to package maps.
+        #  This should make the powerpic map.
+        #  Over time we can add more to these maps and such.
+        # Now check what we have and install the packages. Do we need to post install run something?
+        ### Do we really want to mark failure if we can't find HP firmware?
+        # Probabyl should just improve logging.
+        try:
+            self.install_package_set.append(self.hp_bios_firmware_map[self.model])
+        except KeyError:
+            #self.warnings = True
+            self.log('Unable to find model %s' % self.model, err=True)
+            self.log('Show William: %s' % self.hp_bios_firmware_map, err=True)
+        for raid_controller in self.raid_model:
+            try:
+                self.install_package_set.append(self.hp_raid_firmware_map[raid_controller])
+            except KeyError:
+                #self.warnings = True
+                self.log('Unable to find raid model %s' % raid_controller, err=True)
+                self.log('Show William: %s' % self.hp_raid_firmware_map, err=True)
+        try:
+            if self.hp_ilo_firmware_map[self.ilo_model] != None:    
+                self.install_package_set.append(self.hp_ilo_firmware_map[self.ilo_model])
+        except KeyError:
+            #self.warnings = True
+            self.log('Unable to find ilo model %s' % self.ilo_model, err=True)
+            self.log('Show William: %s' % self.hp_ilo_firmware_map, err=True)
+
+    def _prep_vmware(self):
+        pass
+
+    def _prep_platform(self):
+        if self.platform == 'HP':
+            self._prep_hp_firmware_maps()
+            self._prep_hp()
+        elif self.platform == 'VMWARE':
+            self._prep_vmware()
+        else:
+            pass
+
+    def _service_stop(self):
+        if self.debug:
+            self.log("Will stop : %s" % self.stop_service_set)
+        command = "/sbin/service %s stop"
+        if self.major >= 7:
+            command = "/usr/bin/systemctl stop %s"
+        for service in self.stop_service_set:
+            if not self.dryrun:
+                self._run_command(command % service)
+
+    def _service_start(self):
+        if self.debug:
+            self.log("Will start : %s" % self.start_service_set)
+        command = "/sbin/service %s restart"
+        if self.major >= 7:
+            command = "/usr/bin/systemctl restart %s"
+        for service in self.start_service_set:
+            if not self.dryrun:
+                self._run_command(command % service)
+
+    def _service_enable(self):
+        if self.debug:
+            self.log("Will enable : %s" % self.enable_service_set)
+        command = "/sbin/chkconfig %s on"
+        if self.major >= 7:
+            command = "/usr/bin/systemctl enable %s"
+        for service in self.enable_service_set:
+            if not self.dryrun:
+                self._run_command(command % service)
+
+    def _service_disable(self):
+        if self.debug:
+            self.log("Will disable : %s" % self.disable_service_set)
+        command = "/sbin/chkconfig %s off"
+        if self.major >= 7:
+            command = "/usr/bin/systemctl disable %s"
+        for service in self.disable_service_set:
+            if not self.dryrun:
+                self._run_command(command % service)
+
+
+    def _action_baseyum(self):
+
+        command = "/usr/bin/yum -y -d 0 %s " % self.yum_exclude
+        if self.dryrun:
+            command = "/usr/bin/yum --assumeno -d 0 %s " % self.yum_exclude
+        return command
+
+    def _action_remove(self):
+        command = self._action_baseyum() + "remove "
+        if len(self.remove_package_set) > 0:
+            rlist = self._prep_str_list(self.remove_package_set, delim=' ')
+            result, err = self._run_command(command + rlist)
+            #### For anything that CAN't be removed because it's not there,
+            ### Make sure we don't install it!
+            for line in err.split('\n'):
+                if line.startswith('No Match for argument: '):
+                    pkg = line.replace('No Match for argument: ', '')
+                    self.log('%s not installed, will not reinstall' % pkg)
+                    if self.debug:
+                        self.log('%s not installed, will not reinstall' % pkg)
+                    try:
+                        self.install_package_set.remove(pkg)
+                    except ValueError:
+                        #Move on, it's already not in the set
+                        pass
+
+    def _action_update(self):
+        command = self._action_baseyum() + "upgrade "
+        self._run_command(command)
+
+    def _action_install(self):
+        command = self._action_baseyum() + "install "
+        if len(self.install_package_set) > 0:
+            rlist = self._prep_str_list(self.install_package_set, delim=' ')
+            self._run_command(command + rlist)
+
+    def _action_clean_duplicates(self):
+        if self.duplicate_clean:
+            if not self.dryrun:
+                self._run_command('package-cleanup -y --cleandupes')
+
+    def _action_install_hp(self):
+        # First we need to find all the hpsetup and cpqsetup commands.
+        # All the installers are named as:
+        stdoutdata, stderrdata = self._run_command("find /usr/lib/*/hp-firmware-* -regex '.*/\(cpqsetup\|hpsetup\|flash_ilo4\)'")
+        if not self.dryrun:
+            for line in stdoutdata.split('\n'):
+                if line.strip() == '':
+                    continue
+                result, resulterr = None, None
+                if line.endswith('hpsetup'):
+                    result, resulterr = self._run_command("yes | %s" % line, ignore=True)
+                else:
+                    result, resulterr = self._run_command("%s --silent" % line, ignore=True)
+                #self._run_command(resulterr, ignore=True)
+            # Inject the component log into syslog
+            #self._run_command("logger -f /var/cpq/Component.log")
+
+    def _action_install_vmware(self):
+        pass
+
+    def _action_platform(self):
+        if self.platform == 'HP':
+            self._action_install_hp()
+        elif self.platform == 'VMWARE':
+            self._action_install_vmware()
+        else:
+            pass
+
+    def _post_config_auth(self):
+        """
+        Mark our auth service for "start" to make sure it's running.
+        """
+        #### We need a way to make services "enabled" too ...
+        # self.satellite_config_set.append('/etc/pam.d/system-auth')
+        # self.satellite_config_set.append('/etc/pam.d/system-auth-ac')
+        # self.satellite_config_set.append('/etc/pam.d/password-auth')
+        # self.satellite_config_set.append('/etc/pam.d/password-auth-ac')
+        # self.satellite_config_set.append('/etc/nsswitch.conf')
+        # self.satellite_config_set.append('/etc/sudoers')
+        # self.satellite_config_set.append('/etc/ssh/sshd_config')
+        # self.satellite_config_set.append('/etc/ssh/sshd_banner.txt')
+        # self.satellite_config_set.append('/etc/openldap/ldap.conf')
+        # This will rely on changes to pam and nsswitch
+        if self.major >= 6:
+            self.start_service_set.append('sssd')
+            self.enable_service_set.append('sssd')
+            # self.satellite_config_set.append('/etc/sssd/sssd.conf')
+        if self.major == 7:
+            self.disable_service_set.append('nslcd')
+            #self.satellite_config_set.append('/etc/nslcd.conf')
+
+    def _post_satellite_fetch(self):
+        command = 'rhncfg-client get '
+        if self.dryrun:
+            command = 'rhncfg-client diff '
+        rlist = self._prep_str_list(self.satellite_config_set, delim=' ')
+        self._run_command(command + rlist)
+
+    def doit(self):
+        """
+        Do the thing, and do it well. Patch this box intensley!
+        """
+        self.log("Patching %s" % self.naming['s1'], err=True)
+        #Patch me harder is broken in to a few stages.
+        ##### GET INFORMATION
+        self._info_rhel_version()  # THIS REALLY MUST BE FIRST
+        self._info_hostname()
+        # Get current SELinux status
+        ## If enforcing, should we be setting .autorelabel?
+        self.pre_service_set = self._info_running_services()
+        self.pre_package_set = self._info_packages()
+        self._info_hardware()
+        ####
+
+        #### Prep what we will do
+        # * Preparation
+        # self._prep_yum_reconfigure()
+        self._prep_yum_clean()
+        self._prep_yum_inconsistent()
+        # ** If needed, add packages to the installation set. 
+        # ** If installed, add issue packages to the removal set.
+        #If we have a hardware platform, prep the actions now
+        self._prep_platform()
+
+        ### START PATCHING. DO NOT CHANGE THIS SECTION
+        self.log('Patching %s ...' % self.naming['s2'], err=True)
+        # We are commited, don't let anyone interupt.
+        signal.signal(signal.SIGINT, signal_handler)
+        signal.signal(signal.SIGTERM, signal_handler)
+        signal.signal(signal.SIGQUIT, signal_handler)
+        signal.signal(signal.SIGHUP, signal_handler)
+        # Final prep
+        # self._prep_service_rhnsd() # Don't get actions during update
+        self._prep_yum_exclusions() # We have all the excludes now, finalise
+        # Do it.
+        if not self.firmwareonly:
+            self._service_stop()
+            self._action_clean_duplicates()
+            self._action_remove()
+            self._action_update()
+            self._action_install()
+        # ** Vendor firmware if available
+        self._action_platform()
+        # ** If Virtual, install guest tools
+        # ** if HP install physical tools.
+        self.post_package_set = self._info_packages()
+        ####
+
+        #### POST, add jobs here that request configs, services etc
+        # ** Make sure our auth services are running
+        # self._post_config_auth()
+        # self._post_radius_fix()
+        # self._post_config_nb()
+        ####
+
+        ###### REALLY ITS IMPORTANT THESE ARE LAST
+        # At the end, get configs that are pending
+        if not self.firmwareonly:
+            # self._post_satellite_fetch()
+            # ** Restart pending services
+            self._service_enable()
+            self._service_disable()
+            self._service_start()
+        # Restore SELinux status
+        self.post_service_set = self._info_running_services()
+        self.log("Patching %s" % self.naming['com'], err=True)
+
+
+if __name__ == '__main__':
+    #Check we are running as root
+    ### There are lots of limitations with firmware only. You need to preinstall
+    ### All the bits. Will need to polish this later
+    DEBUG = False
+    DRY = False
+    FIRMWAREONLY = False
+    ROOT = None
+    REBOOT = False
+    NAME = INTENSELY
+    # The most important naming scheme changes.
+    if 'intense' in sys.argv[0]:
+        NAME = INTENSELY
+    elif 'soft' in sys.argv[0]:
+        NAME = SOFTLY
+    if len(sys.argv) > 1: 
+        for arg in sys.argv:
+            if 'debug' in arg:
+                DEBUG = True
+            if 'dry' in arg:
+                DRY = True
+            if 'firmwareonly' in arg:
+                FIRMWAREONLY = True
+            if 'reboot' in arg:
+                REBOOT = True
+    if os.geteuid() != 0:
+        if DEBUG is True:
+            DRY = True
+            ROOT = False
+            REBOOT = False
+            sys.stderr.write('Euid != 0, dry run with no reboot instead\n')
+        else:
+            ROOT = True
+            sys.stderr.write('Not running as root, BAIL BAIL BAIL\n')
+            sys.exit(-1)
+    pmi = PatchMeIntensely(debug=DEBUG, dryrun=DRY, root=ROOT, firmwareonly=FIRMWAREONLY, name=NAME)
+    pmi.doit()
+    if pmi.warnings:
+        sys.exit(1)
+    else:
+        if REBOOT and not DRY:
+            os.system("/usr/sbin/shutdown -r now")
+        sys.exit(0)
+
+

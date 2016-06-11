@@ -6,36 +6,36 @@
 franky.ipa.blackhats.net.au
 
 [amanda_servers]
-yvett.ipa.blackhats.net.au
+yvett.ipa.blackhats.net.au patch_day=mon
 
 [blog_servers]
 adara.ipa.blackhats.net.au
 
 [deployment_servers]
-elise.ipa.blackhats.net.au
+elise.ipa.blackhats.net.au patch_day=tue
 
 [development_servers]
 avery.dev.blackhats.net.au
 pbody.ipa.blackhats.net.au
-victoria.ipa.blackhats.net.au
+victoria.ipa.blackhats.net.au patch_day=mon
 
 [email_servers]
-ariel.ipa.blackhats.net.au
+ariel.ipa.blackhats.net.au patch_day=sat
 
 [email_relay_servers]
-adara.ipa.blackhats.net.au
-cassia.ipa.blackhats.net.au
+adara.ipa.blackhats.net.au patch_day=fri
+cassia.ipa.blackhats.net.au patch_day=fri
 
 # The primary DC MUST BE FIRST
 [freeipa_servers]
-alina.ipa.blackhats.net.au
-ariel.ipa.blackhats.net.au
+alina.ipa.blackhats.net.au patch_day=sun
+ariel.ipa.blackhats.net.au patch_day=sat
 
 # [libvirt_servers]
 # mion.ipa.blackhats.net.au
 
 [nfs_servers]
-lorna.ipa.blackhats.net.au
+lorna.ipa.blackhats.net.au patch_day=wed
 
 # [postgis_servers]
 # denver.ipa.blackhats.net.au
@@ -81,4 +81,7 @@ ariel.ipa.blackhats.net.au
 
 [linode_servers:children]
 email_relay_servers
+
+[hp_servers]
+bubo.dev.blackhats.net.au
 

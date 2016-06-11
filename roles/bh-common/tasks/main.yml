@@ -1,6 +1,7 @@
+
 - name: Update timezone
   sudo: yes
-  action: command ln -sf ../usr/share/zoneinfo/Australia/Brisbane localtime
+  action: file state=link src=/usr/share/zoneinfo/Australia/Brisbane dest=/etc/localtime
 
 # Add new aliases ...
 
@@ -11,14 +12,6 @@
 
 # These are safe, useful, default packages for all installs
 - include: packages.yml
-# You have to be kidding that I wouldn't run anything other
-#  than enforcing on my systems.
-#- include: selinux.yml
-#  when: ansible_selinux.status != 'disabled'
-
-# Apply to our linodes
-- include: linode.yml
-  when: "'linode_servers' in group_names"
 
 # Laptop defaults
 - include: laptop.yml
@@ -35,7 +28,6 @@
 # How do I exclude ammy here?
 - include: ipa.yml
   when: "'freeipa_servers' not in group_names"
-  #when: "'linode_servers' not in group_names and 'freeipa_servers' not in group_names and ansible_hostname != 'ammy'"
 
 # Potentially capture coredumps if things go bad.
 - include: kdump.yml
@@ -43,11 +35,15 @@
 
 # Enable the backup client on hosts that we can backup.
 - include: amanda.yml
-  when: "'amanda_servers' not in group_names and ansible_hostname != 'ammy' "
+  when: "'amanda_servers' not in group_names"
 
-# Install guest utils on relevant hosts.
-- include: libvirt-guest.yml
-  when: ansible_virtualization_role == "guest"
+
+- name: Deploy grub serial console changes
+  sudo: yes
+  action: template src=libvirt/etc/default/grub dest=/etc/default/grub owner=root group=root mode=644
+  notify:
+    - rebuild grub2
+  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
 - include: monitoring.yml
 

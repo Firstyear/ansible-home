@@ -29,6 +29,13 @@
    - RPM-GPG-KEY-EPEL-7
    - RPM-GPG-KEY-CentOS-7
 
+- name: rpm import hp keys
+  sudo: yes
+  shell: /usr/bin/rpmkeys --import /etc/pki/rpm-gpg/{{ item }}
+  with_items:
+   - hpPublicKey2048.pub
+   - hpPublicKey2048_key1.pub
+
 - name: newaliases
   sudo: yes
   shell: /usr/bin/newaliases

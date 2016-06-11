@@ -1,0 +1,21 @@
+
+- name: Install httpd
+  sudo: yes
+  action: yum name=httpd state=present
+
+- name: Ensure content directories
+  sudo: yes
+  action: file path=/var/www/{{ item }} owner={{ item }} group=apache mode=u=rwX,g=rX,o=rX recurse=yes
+  with_items:
+    - william
+
+- name: Deploy blog configurations
+  sudo: yes
+  action: template src={{ item }} dest=/etc/httpd/{{ item }} owner=root group=root mode=0644
+  notify: restart httpd
+  with_items:
+    - conf.d/static-vhosts.conf
+
+- name: Enable httpd
+  sudo: yes
+  action: service name=httpd state=started enabled=yes

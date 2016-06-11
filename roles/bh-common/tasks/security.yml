@@ -2,6 +2,14 @@
   sudo: yes
   service: name=auditd state=started enabled=yes
 
+- name: deploy patch-me-intensely script.
+  sudo: yes
+  action: template src=security/patch-me-intensely dest=/usr/sbin/patch-me-intensely owner=root group=root mode=0755
+
+- name: Configure automatic patching
+  sudo: yes
+  action: cron name="Automatic patch and reboot" minute=16 hour=6 weekday={{ patch_day }} job="/usr/sbin/patch-me-intensely reboot" user="root" disabled=no
+
 - name: deploy audit configurations
   sudo: yes
   template: src=security/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0640

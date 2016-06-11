@@ -8,6 +8,16 @@
   notify:
     rpm import keys
 
+- name: Deploy HP GPG keys
+  template: src=repos/pki/rpm-gpg/{{ item }} dest=/etc/pki/rpm-gpg/{{ item }} owner=root group=root mode=0644
+  sudo: yes
+  with_items:
+   - hpPublicKey2048.pub
+   - hpPublicKey2048_key1.pub
+  notify:
+    rpm import hp keys
+  when: "'hp_servers' in group_names"
+
 - meta: flush_handlers
 
 # We should alter this based on where it's linode or not
@@ -27,4 +37,8 @@
   action: template src=repos/yum.repos.d/CentOS-Base-linode.repo dest=/etc/yum.repos.d/CentOS-Base.repo owner=root group=root mode=0644
   when: "'linode_servers' in group_names"
 
+- name: Configure hp spp repos
+  sudo: yes
+  action: template src=repos/yum.repos.d/hp-spp.repo dest=/etc/yum.repos.d/hp-spp.repo owner=root group=root mode=0644
+  when: "'hp_servers' in group_names"
 
