@@ -42,18 +42,18 @@
 # 
 # # Need to add chrony to this
 # 
-# - name: Configure IPA configurations
-#   sudo: yes
-#   template: src=ipa/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
-#   with_items:
+- name: Configure IPA configurations
+  sudo: yes
+  template: src=ipa/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
 #     - sysconfig/network
 #     - openldap/ldap.conf
 #     - nsswitch.conf
 #     - pam.d/password-auth-ac
 #     - pam.d/system-auth-ac
-#     - hostname
-#     - hosts
-#     - chrony.conf
+    - hostname
+    - hosts
+    - chrony.conf
 # 
 # - name: Configure secure IPA configurations
 #   sudo: yes
@@ -63,15 +63,17 @@
 #   notify:
 #     - restart sssd
 # 
-# - name: Disable NTP
-#   sudo: yes
-#   service: name=ntpd enabled=no state=stopped
+- name: Disable NTP
+  sudo: yes
+  service: name=ntpd enabled=no state=stopped
+  ignore_errors: yes
 # 
-# - name: Ensure services running
-#   sudo: yes
-#   service: name={{ item }} enabled=yes state=started
-#   with_items:
-#     - chronyd
+- name: Ensure services running
+  sudo: yes
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - chronyd
+# This probably doesn't work on linode ...
 #     - certmonger
 #     - sssd
 # 

@@ -1,0 +1,36 @@
+[firstyear-ds]
+name=Copr repo for ds owned by firstyear
+baseurl=https://copr-be.cloud.fedoraproject.org/results/firstyear/ds/epel-7-$basearch/
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/firstyear/ds/pubkey.gpg
+enabled=1
+enabled_metadata=1
+
+[firstyear-lib389]
+name=Copr repo for lib389 owned by firstyear
+baseurl=https://copr-be.cloud.fedoraproject.org/results/firstyear/lib389/epel-7-$basearch/
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/firstyear/lib389/pubkey.gpg
+enabled=1
+enabled_metadata=1
+
+[firstyear-rest389]
+name=Copr repo for rest389 owned by firstyear
+baseurl=https://copr-be.cloud.fedoraproject.org/results/firstyear/rest389/epel-7-$basearch/
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/firstyear/rest389/pubkey.gpg
+enabled=1
+enabled_metadata=1
+
+[firstyear-svrcore]
+name=Copr repo for svrcore owned by firstyear
+baseurl=https://copr-be.cloud.fedoraproject.org/results/firstyear/svrcore/epel-7-$basearch/
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://copr-be.cloud.fedoraproject.org/results/firstyear/svrcore/pubkey.gpg
+enabled=1
+enabled_metadata=1
+

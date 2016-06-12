@@ -1,0 +1,79 @@
+
+# Add the repo definitions
+
+- name: add copr repo
+  sudo: yes
+  action: template src=firstyear-ds-copr.repo dest=/etc/yum.repos.d/firstyear-ds-copr.repo owner=root group=root mode=0644
+
+- name: install directory server
+  sudo: yes
+  action: yum name={{ item }} state=present
+  with_items:
+    - 389-ds-base
+    - python-lib389
+    - python-rest389
+    - freeradius
+    - freeradius-utils
+    - freeradius-ldap
+    - ldapvi
+
+- name: configure auth master firewall
+  sudo: yes
+  firewalld: zone=internal permanent=true state=enabled service={{ item }} immediate=true
+  with_items:
+    - ldap
+    - ldaps
+    - radius
+  when: "'linode_servers' not in group_names"
+
+- name: configure limited auth master firewall
+  sudo: yes
+  firewalld: zone=internal permanent=yes state=enabled immediate=yes rich_rule='rule family="ipv6" source address="{{ item[1] }}" service name="{{ item[0] }}" accept'
+  with_nested:
+    - [ 'ldap', 'ldaps', 'radius' ]
+    - [ '2001:44b8:2155:2c00::/56', '2a01:7e00::f03c:91ff:fe84:9e3e', '2400:8901::f03c:91ff:fe98:4593', '2a01:7e00::f03c:91ff:feae:5d82' ]
+  when: "'linode_servers' in group_names"
+
+- name: enable all auth services
+  sudo: yes
+  action: service name=dirsrv@blackhats state=started enabled=yes
+
+- name: Configure radiusd
+  sudo: yes
+  action: template src=raddb/{{ item }} dest=/etc/raddb/{{ item }} owner=root group=radiusd mode=0640
+  with_items:
+    - radiusd.conf
+    - clients.conf
+    - mods-available/ldap
+    - mods-available/eap
+    - sites-available/default
+    - sites-available/inner-tunnel
+
+- name: Configure ldap auth
+  sudo: yes
+  action: template src=ldap-bind dest=/etc/raddb/mods-enabled/ldap-bind owner=root group=radiusd mode=0640
+
+- name: Symlink mods available
+  sudo: yes
+  action: file src=/etc/raddb/mods-available/{{ item }} dest=/etc/raddb/mods-enabled/{{ item }} state=link
+  with_items:
+    - ldap
+    - eap
+
+- name: Symlink sites available
+  sudo: yes
+  action: file src=/etc/raddb/sites-available/{{ item }} dest=/etc/raddb/sites-enabled/{{ item }} state=link
+  with_items:
+    - default
+    - inner-tunnel
+
+# Add radiusd keys
+
+- name: Correct radius tls directory
+  sudo: yes
+  action: file path=/etc/pki/radius/ state=directory owner=radiusd group=radiusd mode=0750
+
+- name: enable all auth services
+  sudo: yes
+  action: service name=radiusd state=started enabled=yes
+
