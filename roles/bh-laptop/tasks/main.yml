@@ -1,0 +1,5 @@
+
+# Laptop defaults
+- include: laptop.yml
+  when: ansible_form_factor == "Notebook"
+

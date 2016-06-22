@@ -1,0 +1,5 @@
+
+# How do I exclude ammy here?
+- include: ipa.yml
+  when: "'freeipa_servers' not in group_names"
+

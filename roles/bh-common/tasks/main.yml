@@ -4,19 +4,12 @@
   action: file state=link src=/usr/share/zoneinfo/Australia/Brisbane dest=/etc/localtime
 
 
-# Add new aliases ...
-
-
 # Only apply this to static CentOS hosts
 - include: repos.yml
   when: "ansible_form_factor != 'Notebook' and ansible_distribution == 'CentOS'"
 
 # These are safe, useful, default packages for all installs
 - include: packages.yml
-
-# Laptop defaults
-- include: laptop.yml
-  when: ansible_form_factor == "Notebook"
 
 # Server defaults
 - include: sysctl.yml
@@ -26,10 +19,6 @@
 - include: firewalld.yml
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version >= "7"
 
-# How do I exclude ammy here?
-- include: ipa.yml
-  when: "'freeipa_servers' not in group_names"
-
 # Potentially capture coredumps if things go bad.
 - include: kdump.yml
   when: "'linode_servers' not in group_names"
@@ -37,7 +26,6 @@
 # Enable the backup client on hosts that we can backup.
 - include: amanda.yml
   when: "'amanda_servers' not in group_names"
-
 
 - name: Deploy grub serial console changes
   sudo: yes
