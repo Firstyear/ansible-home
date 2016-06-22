@@ -6,5 +6,5 @@
     #- common-facts
     #- common-bh
     - bh-amanda-fy
-  vars_files:
-    - ~/secure/ansible_home_secrets.yml
+  #vars_files:
+  #  - ~/secure/ansible_home_secrets.yml

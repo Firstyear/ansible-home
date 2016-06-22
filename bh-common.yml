@@ -5,5 +5,6 @@
     #- virtual
     - bh-common-facts
     - bh-common
-  vars_files:
-    - ~/secure/ansible_home_secrets.yml
+    # - bh-common-auth
+  #vars_files:
+  #  - ~/secure/ansible_home_secrets.yml

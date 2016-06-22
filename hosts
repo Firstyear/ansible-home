@@ -61,6 +61,9 @@ tplink-long.net.blackhats.net.au
 [rsyslog_servers]
 yvett.ipa.blackhats.net.au
 
+[wiki_servers]
+whatnobob.dev.blackhats.net.au patch_day=mon
+
 # Amanda backup specs
 [DailySet1]
 amelea.net.blackhats.net.au
@@ -73,6 +76,7 @@ email_servers
 freeipa_servers
 nfs_servers
 ds_servers
+wiki_servers
 
 [ManualSet:children]
 laptops
@@ -91,6 +95,7 @@ ds_servers
 
 [linode_servers]
 ariel.ipa.blackhats.net.au
+whatnobob.dev.blackhats.net.au
 
 [linode_servers:children]
 email_relay_servers

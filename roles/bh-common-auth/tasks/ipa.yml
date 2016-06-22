@@ -81,3 +81,9 @@
 ### TODO: Add nsswitch, sssd and others.
 # krb5.conf? ipa ca.crt? etc.?
 
+- name: deploy ssh configurations
+  sudo: yes
+  action: template src=security/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - ssh/sshd_config
+

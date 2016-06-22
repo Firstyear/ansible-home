@@ -3,6 +3,9 @@
   sudo: yes
   action: file state=link src=/usr/share/zoneinfo/Australia/Brisbane dest=/etc/localtime
 
+- name: Ensure cron email correct
+  sudo: yes
+  action: cron name=MAILTO env=yes value=william@blackhats.net.au state=present
 
 # Only apply this to static CentOS hosts
 - include: repos.yml

@@ -1,0 +1,36 @@
+
+
+
+- name: Install mediawiki and postgres
+  sudo: yes
+  action: yum name={{ item }} state=present
+  with_items:
+    - httpd
+    - postgresql
+    - postgresql-server
+    - mediawiki123
+    - php-pgsql
+
+- name: Deploy mediawiki config
+  sudo: yes
+  action: template src=mediawiki.conf dest=/etc/httpd/conf.d/mediawiki.conf owner=root group=root mode=0644
+
+- name: Enable postgresql
+  sudo: yes
+  action: service name=postgresql state=started enabled=yes
+
+- name: Enable httpd
+  sudo: yes
+  action: service name=httpd state=started enabled=yes
+
+- name: Enable pgsql dump
+  sudo: yes
+  action: cron name="Backup PGSQL" minute="15" hour="1" job="/usr/bin/pg_dump bs_wiki_prd > /var/lib/pgsql/backups/bs_wiki_prd.sql" user="postgres"
+
+- name: config email firewalld
+  sudo: yes
+  firewalld: service={{ item }} zone=internal permanent=yes state=enabled immediate=yes
+  with_items:
+    - http
+    - https
+
