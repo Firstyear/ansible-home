@@ -1,0 +1,5 @@
+
+default._domainkey.blackhats.net.au blackhats.net.au:default:/etc/opendkim/keys/blackhats.net.au/default.private
+default._domainkey.firstyear.id.au firstyear.id.au:default:/etc/opendkim/keys/firstyear.id.au/default.private
+
+

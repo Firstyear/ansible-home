@@ -1,7 +1,16 @@
 
-- name: Install httpd
+- name: Install httpd and ssl modules
   sudo: yes
-  action: yum name=httpd state=present
+  action: yum name={{ item }} state=present
+  with_items:
+    - httpd
+    - mod_ssl
+    - certbot
+
+# You can get the cert with:
+# certbot certonly --staging -n  --agree-tos --webroot -m william@blackhats.net.au -w /var/www/william/ -d fy.blackhats.net.au
+# Or domain validation
+# 
 
 - name: Ensure content directories
   sudo: yes
@@ -15,7 +24,20 @@
   notify: restart httpd
   with_items:
     - conf.d/static-vhosts.conf
+    - conf.d/ssl.conf
 
 - name: Enable httpd
   sudo: yes
   action: service name=httpd state=started enabled=yes
+
+- name: Configure Blog firewalld
+  sudo: yes
+  firewalld: zone=internal permanent=true state=enabled service={{ item }} immediate=true
+  with_items:
+    - http
+    - https
+
+- name: cron the lets encrypt renewal
+  sudo: yes
+  action: cron name="Renew le cert blog" minute="43" hour="8" job="/usr/bin/certbot renew" user="root"
+

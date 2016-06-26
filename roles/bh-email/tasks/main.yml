@@ -14,6 +14,7 @@
     - clamav-scanner
     - clamav-scanner-systemd
     - spamassassin
+    - opendkim
 
 - name: Create vmail user
   sudo: yes
@@ -129,6 +130,15 @@
   sudo: yes
   template: src=etc/mail/spamassassin/local.cf dest=/etc/mail/spamassassin/local.cf owner=root group=root mode=0644
 
+- name: Deploy opendkim config
+  sudo: yes
+  template: src={{ item }} dest=/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - etc/opendkim.conf
+    - etc/opendkim/KeyTable
+    - etc/opendkim/SigningTable
+    - etc/opendkim/TrustedHosts
+
 - name: Deploy mail scripts
   sudo: yes
   template: src={{ item }} dest=/root/{{ item }} owner=root group=root mode=0750
@@ -145,6 +155,7 @@
   sudo: yes
   service: name={{ item }} state=started enabled=yes
   with_items:
+    - opendkim
     - spamass-milter
     - clamd@clamsmtp
     - clamav-milter

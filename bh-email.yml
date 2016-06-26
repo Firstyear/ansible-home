@@ -2,8 +2,6 @@
 - hosts: email_servers
   #gather_facts: False
   roles:
-    #- virtual
-    #- common-facts
     #- common-bh
     - bh-email
   vars_files:

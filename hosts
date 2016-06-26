@@ -15,9 +15,10 @@ adara.ipa.blackhats.net.au
 elise.ipa.blackhats.net.au patch_day=tue
 
 [development_servers]
-avery.dev.blackhats.net.au
-pbody.ipa.blackhats.net.au
+# avery.dev.blackhats.net.au
+# pbody.ipa.blackhats.net.au
 victoria.ipa.blackhats.net.au patch_day=mon
+honey.dev.blackhats.net.au patch_day=tue
 
 [email_servers]
 ariel.ipa.blackhats.net.au patch_day=sat
@@ -55,8 +56,8 @@ lorna.ipa.blackhats.net.au patch_day=wed
 # [radicale_servers]
 # liza.ipa.blackhats.net.au
 
-[openwrt_aps]
-tplink-long.net.blackhats.net.au
+# [openwrt_aps]
+# tplink-long.net.blackhats.net.au
 
 [rsyslog_servers]
 yvett.ipa.blackhats.net.au
@@ -72,6 +73,7 @@ mikoto.net.blackhats.net.au
 [DailySet1:children]
 amanda_servers
 deployment_servers
+development_servers
 email_servers
 freeipa_servers
 nfs_servers
