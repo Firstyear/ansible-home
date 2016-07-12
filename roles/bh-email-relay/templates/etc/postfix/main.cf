@@ -296,7 +296,7 @@ mynetworks_style = host
 # permit_mx_backup restriction description in postconf(5).
 #
 #relay_domains = $mydestination
-relay_domains = firstyear.id.au, ipa.firstyear.id.au, blackhats.net.au, ipa.blackhats.net.au, dev.blackhats.net.au, runlevelone.net, artofgeek.net, lavu.net
+relay_domains = firstyear.id.au, ipa.firstyear.id.au, blackhats.net.au, ipa.blackhats.net.au, dev.blackhats.net.au, runlevelone.net, artofgeek.net, lavu.net, brissafety.org
 
 # INTERNET OR INTRANET
 

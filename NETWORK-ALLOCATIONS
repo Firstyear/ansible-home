@@ -1,7 +1,8 @@
 
 # Allocated
-172.24.0.0/16 Firstyear
 172.20.0.0/16 Micolous
+172.24.0.0/16 Firstyear
+172.22.0.0/16 Keeper
 
 # Potentially allocated
 172.26.0.0/16 Kleinig
