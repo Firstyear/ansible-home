@@ -4,6 +4,7 @@
   shell: postmap /etc/postfix/{{ item }}
   with_items:
     - transport
+    - recipientmap
     - relay_recipients
 
 - name: restart postfix

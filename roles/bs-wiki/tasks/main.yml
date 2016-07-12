@@ -10,10 +10,15 @@
     - postgresql-server
     - mediawiki123
     - php-pgsql
+    - mod_ssl
+    - certbot
 
 - name: Deploy mediawiki config
   sudo: yes
-  action: template src=mediawiki.conf dest=/etc/httpd/conf.d/mediawiki.conf owner=root group=root mode=0644
+  action: template src={{ item }} dest=/etc/httpd/conf.d/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - ssl.conf
+    - mediawiki.conf
 
 - name: Enable postgresql
   sudo: yes
@@ -27,10 +32,14 @@
   sudo: yes
   action: cron name="Backup PGSQL" minute="15" hour="1" job="/usr/bin/pg_dump bs_wiki_prd > /var/lib/pgsql/backups/bs_wiki_prd.sql" user="postgres"
 
-- name: config email firewalld
+- name: config http firewalld
   sudo: yes
   firewalld: service={{ item }} zone=internal permanent=yes state=enabled immediate=yes
   with_items:
     - http
     - https
+
+- name: cron the lets encrypt renewal
+  sudo: yes
+  action: cron name="Renew le cert blog" minute="43" hour="8" job="/usr/bin/certbot renew" user="root"
 

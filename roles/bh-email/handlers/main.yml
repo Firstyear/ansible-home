@@ -24,6 +24,7 @@
   shell: postmap /etc/postfix/{{ item }}
   with_items:
     - transport
+    - recipientmap
 
 - name: restart clamav-milter
   sudo: yes

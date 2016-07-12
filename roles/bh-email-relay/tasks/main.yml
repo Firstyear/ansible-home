@@ -16,6 +16,7 @@
   with_items:
     - transport
     - relay_recipients
+    - recipientmap
   notify:
     - postmap
     - restart postfix

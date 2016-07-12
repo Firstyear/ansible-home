@@ -110,6 +110,7 @@
   template: src=etc/postfix/{{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0644
   with_items:
     - transport
+    - recipientmap
   notify:
     - postmap
     - restart postfix
