@@ -12,6 +12,7 @@
     - iotop
     - nmap
     - mlocate
+    - postfix
     - screen
     - strace
     - vim

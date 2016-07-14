@@ -4,7 +4,7 @@
   roles:
     #- virtual
     - bh-common-facts
-    # - bh-common
+    - bh-common
     - bh-common-auth
   #vars_files:
   #  - ~/secure/ansible_home_secrets.yml

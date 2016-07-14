@@ -9,6 +9,7 @@
 - name: Configure automatic patching
   sudo: yes
   action: cron name="Automatic patch and reboot" minute=16 hour=6 weekday={{ patch_day }} job="/usr/sbin/patch-me-intensely reboot" user="root" disabled=no
+  when: patch_day is defined
 
 - name: deploy audit configurations
   sudo: yes

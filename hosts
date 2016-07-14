@@ -3,40 +3,40 @@
 # Other times I need this to be localhost.
 # Local_action in playbooks instead?
 [laptops]
-franky.ipa.blackhats.net.au
+franky.prd.blackhats.net.au
 
 [amanda_servers]
-yvett.ipa.blackhats.net.au patch_day=mon
+yvett.prd.blackhats.net.au patch_day=mon
 
 [blog_servers]
-adara.ipa.blackhats.net.au
+adara.prd.blackhats.net.au
 
 [deployment_servers]
-elise.ipa.blackhats.net.au patch_day=tue
+elise.prd.blackhats.net.au patch_day=tue
 
 [development_servers]
 # avery.dev.blackhats.net.au
 # pbody.ipa.blackhats.net.au
-victoria.ipa.blackhats.net.au patch_day=mon
+victoria.dev.blackhats.net.au patch_day=mon
 honey.dev.blackhats.net.au patch_day=tue
 
 [email_servers]
-ariel.ipa.blackhats.net.au patch_day=sat
+ariel.prd.blackhats.net.au patch_day=sat
 
 [email_relay_servers]
-adara.ipa.blackhats.net.au patch_day=fri
-cassia.ipa.blackhats.net.au patch_day=fri
+adara.prd.blackhats.net.au patch_day=fri
+cassia.prd.blackhats.net.au patch_day=fri
 
 [dns_slave_servers]
-adara.ipa.blackhats.net.au patch_day=thu
-cassia.ipa.blackhats.net.au patch_day=fri
-ariel.ipa.blackhats.net.au patch_day=sat
+adara.prd.blackhats.net.au patch_day=thu
+cassia.prd.blackhats.net.au patch_day=fri
+ariel.prd.blackhats.net.au patch_day=sat
 alina.ipa.blackhats.net.au patch_day=sun
 
 # The primary DC MUST BE FIRST
 [freeipa_servers]
 alina.ipa.blackhats.net.au patch_day=sun
-ariel.ipa.blackhats.net.au patch_day=sat
+# ariel.ipa.blackhats.net.au patch_day=sat
 
 [dns_master_servers]
 tokiha.prd.blackhats.net.au patch_day=sun
@@ -44,11 +44,11 @@ tokiha.prd.blackhats.net.au patch_day=sun
 [ds_servers]
 tokiha.prd.blackhats.net.au patch_day=sun
 
-# [libvirt_servers]
-# mion.ipa.blackhats.net.au
+[libvirt_servers]
+mion.prd.blackhats.net.au
 
 [nfs_servers]
-lorna.ipa.blackhats.net.au patch_day=wed
+lorna.prd.blackhats.net.au patch_day=wed
 
 # [postgis_servers]
 # denver.ipa.blackhats.net.au
@@ -60,10 +60,10 @@ lorna.ipa.blackhats.net.au patch_day=wed
 # tplink-long.net.blackhats.net.au
 
 [rsyslog_servers]
-yvett.ipa.blackhats.net.au
+yvett.prd.blackhats.net.au
 
 [wiki_servers]
-whatnobob.dev.blackhats.net.au patch_day=mon
+whatnobob.prd.blackhats.net.au patch_day=mon
 
 # Amanda backup specs
 [DailySet1]
@@ -96,8 +96,8 @@ rsyslog_servers
 ds_servers
 
 [linode_servers]
-ariel.ipa.blackhats.net.au
-whatnobob.dev.blackhats.net.au
+ariel.prd.blackhats.net.au
+whatnobob.prd.blackhats.net.au
 
 [linode_servers:children]
 email_relay_servers

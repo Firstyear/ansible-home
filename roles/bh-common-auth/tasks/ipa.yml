@@ -10,20 +10,6 @@
     - oddjob
     - oddjob-mkhomedir
 
-- name: Configure LDAP configurations
-  sudo: yes
-  template: src=ldap/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
-  with_items:
-    - pki/tls/certs/bh_ldap.crt
-    - sysconfig/network
-    - openldap/ldap.conf
-    - nsswitch.conf
-    - pam.d/password-auth-ac
-    - pam.d/system-auth-ac
-    - hostname
-    - hosts
-    - chrony.conf
-
 - name: Configure secure LDAP configurations
   sudo: yes
   template: src=ldap/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
@@ -32,6 +18,20 @@
     - sudoers.d/bh_admins-sudo
   notify:
     - restart sssd
+
+- name: Configure LDAP configurations
+  sudo: yes
+  template: src=ldap/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - pki/tls/certs/bh_ldap.crt
+    - sysconfig/network
+    - openldap/ldap.conf
+    - hostname
+    - hosts
+    - chrony.conf
+    - nsswitch.conf
+    - pam.d/password-auth-ac
+    - pam.d/system-auth-ac
 
 - name: Disable NTP
   sudo: yes
