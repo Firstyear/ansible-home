@@ -158,5 +158,5 @@ PubkeyAuthentication yes
 UsePAM yes
 AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
 AuthorizedKeysCommandUser nobody
-GSSAPIAuthentication yes
+# GSSAPIAuthentication yes
 

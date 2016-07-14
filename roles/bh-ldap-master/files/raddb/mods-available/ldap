@@ -18,7 +18,8 @@ ldap {
 	#
 	#  Otherwise, it will use just one server.
     ### We make the assumption of running RADIUSD on the same machine as IPA
-	server = "tokiha.prd.blackhats.net.au"
+	#server = "ldap01.blackhats.net.au"
+    # SERVER IS IN THE LDAP_BIND FILE
 
 	#  Port to connect on, defaults to 389. Setting this to
 	#  636 will enable LDAPS if start_tls (see below) is not
@@ -61,7 +62,7 @@ ldap {
 	#
 	update {
 		control:Password-With-Header	+= 'userPassword'
-		control:NT-Password		:= 'ipaNTHash'
+		control:NT-Password		:= 'ntUserNtPassword'
 #		reply:Reply-Message		:= 'radiusReplyMessage'
 #		reply:Tunnel-Type		:= 'radiusTunnelType'
 #		reply:Tunnel-Medium-Type	:= 'radiusTunnelMediumType'
@@ -100,7 +101,7 @@ ldap {
 	#
 	user {
 		#   Where to start searching in the tree for users
-		base_dn = "cn=users,cn=accounts,dc=ipa,dc=blackhats,dc=net,dc=au"
+		base_dn = "ou=People,dc=blackhats,dc=net,dc=au"
 
 		#  Filter for user objects, should be specific enough
 		#  to identify a single user object.
@@ -143,7 +144,7 @@ ldap {
 	#
 	group {
 		#   Where to start searching in the tree for groups
-		base_dn = "cn=groups,cn=compat,dc=ipa,dc=blackhats,dc=net,dc=au"
+		base_dn = "ou=Groups,dc=blackhats,dc=net,dc=au"
 
 		#  Filter for group objects, should match all available
 		#  group objects a user might be a member of.
@@ -160,7 +161,8 @@ ldap {
 		#  Filter to find group objects a user is a member of.
 		#  That is, group objects with attributes that
 		#  identify members (the inverse of membership_attribute).
-		membership_filter = "(|(member=%{control:Ldap-UserDn})(memberUid=%{%{Stripped-User-Name}:-%{User-Name}}))"
+		# membership_filter = "(|(member=%{control:Ldap-UserDn})(memberUid=%{%{Stripped-User-Name}:-%{User-Name}}))"
+		membership_filter = "(member=%{control:Ldap-UserDn})"
 
 		#  The attribute in user objects which contain the names
 		#  or DNs of groups a user is a member of.
@@ -212,7 +214,7 @@ ldap {
 	#
 	client {
 		#   Where to start searching in the tree for clients
-		base_dn = "${..base_dn}"
+		base_dn = "dc=blackhats,dc=net,dc=au"
 
 		#
 		#  Filter to match client objects
@@ -376,7 +378,7 @@ ldap {
 		# using ldaps (port 636) connections
 		start_tls = yes
 
-		ca_file	= /etc/ipa/ca.crt
+		ca_file	= /etc/pki/tls/certs/bh_ldap.crt
 
 #		ca_path	= ${certdir}
 #		certificate_file = /path/to/radius.crt

@@ -38,9 +38,10 @@
   sudo: yes
   action: service name=dirsrv@blackhats state=started enabled=yes
 
+# Has to be file due to use of {{ in radius config
 - name: Configure radiusd
   sudo: yes
-  action: template src=raddb/{{ item }} dest=/etc/raddb/{{ item }} owner=root group=radiusd mode=0640
+  action: copy src=raddb/{{ item }} dest=/etc/raddb/{{ item }} owner=root group=radiusd mode=0640
   with_items:
     - radiusd.conf
     - clients.conf

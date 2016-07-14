@@ -1,0 +1,3 @@
+
+%bh_admins  ALL=(ALL) TYPE=unconfined_t ROLE=unconfined_r  ALL
+

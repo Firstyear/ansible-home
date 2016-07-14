@@ -1,3 +1,6 @@
 
-	identity = "krbprincipalname=radius/lyra.ipa.blackhats.net.au@IPA.BLACKHATS.NET.AU,cn=services,cn=accounts,dc=ipa,dc=blackhats,dc=net,dc=au"
+    server = {{ inventory_hostname }}
+
+	identity = "cn=radius/tokiha.prd.blackhats.net.au,ou=Services,dc=blackhats,dc=net,dc=au"
 	password = {{ radiusd_ldap_password }}
+
