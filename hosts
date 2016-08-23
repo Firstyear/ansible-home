@@ -1,9 +1,6 @@
-
 # I need this to sometimes be the full name of the laptop.
 # Other times I need this to be localhost.
 # Local_action in playbooks instead?
-[laptops]
-franky.prd.blackhats.net.au
 
 [amanda_servers]
 yvett.prd.blackhats.net.au patch_day=mon
@@ -15,8 +12,6 @@ adara.prd.blackhats.net.au
 elise.prd.blackhats.net.au patch_day=tue
 
 [development_servers]
-# avery.dev.blackhats.net.au
-# pbody.ipa.blackhats.net.au
 victoria.dev.blackhats.net.au patch_day=mon
 honey.dev.blackhats.net.au patch_day=tue
 
@@ -31,12 +26,12 @@ cassia.prd.blackhats.net.au patch_day=fri
 adara.prd.blackhats.net.au patch_day=thu
 cassia.prd.blackhats.net.au patch_day=fri
 ariel.prd.blackhats.net.au patch_day=sat
-alina.ipa.blackhats.net.au patch_day=sun
+# alina.ipa.blackhats.net.au patch_day=sun
 
 # The primary DC MUST BE FIRST
 [freeipa_servers]
-alina.ipa.blackhats.net.au patch_day=sun
 ariel.ipa.blackhats.net.au patch_day=sat
+# alina.ipa.blackhats.net.au patch_day=sun
 
 [dns_master_servers]
 tokiha.prd.blackhats.net.au patch_day=sun
@@ -50,14 +45,12 @@ mion.prd.blackhats.net.au
 [nfs_servers]
 lorna.prd.blackhats.net.au patch_day=wed
 
-# [postgis_servers]
-# denver.ipa.blackhats.net.au
+[openshift_master_servers]
+osmaster.dev.blackhats.net.au patch_day=thu
 
-# [radicale_servers]
-# liza.ipa.blackhats.net.au
-
-# [openwrt_aps]
-# tplink-long.net.blackhats.net.au
+[openshift_node_servers]
+osnode01.dev.blackhats.net.au patch_day=fri
+osnode02.dev.blackhats.net.au patch_day=sat
 
 [rsyslog_servers]
 yvett.prd.blackhats.net.au
@@ -80,8 +73,8 @@ nfs_servers
 ds_servers
 wiki_servers
 
-[ManualSet:children]
-laptops
+[ManualSet]
+franky.ipa.blackhats.net.au
 
 # Other groups
 
@@ -94,6 +87,9 @@ freeipa_servers
 nfs_servers
 rsyslog_servers
 ds_servers
+openshift_master_servers
+openshift_node_servers
+
 
 [linode_servers]
 ariel.prd.blackhats.net.au
