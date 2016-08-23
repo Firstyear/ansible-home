@@ -1,0 +1,106 @@
+
+# Install aide
+
+- name: install aide
+  sudo: yes
+  action: yum name={{ item }} state=present
+  with_items:
+    - aide
+  tags: aide
+
+- name: deploy motd
+  sudo: yes
+  copy: src={{ item }} dest=/etc/profile.d/{{ item }} owner=root group=root mode=0755
+  with_items:
+    - 99-aide-motd.sh
+  tags: aide
+
+- name: deploy motd
+  sudo: yes
+  copy: src={{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - aide-motd
+  tags: aide
+
+- name: If prelink is installed
+  sudo: yes
+  action: stat path=/usr/sbin/prelink
+  register: prelink_st
+  tags: aide
+
+# Disable prelink
+- name: disable prelink
+  sudo: yes
+  action: copy src=prelink dest=/etc/sysconfig/prelink owner=root group=root mode=0644
+  notify:
+    - undo prelink
+  when: prelink_st.stat.exists == true
+  tags: aide
+
+- meta: flush_handlers
+  tags: aide
+
+- name: Erase prelink
+  sudo: yes
+  action: yum name=prelink state=absent
+  tags: aide
+
+# Configure aide
+- name: configure aide
+  sudo: yes
+  action: copy src=aide.conf dest=/etc/aide.conf owner=root group=root mode=0600
+  tags: aide
+
+- name: ensure include
+  sudo: yes
+  action: file path=/etc/aide-local.conf state=touch owner=root group=root mode=0600
+  tags: aide
+
+# Schedule cron to trigger on change.
+## You need to cron this BEFORE you update aide, because else you immediately
+## trigger a crontab change violation
+
+- name: cron database check
+  sudo: yes
+  action: cron name="Aide integrity check" minute="15" hour="7" job="/usr/bin/python -c 'import time; import random; time.sleep(random.randint(0, 2700))' && /usr/sbin/aide -C &> /tmp/aide.check.out; if [ $? -ne 0 ]; then cat /tmp/aide.check.out; fi "
+  tags: aide
+
+- name: check aide database state
+  sudo: yes
+  action: stat path="/var/lib/aide/aide.db.gz"
+  register: state
+  tags: aide
+
+# If no database, initialise.
+
+- name: initialise aide database
+  sudo: yes
+  action: command creates="/var/lib/aide/aide.db.new.gz" /usr/sbin/aide -i
+  when: state.stat.exists == false
+  tags: aide
+
+# If database, update.
+
+- name: update aide database
+  sudo: yes
+  action: command creates="/var/lib/aide/aide.db.new.gz" /usr/sbin/aide -u
+  ignore_errors: yes # Ignore errors because updates will highlight differences
+  when: state.stat.exists == true
+  tags: aide
+
+- name: unlock aide database
+  sudo: yes
+  action: command /usr/bin/chattr -i /var/lib/aide/aide.db.gz
+  when: state.stat.exists == true
+  tags: aide
+
+- name: move aide database into place
+  sudo: yes
+  action: command mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+  tags: aide
+
+- name: lock aide database
+  sudo: yes
+  action: command /usr/bin/chattr +i /var/lib/aide/aide.db.gz
+  tags: aide
+

@@ -8,10 +8,6 @@
   sudo: yes
   shell: /usr/bin/firewall-cmd --reload
 
-- name: restart sssd
-  sudo: yes
-  service: name=sssd state=restarted
-
 - name: restart auditd
   sudo: yes
   command: /usr/sbin/auditctl -R /etc/audit/rules.d/audit.rules

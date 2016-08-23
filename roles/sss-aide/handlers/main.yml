@@ -1,0 +1,5 @@
+
+- name: undo prelink
+  sudo: yes
+  action: command /usr/sbin/prelink -uav
+

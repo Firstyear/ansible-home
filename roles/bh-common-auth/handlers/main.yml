@@ -1,0 +1,5 @@
+- name: restart sssd
+  sudo: yes
+  service: name=sssd state=restarted
+
+

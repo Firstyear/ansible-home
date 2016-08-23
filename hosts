@@ -36,7 +36,7 @@ alina.ipa.blackhats.net.au patch_day=sun
 # The primary DC MUST BE FIRST
 [freeipa_servers]
 alina.ipa.blackhats.net.au patch_day=sun
-# ariel.ipa.blackhats.net.au patch_day=sat
+ariel.ipa.blackhats.net.au patch_day=sat
 
 [dns_master_servers]
 tokiha.prd.blackhats.net.au patch_day=sun

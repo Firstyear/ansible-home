@@ -302,6 +302,7 @@ unknown_local_recipient_reject_code = 550
 #
 #relay_domains = $mydestination
 #relay_domains = firstyear.id.au, ipa.firstyear.id.au, blackhats.net.au, ipa.blackhats.net.au
+relay_domains = runlevelone.net, artofgeek.net, brissafety.net
 
 # INTERNET OR INTRANET
 
