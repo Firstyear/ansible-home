@@ -1,0 +1,9 @@
+
+- name: resize xfs
+  sudo: yes
+  shell: /usr/sbin/xfs_growfs /dev/vg00/var_lv
+
+- name: remount xfs
+  sudo: yes
+  shell: /usr/bin/mount -o remount /dev/vg00/var_lv
+

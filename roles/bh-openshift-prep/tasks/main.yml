@@ -1,0 +1,47 @@
+
+- name: Install openshift repo
+  sudo: yes
+  action: yum state=present name=centos-release-openshift-origin
+
+- name: install openshift dependencies
+  sudo: yes
+  action: yum state=present name={{ item }} enablerepo=centos-openshift-origin-testing
+  with_items:
+    - wget
+    - git
+    - net-tools
+    - bind-utils
+    - iptables-services
+    - bridge-utils
+    - bash-completion
+    - gcc
+    - python-virtualenv
+    - docker
+    - origin-clients
+    - atomic-openshift-utils
+
+- name: enable docker
+  sudo: yes
+  action: service name=docker enabled=yes state=started
+
+# Configure the insecure registry here.
+
+- name: docker sysconfig
+  sudo: yes
+  action: template src=docker dest=/etc/sysconfig/docker owner=root group=root mode=0644
+
+- name: Resize /var for master
+  sudo: yes
+  lvol: vg=vg00 lv=var_lv size=20g
+  notify:
+    - resize xfs
+    - remount xfs
+  when: "'openshift_master_servers' in group_names"
+
+- name: Resize /var for node
+  sudo: yes
+  lvol: vg=vg00 lv=var_lv size=15g
+  notify:
+    - resize xfs
+    - remount xfs
+  when: "'openshift_node_servers' in group_names"
