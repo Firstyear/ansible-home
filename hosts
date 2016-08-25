@@ -72,6 +72,8 @@ freeipa_servers
 nfs_servers
 ds_servers
 wiki_servers
+openshift_master_servers
+openshift_node_servers
 
 [ManualSet]
 franky.ipa.blackhats.net.au

@@ -3,6 +3,10 @@
   sudo: yes
   action: yum state=present name=centos-release-openshift-origin
 
+- name: Install epel repo
+  sudo: yes
+  action: yum state=present name=epel-release
+
 - name: install openshift dependencies
   sudo: yes
   action: yum state=present name={{ item }} enablerepo=centos-openshift-origin-testing
@@ -11,7 +15,6 @@
     - git
     - net-tools
     - bind-utils
-    - iptables-services
     - bridge-utils
     - bash-completion
     - gcc
@@ -19,16 +22,31 @@
     - docker
     - origin-clients
     - atomic-openshift-utils
+    - ansible
+    - pyOpenSSL
 
-- name: enable docker
+- name: clone ansible repo
   sudo: yes
-  action: service name=docker enabled=yes state=started
+  action: git repo=https://github.com/openshift/openshift-ansible dest=/root/openshift-ansible
+  when: "'openshift_master_servers' in group_names"
 
 # Configure the insecure registry here.
 
 - name: docker sysconfig
   sudo: yes
   action: template src=docker dest=/etc/sysconfig/docker owner=root group=root mode=0644
+
+- name: enable docker
+  sudo: yes
+  action: service name=docker enabled=yes state=started
+
+- name: deploy cluster information
+  sudo: yes
+  action: template src=hosts dest=/etc/ansible/hosts owner=root group=root mode=0644
+
+- name: deploy weakened sshd_config
+  sudo: yes
+  action: template src=sshd_config dest=/etc/ssh/sshd_config owner=root group=root mode=0644
 
 - name: Resize /var for master
   sudo: yes
@@ -45,3 +63,4 @@
     - resize xfs
     - remount xfs
   when: "'openshift_node_servers' in group_names"
+
