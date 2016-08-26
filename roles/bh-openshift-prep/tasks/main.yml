@@ -48,6 +48,10 @@
   sudo: yes
   action: template src=sshd_config dest=/etc/ssh/sshd_config owner=root group=root mode=0644
 
+- name: deploy notes
+  sudo: yes
+  action: template src=notes dest=/root/notes owner=root group=root mode=0644
+
 - name: Resize /var for master
   sudo: yes
   lvol: vg=vg00 lv=var_lv size=20g

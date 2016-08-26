@@ -1,0 +1,82 @@
+
+For the ldap auth you need:
+
+/etc/origin/master/master-config.yaml
+
+oauthConfig:
+  assetPublicURL: https://osmaster.dev.blackhats.net.au:8443/console/
+  grantConfig:
+    method: auto
+  #identityProviders:
+  #- challenge: true
+  #  login: true
+  #  mappingMethod: claim
+  #  name: allow_all
+  #  provider:
+  #    apiVersion: v1
+  #    kind: AllowAllPasswordIdentityProvider
+  identityProviders:
+  - challenge: true
+    login: true
+    mappingMethod: claim
+    name: bh_ldap
+    provider:
+     apiVersion: v1
+     kind: LDAPPasswordIdentityProvider
+     attributes:
+      id:
+      - dn
+      email:
+      - mail
+      name:
+      - cn
+      preferredUsername:
+      - uid
+     ca: /etc/pki/tls/certs/bh_ldap.crt
+     insecure: false
+     url: "ldap://ldap01.blackhats.net.au/ou=People,dc=blackhats,dc=net,dc=au?uid?sub?(memberOf=cn=bh_admins,ou=Groups,dc=blackhats,dc=net,dc=au)"
+  masterCA: ca-bundle.crt
+  masterPublicURL: https://osmaster.dev.blackhats.net.au:8443
+  masterURL: https://osmaster.dev.blackhats.net.au:8443
+  sessionConfig:
+    sessionMaxAgeSeconds: 3600
+    sessionName: ssn
+    sessionSecretsFile: /etc/origin/master/session-secrets.yaml
+  tokenConfig:
+    accessTokenMaxAgeSeconds: 86400
+    authorizeTokenMaxAgeSeconds: 500
+
+
+You will need to update ip6tables too:
+
+-A INPUT -p tcp -m state --state NEW -m tcp --dport 10080 -s 2001:44b8:2155:2c11:5054:ff:feba:574 -j ACCEPT
+
+
+Reboot the nodes at this point.
+
+If you see the registry and router fail to deploy, run:
+
+oc deploy --cancel dc/router -n default
+oc latest --cancel dc/router -n default
+
+
+corsAllowedOrigins:
+  - 127.0.0.1
+  - localhost
+  - 172.24.11.19
+  - kubernetes.default
+  - kubernetes.default.svc.cluster.local
+  - kubernetes
+  - openshift.default
+  - osmaster.dev.blackhats.net.au
+  - openshift
+  - openshift.default.svc
+  - 172.30.0.1
+  - openshift.default.svc.cluster.local
+  - kubernetes.default.svc
+  - openshift.dev.blackhats.net.au      <<-- add this
+
+
+
+
+

@@ -13,10 +13,13 @@ ansible_ssh_user=root
 #ansible_sudo=true
 
 deployment_type=origin
-openshift_http_proxy=http://proxy-bne1.net.blackhats.net.au:3128/
+# Ohh fuck me don't set the proxy here unless you want to trash EVERYTHING
+# openshift_http_proxy=http://proxy-bne1.net.blackhats.net.au:3128/
 
 # uncomment the following to enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
 #openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+### WARNING. DO NOT SET AAAA on these hostnames!!!
 
 # host group for masters
 [masters]
