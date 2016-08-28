@@ -1,9 +1,16 @@
 
 # This file fucking shits it's pants, but ohh well, at least it's documented.
 
-- name: Ensure nfs is installed
+# We are lazy: Fuck it, put on samba too :)
+
+- name: Ensure storage services are installed
   sudo: yes
-  action: yum name=nfs-utils state=present
+  action: yum name={{ item }} state=present
+  with_items:
+    - samba
+    - samba-client
+    - sssd-libwbclient
+    - nfs-utils
 
 - name: Enable nfs server
   sudo: yes
@@ -13,19 +20,34 @@
   sudo: yes
   action: firewalld service=nfs zone=internal permanent=true state=enabled
 
-# We are lazy: Fuck it, put on samba too :)
-
-- name: Ensure samba is installed
+- name: Configure exports
   sudo: yes
-  action: yum name={{ item }} state=present
-  with_items:
-    - samba
-    - samba-client
-    - sssd-libwbclient
+  action: template src=exports dest=/etc/exports owner=root group=root mode=0644
+
+- name: Create openshift volumes
+  sudo: yes
+  action: file path=/var/lib/openshift/ owner=nfsnobody group=nfsnobody mode=0755 state=directory
+
+- name: Create openshift volumes
+  sudo: yes
+  action: file path=/var/lib/openshift/{{ item }} owner=nfsnobody group=nfsnobody mode=0750 state=directory
+  with_sequence: start=1 end=10 format=os-dev-vol-%d
 
 # Then follow http://www.freeipa.org/page/Howto/Integrating_a_Samba_File_Server_With_IPA
 
 
-- name: Configure nfs firewalld
+- name: Configure samba firewalld
   sudo: yes
   action: firewalld service=samba zone=internal permanent=true state=enabled
+
+- name: Configure samba
+  sudo: yes
+  action: template src=smb.conf dest=/etc/samba/smb.conf owner=root group=root mode=0644
+
+- name: Enable samba
+  sudo: yes
+  action: service name={{ item }} enabled=yes state=started
+  with_items:
+    - smb
+    - nmb
+

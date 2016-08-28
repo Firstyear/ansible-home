@@ -76,6 +76,165 @@ corsAllowedOrigins:
   - kubernetes.default.svc
   - openshift.dev.blackhats.net.au      <<-- add this
 
+Create persistent storage next:
+
+https://docs.openshift.org/latest/install_config/persistent_storage/persistent_storage_nfs.html
+
+Make the volume accesible:
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: os-dev-vol-1
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+  - ReadWriteOnce
+  nfs:
+    path: /var/lib/openshift/os-dev-vol-1
+    server: lorna.prd.blackhats.net.au
+  persistentVolumeReclaimPolicy: Recycle
+
+oc create -f <file.yml>
+
+You will need to use this claim template to test the volume:
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: claim-os-dev-vol-1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+
+To use the volumes, you must make a sec policy. See: https://docs.openshift.org/latest/install_config/persistent_storage/pod_security_context.html
+
+
+oc export scc restricted > new-scc.yaml
+
+[root@osmaster]~# cat new-scc.yaml 
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegedContainer: false
+allowedCapabilities: null
+apiVersion: v1
+defaultAddCapabilities: null
+fsGroup:
+  type: MustRunAs
+groups:
+- system:authenticated
+kind: SecurityContextConstraints
+metadata:
+  annotations:
+    kubernetes.io/description: restricted denies access to all host features and requires
+      pods to be run with a UID, and SELinux context that are allocated to the namespace.  This
+      is the most restrictive SCC.
+  creationTimestamp: null
+  name: restricted
+priority: null
+readOnlyRootFilesystem: false
+requiredDropCapabilities:
+- KILL
+- MKNOD
+- SYS_CHROOT
+- SETUID
+- SETGID
+runAsUser:
+  type: MustRunAsRange
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+volumes:
+- configMap
+- downwardAPI
+- emptyDir
+- persistentVolumeClaim
+- secret
+
+Edit it to make the nfs-scc.
+
+[root@osmaster]~# cat nfs-scc.yml 
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegedContainer: false
+allowedCapabilities: null
+apiVersion: v1
+defaultAddCapabilities: null
+fsGroup:
+  type: MustRunAs
+groups:
+- system:authenticated
+kind: SecurityContextConstraints
+metadata:
+  annotations:
+    kubernetes.io/description: nfs denies access to all host features and requires
+      pods to be run with a UID, and SELinux context that are allocated to the namespace.  This
+      is the most restrictive SCC. Allows access to NFS as nfsnobody.
+  creationTimestamp: null
+  name: nfs-scc
+priority: 9
+readOnlyRootFilesystem: false
+requiredDropCapabilities:
+- KILL
+- MKNOD
+- SYS_CHROOT
+- SETUID
+- SETGID
+runAsUser:
+  type: MustRunAsRange
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: MustRunAs
+  ranges:
+  - min: 65534
+    max: 65534
+volumes:
+- configMap
+- downwardAPI
+- emptyDir
+- persistentVolumeClaim
+- secret
+
+I don't know if this is secure, because all contains will have access to all the other nfs claims .....
+
+Create with:
+
+[root@osmaster]~# oc create -f nfs-scc.yml 
+securitycontextconstraints "nfs-scc" created
+
+
+Look at the project default
+
+oc get project default -o yaml
+
+Now edit the pod to apply
+
+[root@osmaster]~# oc get pod
+NAME                  READY     STATUS      RESTARTS   AGE
+insults-1-build       0/1       Completed   0          1h
+insults-2-8gsym       1/1       Running     0          49m
+postgresql-1-deploy   0/1       Error       0          55m
+
+oc edit pod postgresql-1-deploy
+
+metadata:
+  annotations:
+    openshift.io/deployment.name: postgresql-1
+    openshift.io/scc: nfs-scc
+
 
 
 

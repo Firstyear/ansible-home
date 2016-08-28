@@ -24,6 +24,8 @@
     - atomic-openshift-utils
     - ansible
     - pyOpenSSL
+    - docker
+    - docker-selinux
 
 - name: clone ansible repo
   sudo: yes
@@ -67,4 +69,14 @@
     - resize xfs
     - remount xfs
   when: "'openshift_node_servers' in group_names"
+
+# See https://docs.openshift.org/latest/install_config/persistent_storage/persistent_storage_nfs.html
+
+- name: allow containers to nfs
+  sudo: yes
+  action: seboolean name=virt_use_nfs state=yes persistent=yes
+
+- name: allow containers to nfs sandbox
+  sudo: yes
+  action: seboolean name=virt_sandbox_use_nfs state=yes persistent=yes
 
