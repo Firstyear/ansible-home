@@ -78,163 +78,98 @@ corsAllowedOrigins:
 
 Create persistent storage next:
 
-https://docs.openshift.org/latest/install_config/persistent_storage/persistent_storage_nfs.html
+Make iscsi volume on the storage server
 
-Make the volume accesible:
+targetcli /backstores/fileio create os-dev-t1-pv-1 `pwd`/os-dev-t1-pv-1 10G write_back=false
+targetcli /iscsi/iqn.2003-01.org.linux-iscsi.mion.x8664:sn.96c325adf995/tpg1/luns/ create /backstores/fileio/os-dev-t1-pv-1
+
+On osmaster:
+
+iscsiadm -m node -T iqn.2003-01.org.linux-iscsi.mion.x8664:sn.96c325adf995 -l
+
+for i in {b,c,d,e,f,g,h,i,j,k}; do mkfs.xfs /dev/sd$i; done
+
+iscsiadm -m node -T iqn.2003-01.org.linux-iscsi.mion.x8664:sn.96c325adf995 --logout
+
+Now import the volumes with:
 
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: os-dev-vol-1
+  name: os-dev-t1-pv-XXX
 spec:
   capacity:
-    storage: 2Gi
-  accessModes:
-  - ReadWriteOnce
-  nfs:
-    path: /var/lib/openshift/os-dev-vol-1
-    server: lorna.prd.blackhats.net.au
-  persistentVolumeReclaimPolicy: Recycle
-
-oc create -f <file.yml>
-
-You will need to use this claim template to test the volume:
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: claim-os-dev-vol-1
-spec:
+    storage: 8Gi
   accessModes:
     - ReadWriteOnce
+  iscsi:
+     targetPortal: 172.24.10.8
+     iqn: iqn.2003-01.org.linux-iscsi.mion.x8664:sn.96c325adf995
+     lun: XXX
+     fsType: 'xfs'
+     readOnly: false
+
+
+
+Make the registry use a persistent volume.
+
+Create a backing store of sufficent capacity.
+
+targetcli /backstores/fileio create os-dev-t2-pv-11 `pwd`/os-dev-t2-pv-11 80G write_back=false
+targetcli /iscsi/iqn.2003-01.org.linux-iscsi.mion.x8664:sn.96c325adf995/tpg1/luns/ create /backstores/fileio/os-dev-t2-pv-11
+
+iscsiadm -m node -T iqn.2003-01.org.linux-iscsi.mion.x8664:sn.96c325adf995 -l
+mkfs.xfs /dev/sdXXXX
+iscsiadm -m node -T iqn.2003-01.org.linux-iscsi.mion.x8664:sn.96c325adf995 --logout
+
+Now make the volume
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: os-dev-t2-pv-11
+spec:
+  capacity:
+    storage: 78Gi
+  accessModes:
+    - ReadWriteOnce
+  iscsi:
+     targetPortal: 172.24.10.8
+     iqn: iqn.2003-01.org.linux-iscsi.mion.x8664:sn.96c325adf995
+     lun: 0
+     fsType: 'xfs'
+     readOnly: false
+
+Create a claim for it
+
+
+
+apiVersion: "v1"
+kind: "PersistentVolumeClaim"
+metadata:
+  name: "claim-os-dev-t2-pv-11"
+spec:
+  accessModes:
+    - "ReadWriteOnce"
   resources:
     requests:
-      storage: 1Gi
+      storage: "78Gi"
+  volumeName: "os-dev-t2-pv-11"
 
 
-To use the volumes, you must make a sec policy. See: https://docs.openshift.org/latest/install_config/persistent_storage/pod_security_context.html
+Now attach this to the registry for usage.
+
+oc volume deploymentconfigs/docker-registry --add --name=registry-storage -t pvc --claim-name=claim-os-dev-t2-pv-11 --overwrite
 
 
-oc export scc restricted > new-scc.yaml
 
-[root@osmaster]~# cat new-scc.yaml 
-allowHostDirVolumePlugin: false
-allowHostIPC: false
-allowHostNetwork: false
-allowHostPID: false
-allowHostPorts: false
-allowPrivilegedContainer: false
-allowedCapabilities: null
-apiVersion: v1
-defaultAddCapabilities: null
-fsGroup:
-  type: MustRunAs
-groups:
-- system:authenticated
-kind: SecurityContextConstraints
-metadata:
-  annotations:
-    kubernetes.io/description: restricted denies access to all host features and requires
-      pods to be run with a UID, and SELinux context that are allocated to the namespace.  This
-      is the most restrictive SCC.
-  creationTimestamp: null
-  name: restricted
-priority: null
-readOnlyRootFilesystem: false
-requiredDropCapabilities:
-- KILL
-- MKNOD
-- SYS_CHROOT
-- SETUID
-- SETGID
-runAsUser:
-  type: MustRunAsRange
-seLinuxContext:
-  type: MustRunAs
-supplementalGroups:
-  type: RunAsAny
-volumes:
-- configMap
-- downwardAPI
-- emptyDir
-- persistentVolumeClaim
-- secret
+Can push images with:
 
-Edit it to make the nfs-scc.
+sudo docker login -u william -p `oc whoami -t` docker-registry-default.openshift.dev.blackhats.net.au:80
+sudo docker tag centos_wibrown_devel:7 docker-registry-default.openshift.dev.blackhats.net.au:80/centos7sh/centos_wibrown_devel
+sudo docker push docker-registry-default.openshift.dev.blackhats.net.au:80/centos7sh/centos_wibrown_devel
 
-[root@osmaster]~# cat nfs-scc.yml 
-allowHostDirVolumePlugin: false
-allowHostIPC: false
-allowHostNetwork: false
-allowHostPID: false
-allowHostPorts: false
-allowPrivilegedContainer: false
-allowedCapabilities: null
-apiVersion: v1
-defaultAddCapabilities: null
-fsGroup:
-  type: MustRunAs
-groups:
-- system:authenticated
-kind: SecurityContextConstraints
-metadata:
-  annotations:
-    kubernetes.io/description: nfs denies access to all host features and requires
-      pods to be run with a UID, and SELinux context that are allocated to the namespace.  This
-      is the most restrictive SCC. Allows access to NFS as nfsnobody.
-  creationTimestamp: null
-  name: nfs-scc
-priority: 9
-readOnlyRootFilesystem: false
-requiredDropCapabilities:
-- KILL
-- MKNOD
-- SYS_CHROOT
-- SETUID
-- SETGID
-runAsUser:
-  type: MustRunAsRange
-seLinuxContext:
-  type: MustRunAs
-supplementalGroups:
-  type: MustRunAs
-  ranges:
-  - min: 65534
-    max: 65534
-volumes:
-- configMap
-- downwardAPI
-- emptyDir
-- persistentVolumeClaim
-- secret
-
-I don't know if this is secure, because all contains will have access to all the other nfs claims .....
-
-Create with:
-
-[root@osmaster]~# oc create -f nfs-scc.yml 
-securitycontextconstraints "nfs-scc" created
-
-
-Look at the project default
-
-oc get project default -o yaml
-
-Now edit the pod to apply
-
-[root@osmaster]~# oc get pod
-NAME                  READY     STATUS      RESTARTS   AGE
-insults-1-build       0/1       Completed   0          1h
-insults-2-8gsym       1/1       Running     0          49m
-postgresql-1-deploy   0/1       Error       0          55m
-
-oc edit pod postgresql-1-deploy
-
-metadata:
-  annotations:
-    openshift.io/deployment.name: postgresql-1
-    openshift.io/scc: nfs-scc
-
+oc run -i --tty zsh --image=centos_wibrown_devel --restart=Never
 
 
 

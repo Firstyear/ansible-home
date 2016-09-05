@@ -66,14 +66,17 @@ mikoto.net.blackhats.net.au
 [DailySet1:children]
 amanda_servers
 deployment_servers
-development_servers
 email_servers
-freeipa_servers
+email_relay_servers
 nfs_servers
 ds_servers
-wiki_servers
+
+[DailySet2:children]
 openshift_master_servers
 openshift_node_servers
+freeipa_servers
+wiki_servers
+development_servers
 
 [ManualSet]
 franky.ipa.blackhats.net.au

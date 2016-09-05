@@ -37,6 +37,7 @@
   action: file path=/var/lib/amanda/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
   with_items:
     - DailySet1
+    - DailySet2
     - ManualSet
 
 - name: Create config directories
@@ -44,6 +45,7 @@
   action: file path=/etc/amanda/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
   with_items:
     - DailySet1
+    - DailySet2
     - ManualSet
 
 - name: Configure amanda
@@ -53,6 +55,9 @@
     - DailySet1/disklist
     - DailySet1/amanda.conf
     - DailySet1/amanda-client.conf
+    - DailySet2/disklist
+    - DailySet2/amanda.conf
+    - DailySet2/amanda-client.conf
     - ManualSet/disklist
     - ManualSet/amanda.conf
     - ManualSet/amanda-client.conf
@@ -62,11 +67,17 @@
   action: file path=/var/lib/amanda/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
   with_items:
     - DailySet1/vtapes
+    - DailySet2/vtapes
     - ManualSet/vtapes
 
 - name: Create vtape directories DailySet1
   sudo: yes
   action: file path=/var/lib/amanda/DailySet1/vtapes/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
+  with_sequence: start=1 end=35 format=slot%d
+
+- name: Create vtape directories DailySet2
+  sudo: yes
+  action: file path=/var/lib/amanda/DailySet2/vtapes/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
   with_sequence: start=1 end=35 format=slot%d
 
 - name: Create vtape directories ManualSet
@@ -77,8 +88,12 @@
 # This needs to change .... We need to make a cronjob *per* host I think ..., but we need to stagger times.
 - name: Cron backup job DailySet1
   sudo: yes
-  action: cron name="Run amanda DailySet1" minute="0" hour="2" job="/usr/sbin/amdump DailySet1" user="amandabackup"
+  action: cron name="Run amanda DailySet1" minute="0" hour="1" job="/usr/sbin/amdump DailySet1" user="amandabackup"
 
+
+- name: Cron backup job DailySet2
+  sudo: yes
+  action: cron name="Run amanda DailySet1" minute="0" hour="11" job="/usr/sbin/amdump DailySet1" user="amandabackup"
 
 
 

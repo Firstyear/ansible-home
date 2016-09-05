@@ -1,0 +1,14 @@
+
+/var/lib/openshift/os-dev-vol-1 172.24.11.0/24(rw,root_squash,no_wdelay) 2001:44b8:16a:11::/64(rw,root_squash,no_wdelay)
+/var/lib/openshift/os-dev-vol-2 172.24.11.0/24(rw,root_squash,no_wdelay) 2001:44b8:16a:11::/64(rw,root_squash,no_wdelay)
+/var/lib/openshift/os-dev-vol-3 172.24.11.0/24(rw,root_squash,no_wdelay) 2001:44b8:16a:11::/64(rw,root_squash,no_wdelay)
+/var/lib/openshift/os-dev-vol-4 172.24.11.0/24(rw,root_squash,no_wdelay) 2001:44b8:16a:11::/64(rw,root_squash,no_wdelay)
+/var/lib/openshift/os-dev-vol-5 172.24.11.0/24(rw,root_squash,no_wdelay) 2001:44b8:16a:11::/64(rw,root_squash,no_wdelay)
+/var/lib/openshift/os-dev-vol-6 172.24.11.0/24(rw,root_squash,no_wdelay) 2001:44b8:16a:11::/64(rw,root_squash,no_wdelay)
+/var/lib/openshift/os-dev-vol-7 172.24.11.0/24(rw,root_squash,no_wdelay) 2001:44b8:16a:11::/64(rw,root_squash,no_wdelay)
+/var/lib/openshift/os-dev-vol-8 172.24.11.0/24(rw,root_squash,no_wdelay) 2001:44b8:16a:11::/64(rw,root_squash,no_wdelay)
+/var/lib/openshift/os-dev-vol-9 172.24.11.0/24(rw,root_squash,no_wdelay) 2001:44b8:16a:11::/64(rw,root_squash,no_wdelay)
+/var/lib/openshift/os-dev-vol-10 172.24.11.0/24(rw,root_squash,no_wdelay) 2001:44b8:16a:11::/64(rw,root_squash,no_wdelay)
+
+
+
