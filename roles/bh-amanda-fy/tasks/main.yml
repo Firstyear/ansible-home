@@ -90,10 +90,9 @@
   sudo: yes
   action: cron name="Run amanda DailySet1" minute="0" hour="1" job="/usr/sbin/amdump DailySet1" user="amandabackup"
 
-
 - name: Cron backup job DailySet2
   sudo: yes
-  action: cron name="Run amanda DailySet1" minute="0" hour="11" job="/usr/sbin/amdump DailySet1" user="amandabackup"
+  action: cron name="Run amanda DailySet2" minute="0" hour="11" job="/usr/sbin/amdump DailySet2" user="amandabackup"
 
 
 
