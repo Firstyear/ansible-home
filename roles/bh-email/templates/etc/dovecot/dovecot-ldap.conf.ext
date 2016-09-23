@@ -24,7 +24,7 @@
 #uris = ldap://alina.ipa.firstyear.id.au 
 #uris = ldap:///dc%3Dipa%2Cdc%3Dfirstyear%2Cdc%3Did%2Cdc%3Dau
 #uris = ldap:///dc%3Dipa%2Cdc%3Dblackhats%2Cdc%3Did%2Cdc%3Dau
-uris = ldap://{{ groups.freeipa_servers[1] }}
+uris = ldap://ldap-linode.blackhats.net.au
 
 # Distinguished Name - the username used to login to the LDAP server.
 # Leave it commented out to bind anonymously (useful with auth_bind=yes).
@@ -48,7 +48,7 @@ uris = ldap://{{ groups.freeipa_servers[1] }}
 # Use TLS to connect to the LDAP server.
 tls = yes
 # TLS options, currently supported only with OpenLDAP:
-tls_ca_cert_file = /etc/ipa/ca.crt
+tls_ca_cert_file = /etc/pki/tls/certs/bh_ldap.crt
 #tls_ca_cert_dir =
 #tls_cipher_suite =
 # TLS cert/key is used only if LDAP server requires a client certificate.
@@ -94,7 +94,7 @@ auth_bind = yes
 # LDAP base. %variables can be used here.
 # For example: dc=mail, dc=example, dc=org
 #base = dc=ipa,dc=firstyear,dc=id,dc=au
-base = cn=users,cn=accounts,dc=ipa,dc=blackhats,dc=net,dc=au
+base = ou=People,dc=blackhats,dc=net,dc=au
 
 # Dereference: never, searching, finding, always
 #deref = never

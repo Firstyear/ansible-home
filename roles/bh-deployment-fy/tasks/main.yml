@@ -84,6 +84,14 @@
   sudo: yes
   firewalld: port=20049-20052/udp zone=internal permanent=yes state=enabled immediate=yes
 
+- name: nfsv3 firewall sunrpc
+  sudo: yes
+  firewalld: port=111/tcp zone=internal permanent=yes state=enabled immediate=yes
+
+- name: nfsv3 firewall sunrpc
+  sudo: yes
+  firewalld: port=111/udp zone=internal permanent=yes state=enabled immediate=yes
+
 - name: sync pxeboot mirror
   sudo: yes
   #action: shell rsync -az --exclude='*.iso' rsync://{{ centos_mirror }}/centos/{{ centos_version }}/os/x86_64/ /var/www/html/pub/centos/{{ centos_version }}/os/x86_64/
@@ -131,4 +139,7 @@
   action: shell rsync -az rsync://{{ centos_mirror }}/freebsd/releases/amd64/amd64/ISO-IMAGES/10.3/{{ item }} /var/www/html/pub/freebsd/10.3/amd64/{{ item }}
   with_items:
     - FreeBSD-10.3-RELEASE-amd64-bootonly.iso
+
+
+# http://freebsd.so14k.com/freebsd9_pxe.shtml
 

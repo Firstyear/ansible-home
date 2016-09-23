@@ -1,0 +1,47 @@
+
+- name: configure radius master firewall
+  sudo: yes
+  firewalld: zone=internal permanent=true state=enabled service={{ item }} immediate=true
+  with_items:
+    - radius
+
+# Has to be file due to use of {{ in radius config
+- name: Configure radiusd
+  sudo: yes
+  action: copy src=raddb/{{ item }} dest=/etc/raddb/{{ item }} owner=root group=radiusd mode=0640
+  with_items:
+    - radiusd.conf
+    - clients.conf
+    - mods-available/ldap
+    - mods-available/eap
+    - sites-available/default
+    - sites-available/inner-tunnel
+
+- name: Configure ldap auth
+  sudo: yes
+  action: template src=ldap-bind dest=/etc/raddb/mods-enabled/ldap-bind owner=root group=radiusd mode=0640
+
+- name: Symlink mods available
+  sudo: yes
+  action: file src=/etc/raddb/mods-available/{{ item }} dest=/etc/raddb/mods-enabled/{{ item }} state=link
+  with_items:
+    - ldap
+    - eap
+
+- name: Symlink sites available
+  sudo: yes
+  action: file src=/etc/raddb/sites-available/{{ item }} dest=/etc/raddb/sites-enabled/{{ item }} state=link
+  with_items:
+    - default
+    - inner-tunnel
+
+# Add radiusd keys
+
+- name: Correct radius tls directory
+  sudo: yes
+  action: file path=/etc/pki/radius/ state=directory owner=radiusd group=radiusd mode=0750
+
+- name: enable all auth services
+  sudo: yes
+  action: service name=radiusd state=started enabled=yes
+

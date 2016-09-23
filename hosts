@@ -2,6 +2,10 @@
 # Other times I need this to be localhost.
 # Local_action in playbooks instead?
 
+[laptops]
+franky.prd.blackhats.net.au
+rei.prd.blackhats.net.au
+
 [amanda_servers]
 yvett.prd.blackhats.net.au patch_day=mon
 
@@ -29,8 +33,8 @@ ariel.prd.blackhats.net.au patch_day=sat
 # alina.ipa.blackhats.net.au patch_day=sun
 
 # The primary DC MUST BE FIRST
-[freeipa_servers]
-ariel.ipa.blackhats.net.au patch_day=sat
+# [freeipa_servers]
+# ariel.ipa.blackhats.net.au patch_day=sat
 # alina.ipa.blackhats.net.au patch_day=sun
 
 [dns_master_servers]
@@ -38,6 +42,7 @@ tokiha.prd.blackhats.net.au patch_day=sun
 
 [ds_servers]
 tokiha.prd.blackhats.net.au patch_day=sun
+ariel.prd.blackhats.net.au patch_day=sat
 
 [libvirt_servers]
 mion.prd.blackhats.net.au
@@ -74,12 +79,12 @@ ds_servers
 [DailySet2:children]
 openshift_master_servers
 openshift_node_servers
-freeipa_servers
+# freeipa_servers
 wiki_servers
 development_servers
 
-[ManualSet]
-franky.ipa.blackhats.net.au
+[ManualSet:children]
+laptops
 
 # Other groups
 
@@ -88,7 +93,7 @@ amanda_servers
 deployment_servers
 development_servers
 email_servers
-freeipa_servers
+# freeipa_servers
 nfs_servers
 rsyslog_servers
 ds_servers

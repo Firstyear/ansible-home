@@ -10,8 +10,8 @@
   action: yum name={{ item }} state=present
   with_items:
     - 389-ds-base
-    - python-lib389
-    - python-rest389
+    - python2-rest389
+    - python2-idm389
     - freeradius
     - freeradius-utils
     - freeradius-ldap
@@ -23,14 +23,13 @@
   with_items:
     - ldap
     - ldaps
-    - radius
   when: "'linode_servers' not in group_names"
 
 - name: configure limited auth master firewall
   sudo: yes
   firewalld: zone=internal permanent=yes state=enabled immediate=yes rich_rule='rule family="ipv6" source address="{{ item[1] }}" service name="{{ item[0] }}" accept'
   with_nested:
-    - [ 'ldap', 'ldaps', 'radius' ]
+    - [ 'ldap', 'ldaps' ]
     - [ '2001:44b8:2155:2c00::/56', '2a01:7e00::f03c:91ff:fe84:9e3e', '2400:8901::f03c:91ff:fe98:4593', '2a01:7e00::f03c:91ff:feae:5d82' ]
   when: "'linode_servers' in group_names"
 
@@ -38,43 +37,30 @@
   sudo: yes
   action: service name=dirsrv@blackhats state=started enabled=yes
 
-# Has to be file due to use of {{ in radius config
-- name: Configure radiusd
-  sudo: yes
-  action: copy src=raddb/{{ item }} dest=/etc/raddb/{{ item }} owner=root group=radiusd mode=0640
-  with_items:
-    - radiusd.conf
-    - clients.conf
-    - mods-available/ldap
-    - mods-available/eap
-    - sites-available/default
-    - sites-available/inner-tunnel
+- include: radius.yml
+  when: "'linode_servers' not in group_names"
 
-- name: Configure ldap auth
-  sudo: yes
-  action: template src=ldap-bind dest=/etc/raddb/mods-enabled/ldap-bind owner=root group=radiusd mode=0640
 
-- name: Symlink mods available
-  sudo: yes
-  action: file src=/etc/raddb/mods-available/{{ item }} dest=/etc/raddb/mods-enabled/{{ item }} state=link
-  with_items:
-    - ldap
-    - eap
+##########################################################
+#
+# What next! 
+#
+# Get setup.inf from tokiha /root/setup.inf
+# Now you want to install with:
+#
+# setup-ds.pl --file=setup.inf --silent --debug
+# 
+# Now apply the ldif setup.ldif also on tokiha
+# 
+# Now on the ldap server make the cert request.
+#
+# certutil -d . -R -o ldap-linode.blackhats.net.au -f pwdfile.txt -s "CN=ldap-linode.blackhats.net.au,O=Blackhats,L=Brisbane,ST=Queensland,C=AU" -v 24 -8 ....... 
+# Sign it
+# certutil -C -d . -i /home/william/ldap-linode.blackhats.net.au.csr -o /home/william/ldap-linode.blackhats.net.au.crt -c BH_LDAP_CA
+# Now add
+#  certutil -A -d . -n "Server-Cert" -t ",," -i /tmp/ldap-linode.blackhats.net.au.crt
+# 
+# Now apply the changelog enable ldif
+# Then add the agreements
 
-- name: Symlink sites available
-  sudo: yes
-  action: file src=/etc/raddb/sites-available/{{ item }} dest=/etc/raddb/sites-enabled/{{ item }} state=link
-  with_items:
-    - default
-    - inner-tunnel
-
-# Add radiusd keys
-
-- name: Correct radius tls directory
-  sudo: yes
-  action: file path=/etc/pki/radius/ state=directory owner=radiusd group=radiusd mode=0750
-
-- name: enable all auth services
-  sudo: yes
-  action: service name=radiusd state=started enabled=yes
 
