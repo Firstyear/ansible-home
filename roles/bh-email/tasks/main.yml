@@ -4,6 +4,7 @@
   action: yum name={{ item }} state=present
   with_items:
     - postfix
+    - postgrey
     - dovecot
     - dovecot-pigeonhole
     - clamav-milter
@@ -113,6 +114,7 @@
   with_items:
     - main.cf
     - master.cf
+    - postgrey_whitelist_clients.local
   notify: restart postfix
 
 
@@ -162,5 +164,6 @@
     - clamd@clamsmtp
     - clamav-milter
     - postfix
+    - postgrey
     - dovecot
 

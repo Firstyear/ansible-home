@@ -1,7 +1,10 @@
 
 - name: Install mail software
   sudo: yes
-  action: yum name=postfix state=present
+  action: yum name={{ item }} state=present
+  with_items:
+    - postfix
+    - postgrey
 
 - name: Deploy postfix hash configurations
   sudo: yes
@@ -19,6 +22,7 @@
   template: src=etc/postfix/{{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0644
   with_items:
     - main.cf
+    - postgrey_whitelist_clients.local
   notify: restart postfix
 
 - name: Check postfix keys
@@ -28,16 +32,19 @@
 
 # Clean up if they don't exist
 
-- name: Deploy postfix certificates
-  sudo: yes
-  action: command ipa-getcert request -k /etc/pki/tls/private/mail.firstyear.id.au.key -f /etc/pki/tls/certs/mail.firstyear.id.au.crt -g 4096
-  when: crtst.stat.exists == false
+#- name: Deploy postfix certificates
+#  sudo: yes
+#  action: command ipa-getcert request -k /etc/pki/tls/private/mail.firstyear.id.au.key -f /etc/pki/tls/certs/mail.firstyear.id.au.crt -g 4096
+#  when: crtst.stat.exists == false
 
 ## When some things like transport are deployed, rehash them
 
 - name: Enable mail services
   sudo: yes
-  service: name=postfix state=started enabled=yes
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - postfix
+    - postgrey
 
 - name: config email firewalld
   sudo: yes

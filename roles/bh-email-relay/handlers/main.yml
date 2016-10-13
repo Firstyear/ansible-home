@@ -9,5 +9,8 @@
 
 - name: restart postfix
   sudo: yes
-  service: name=postfix state=restarted
+  service: name={{ item }} state=restarted
+  with_items:
+    - postgrey
+    - postfix
 

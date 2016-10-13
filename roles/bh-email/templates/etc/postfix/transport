@@ -307,3 +307,9 @@ dev.blackhats.net.au        :
 .dev.blackhats.net.au       :
 blackhats.net.au            relay:[ASPMX.L.GOOGLE.COM]
 
+# Now do not allow any more!
+# Will this prevent me sending outbound email?
+# * discard:
+
+
+

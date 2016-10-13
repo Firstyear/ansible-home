@@ -306,5 +306,7 @@ dev.blackhats.net.au        relay:mx05.blackhats.net.au
 .dev.blackhats.net.au       relay:mx05.blackhats.net.au
 blackhats.net.au            relay:[ASPMX.L.GOOGLE.COM]
 
+# Now do not allow any more!
+* discard:
 
 
