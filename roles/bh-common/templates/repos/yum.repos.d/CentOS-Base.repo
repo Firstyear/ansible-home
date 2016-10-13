@@ -46,9 +46,3 @@ enabled=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 
-[epel]
-name=Epel-$releasever
-baseurl=http://mirror.internode.on.net/pub/epel/{{ ansible_distribution_major_version }}/$basearch/
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
-

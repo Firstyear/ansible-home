@@ -42,3 +42,7 @@
   action: template src=repos/yum.repos.d/hp-spp.repo dest=/etc/yum.repos.d/hp-spp.repo owner=root group=root mode=0644
   when: "'hp_servers' in group_names"
 
+- name: Install epel repo
+  sudo: yes
+  action: yum state=present name=epel-release
+

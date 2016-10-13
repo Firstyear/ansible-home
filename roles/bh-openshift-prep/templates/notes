@@ -171,6 +171,28 @@ sudo docker push docker-registry-default.openshift.dev.blackhats.net.au:80/cento
 
 oc run -i --tty zsh --image=centos_wibrown_devel --restart=Never
 
+##### Change a default SCC for a project!!!!
+
+# Allows run as root!
+# You can always copy the SCC to change the user run as etc
+oadm policy add-scc-to-user anyuid -z default
+
+
+
+
+### Running container as root:
+
+You need to use the anyuid or privileged policy:
+
+if you specify the in the dockefile "USER root" it will IGNORE you and just map to some crazy uid anyway.
+
+[root@osmaster]/home/william# oadm policy add-scc-to-user privileged system:serviceaccount:centos7ssh:default
+[root@osmaster]/home/william# oadm policy add-scc-to-user anyuid system:serviceaccount:centos7ssh:default
+[root@osmaster]/home/william# oc policy add-role-to-user admin william -n centos7ssh
+
+
+### How do you make the load balancer use your own domain name.
+
 
 
 

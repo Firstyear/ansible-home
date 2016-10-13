@@ -3,10 +3,6 @@
   sudo: yes
   action: yum state=present name=centos-release-openshift-origin
 
-- name: Install epel repo
-  sudo: yes
-  action: yum state=present name=epel-release
-
 - name: install openshift dependencies
   sudo: yes
   action: yum state=present name={{ item }} enablerepo=centos-openshift-origin-testing
