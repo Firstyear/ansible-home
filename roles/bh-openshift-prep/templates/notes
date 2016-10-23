@@ -186,7 +186,8 @@ You need to use the anyuid or privileged policy:
 
 if you specify the in the dockefile "USER root" it will IGNORE you and just map to some crazy uid anyway.
 
-[root@osmaster]/home/william# oadm policy add-scc-to-user privileged system:serviceaccount:centos7ssh:default
+# [root@osmaster]/home/william# oadm policy add-scc-to-user privileged system:serviceaccount:centos7ssh:default
+
 [root@osmaster]/home/william# oadm policy add-scc-to-user anyuid system:serviceaccount:centos7ssh:default
 [root@osmaster]/home/william# oc policy add-role-to-user admin william -n centos7ssh
 
