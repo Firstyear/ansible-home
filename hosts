@@ -23,19 +23,13 @@ honey.dev.blackhats.net.au patch_day=tue
 ariel.prd.blackhats.net.au patch_day=sat
 
 [email_relay_servers]
-adara.prd.blackhats.net.au patch_day=fri
+adara.prd.blackhats.net.au patch_day=thu
 cassia.prd.blackhats.net.au patch_day=fri
 
 [dns_slave_servers]
 adara.prd.blackhats.net.au patch_day=thu
 cassia.prd.blackhats.net.au patch_day=fri
 ariel.prd.blackhats.net.au patch_day=sat
-# alina.ipa.blackhats.net.au patch_day=sun
-
-# The primary DC MUST BE FIRST
-# [freeipa_servers]
-# ariel.ipa.blackhats.net.au patch_day=sat
-# alina.ipa.blackhats.net.au patch_day=sun
 
 [dns_master_servers]
 tokiha.prd.blackhats.net.au patch_day=sun
