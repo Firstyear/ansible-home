@@ -195,5 +195,119 @@ if you specify the in the dockefile "USER root" it will IGNORE you and just map 
 ### How do you make the load balancer use your own domain name.
 
 
+### Docker won't start and everything explodes. 
 
+Diagnosing:
+
+[root@osmaster]/var/lib/docker/network# oc get nodes
+NAME                            STATUS     AGE
+osmaster.dev.blackhats.net.au   Ready      91d
+osnode01.dev.blackhats.net.au   Ready      91d
+osnode02.dev.blackhats.net.au   NotReady   91d
+
+Now describe the node
+
+[root@osmaster]/var/lib/docker/network# oc describe node osnode02.dev.blackhats.net.au
+Name:           osnode02.dev.blackhats.net.au
+Labels:         kubernetes.io/hostname=osnode02.dev.blackhats.net.au
+            region=primary
+            zone=west
+Taints:         <none>
+CreationTimestamp:  Thu, 25 Aug 2016 09:37:28 +1000
+Phase:          
+Conditions:
+  Type          Status      LastHeartbeatTime           LastTransitionTime          Reason              Message
+  ----          ------      -----------------           ------------------          ------              -------
+  OutOfDisk         Unknown     Sat, 29 Oct 2016 06:22:08 +1000     Sat, 29 Oct 2016 06:22:49 +1000     NodeStatusUnknown       Kubelet stopped posting node status.
+  Ready         Unknown     Sat, 29 Oct 2016 06:22:08 +1000     Sat, 29 Oct 2016 06:22:49 +1000     NodeStatusUnknown       Kubelet stopped posting node status.
+  MemoryPressure    False       Sat, 29 Oct 2016 06:22:08 +1000     Sat, 01 Oct 2016 06:19:33 +1000     KubeletHasSufficientMemory  kubelet has sufficient memory available
+Addresses:      172.24.11.23,172.24.11.23
+Capacity:
+ alpha.kubernetes.io/nvidia-gpu:    0
+ cpu:                   2
+ memory:                5946808Ki
+ pods:                  110
+Allocatable:
+ alpha.kubernetes.io/nvidia-gpu:    0
+ cpu:                   2
+ memory:                5946808Ki
+ pods:                  110
+System Info:
+ Machine ID:            46f5c48af52e4d05b9bbc0539fa94ac0
+ System UUID:           46F5C48A-F52E-4D05-B9BB-C0539FA94AC0
+ Boot ID:           a36c3479-23af-451d-bc33-5710fc1e733d
+ Kernel Version:        3.10.0-327.36.2.el7.x86_64
+ OS Image:          CentOS Linux 7 (Core)
+ Operating System:      linux
+ Architecture:          amd64
+ Container Runtime Version: docker://1.10.3
+ Kubelet Version:       v1.3.0+52492b4
+ Kube-Proxy Version:        v1.3.0+52492b4
+ExternalID:         osnode02.dev.blackhats.net.au
+Non-terminated Pods:        (0 in total)
+  Namespace         Name        CPU Requests    CPU Limits  Memory Requests Memory Limits
+  ---------         ----        ------------    ----------  --------------- -------------
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted. More info: http://releases.k8s.io/HEAD/docs/user-guide/compute-resources.md)
+  CPU Requests  CPU Limits  Memory Requests Memory Limits
+  ------------  ----------  --------------- -------------
+  0 (0%)    0 (0%)      0 (0%)      0 (0%)
+Events:
+  FirstSeen LastSeen    Count   From            SubobjectPath   Type        Reason      Message
+  --------- --------    -----   ----            -------------   --------    ------      -------
+  29m       29m     1   {controllermanager }            Normal      RegisteredNode  Node osnode02.dev.blackhats.net.au event: Registered Node osnode02.dev.blackhats.net.au in NodeController
+
+
+
+The kubelet is origin-node service, so check it.
+
+[root@osnode02]/home/william# systemctl status origin-node
+● origin-node.service - Origin Node
+   Loaded: loaded (/usr/lib/systemd/system/origin-node.service; enabled; vendor preset: disabled)
+  Drop-In: /usr/lib/systemd/system/origin-node.service.d
+           └─openshift-sdn-ovs.conf
+   Active: inactive (dead) (Result: exit-code) since Thu 2016-11-24 13:48:21 AEST; 347ms ago
+     Docs: https://github.com/openshift/origin
+  Process: 51163 ExecStart=/usr/bin/openshift start node --config=${CONFIG_FILE} $OPTIONS (code=exited, status=255)
+ Main PID: 51163 (code=exited, status=255)
+   Memory: 0B
+   CGroup: /system.slice/origin-node.service
+
+Nov 24 13:48:16 osnode02.dev.blackhats.net.au systemd[1]: origin-node.service: main process exited, code=exited, status=255/n/a
+Nov 24 13:48:16 osnode02.dev.blackhats.net.au systemd[1]: Failed to start Origin Node.
+Nov 24 13:48:16 osnode02.dev.blackhats.net.au systemd[1]: Unit origin-node.service entered failed state.
+Nov 24 13:48:16 osnode02.dev.blackhats.net.au systemd[1]: origin-node.service failed.
+Nov 24 13:48:21 osnode02.dev.blackhats.net.au systemd[1]: origin-node.service holdoff time over, scheduling restart.
+
+
+And it's failing because:
+
+[root@osnode02]/home/william# systemctl status docker
+● docker.service - Docker Application Container Engine
+   Loaded: loaded (/usr/lib/systemd/system/docker.service; enabled; vendor preset: disabled)
+  Drop-In: /usr/lib/systemd/system/docker.service.d
+           └─docker-sdn-ovs.conf
+   Active: failed (Result: exit-code) since Thu 2016-11-24 13:48:46 AEST; 2s ago
+     Docs: http://docs.docker.com
+  Process: 51427 ExecStart=/usr/bin/docker-current daemon --exec-opt native.cgroupdriver=systemd $OPTIONS $DOCKER_STORAGE_OPTIONS $DOCKER_NETWORK_OPTIONS $ADD_REGISTRY $BLOCK_REGISTRY $INSECURE_REGISTRY (code=exited, status=1/FAILURE)
+ Main PID: 51427 (code=exited, status=1/FAILURE)
+
+Nov 24 13:48:42 osnode02.dev.blackhats.net.au systemd[1]: Starting Docker Application Container Engine...
+Nov 24 13:48:42 osnode02.dev.blackhats.net.au docker-current[51427]: time="2016-11-24T13:48:42.660143462+10:00" level=info msg="Graph migration to content-addressability took 0.00 seconds"
+Nov 24 13:48:42 osnode02.dev.blackhats.net.au docker-current[51427]: time="2016-11-24T13:48:42.665369044+10:00" level=info msg="Firewalld running: false"
+Nov 24 13:48:46 osnode02.dev.blackhats.net.au docker-current[51427]: time="2016-11-24T13:48:46.460166613+10:00" level=fatal msg="Error starting daemon: Error initializing network controller: could...e endpoints"
+Nov 24 13:48:46 osnode02.dev.blackhats.net.au systemd[1]: docker.service: main process exited, code=exited, status=1/FAILURE
+Nov 24 13:48:46 osnode02.dev.blackhats.net.au systemd[1]: Failed to start Docker Application Container Engine.
+Nov 24 13:48:46 osnode02.dev.blackhats.net.au systemd[1]: Unit docker.service entered failed state.
+Nov 24 13:48:46 osnode02.dev.blackhats.net.au systemd[1]: docker.service failed.
+Hint: Some lines were ellipsized, use -l to show in full.
+
+
+
+The key is "Error initializing network controller: could". Solution is in https://github.com/docker/docker/issues/18283.
+
+[root@osnode02]/home/william# cd /var/lib/docker/network 
+[root@osnode02]/var/lib/docker/network# mv files files-backup
+
+Fixed.
 

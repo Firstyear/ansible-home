@@ -9,28 +9,24 @@
   sudo: yes
   action: yum name={{ item }} state=present
   with_items:
+    - graphviz
+    - pwgen
     - tlp
-    - vim-nerdtree
+    - ansible
+    - bjnplugin
     - cowsay
     - dconf-editor
+    - docker
     - dia
-    - erlang
     - evolution
+    - git
     - gimp
-    - gstreamer1-plugins-bad-free
-    - gstreamer1-plugins-base
-    - gstreamer1-plugins-base
-    - gstreamer1-plugins-good
-    - gstreamer-plugins-bad-free
-    - gstreamer-plugins-base
-    - gstreamer-plugins-good
+    - irssi
     - ldapvi
     - libvirt
-    - pidgin
-    - pidgin-otr
+    - powertop
+    - rhythmbox
     - samba-client
-    - tftp
-    - tftp-server
     - virt-install
     - virt-manager
     - vlc
@@ -42,8 +38,19 @@
   action: template src=laptop/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     - default/tlp
-    - dnf/dnf.conf
-    - squid/squid.conf
+    - modprobe.d/i915.conf
+    - yum.repos.d/abrt-rhel-7-dogfooding-rhel-7.dev.repo
+    - yum.repos.d/bluejeans.repo
+    - yum.repos.d/centos-extras.repo
+    - yum.repos.d/epel.repo
+    - yum.repos.d/epel-testing.repo
+    - yum.repos.d/google-talkplugin.repo
+    - yum.repos.d/nux-desktop.repo
+    - yum.repos.d/rcm-tools-rhel-7-workstation.repo
+    - yum.repos.d/redhat.repo
+
+    # - squid/squid.conf
+    # - dnf/dnf.conf
 
 # Should I restart these ? 
 
@@ -52,12 +59,11 @@
   action: service name={{ item }} state=started enabled=yes
   with_items:
     - tlp
+    - docker
 
 # Add docker0 to trusted zone
 
 - name: Change default zone
   sudo: yes
   shell: /usr/bin/firewall-cmd --permanent --zone=trusted --add-interface=docker0
-  notify:
-    - reload firewalld
 

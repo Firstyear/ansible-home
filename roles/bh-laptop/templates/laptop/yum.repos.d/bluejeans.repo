@@ -1,0 +1,6 @@
+[bluejeans]
+name=Blue Jeans Network, Inc. - x86_64 software and updates
+baseurl=https://swdl.bluejeans.com/repos/bluejeans/x86_64/release/rpm
+gpgcheck=1
+gpgkey=https://swdl.bluejeans.com/repos/bluejeans/bjn-key
+enabled=1

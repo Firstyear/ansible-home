@@ -27,4 +27,4 @@
     - hpacucli
     - hpvca
     - lm_sensors
-  when: "'hp_servers' in group_names"
+  when: "'hp_servers_disabled' in group_names"

@@ -1,0 +1,10 @@
+---
+- hosts: laptops
+  #gather_facts: False
+  roles:
+    #- common-bh
+    - bh-common-auth
+    - bh-laptop
+  vars_files:
+    - ~/secure/ansible_home_secrets.yml
+

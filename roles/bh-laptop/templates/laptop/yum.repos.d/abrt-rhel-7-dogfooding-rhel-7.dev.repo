@@ -1,0 +1,8 @@
+[abrt-rhel-7-dogfooding]
+name=Copr repo for rhel-7-dogfooding owned by abrt
+baseurl=http://coprbe.devel.redhat.com/repos/abrt/rhel-7-dogfooding/rhel-7.dev-$basearch/
+skip_if_unavailable=True
+gpgcheck=0
+gpgkey=http://coprbe.devel.redhat.com/repos/abrt/rhel-7-dogfooding/pubkey.gpg
+enabled=1
+enabled_metadata=1
