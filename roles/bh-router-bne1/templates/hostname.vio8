@@ -1,0 +1,6 @@
+rdomain 0
+description "VLAN23 Char fucking shit up"
+inet 172.24.23.1 255.255.255.0 NONE
+inet6 2001:44b8:2155:2c23::1 64
+up
+

@@ -19,6 +19,12 @@
     - openvpn-auth-ldap
     - zsh
     - nmap
+    - gcc-libs # This resolves a problem with openbsd 6 and openvpn ldap
+    - curl
+    - glib2
+    - gtar
+    - gnupg
+    - gmake
 
 # First, we bootstrap the router with BGP. This is used post install for connection
 # to nextyear, but initially it allows us a default route via vio7.
@@ -34,6 +40,8 @@
     - inetd.conf
     - sysctl.conf
     - dhcp6c.conf
+    - relayd.conf
+    - amanda-security.conf
     - ssh/sshd_config
 
 - name: Deploy init scripts
@@ -58,6 +66,7 @@
     - hostname.vio5
     - hostname.vio6
     - hostname.vio7
+    - hostname.vio8
     - hostname.tun0
     - hostname.tun2
 
@@ -80,5 +89,42 @@
 - name: Reload firewall
   become: true
   command: /sbin/pfctl -f /etc/pf.conf
+
+- name: Amanda configuration
+  become: true
+  template: src=amanda/{{ item }} dest=/var/lib/amanda/{{ item }} owner=amanda group=backup mode=0644
+  with_items:
+    - exclude
+    - backup-pubkey.pem
+
+- name: Amanda secure configuration
+  become: true
+  template: src=amanda/{{ item }} dest=/var/lib/amanda/{{ item }} owner=amanda group=backup mode=0600
+  with_items:
+    - exclude
+    - backup-pubkey.pem
+    - .amandahosts
+
+- name: Amanda tarlists
+  become: true
+  file: path=/usr/local/amanda/var/amanda/gnutar-lists owner=amanda group=backup mode=0755 state=directory
+
+# To build amanda client:
+#
+# curl -o amanda-3.3.9.tar.gz http://downloads.sourceforge.net/project/amanda/amanda%20-%20stable/3.3.9/amanda-3.3.9.tar.gz
+# gtar -xvf amanda-3.3.9.tar.gz
+# cd amanda-3.3.9
+# sudo groupadd backup
+# sudo useradd -g backup -m -d /var/lib/amanda amanda
+# ./configure --prefix=/usr/local/amanda --with-gnutar=/usr/local/bin/gtar --without-server --with-client
+# gmake
+# sudo gmake install
+# sudo cp common-src/amcrypt-ossl-asym /sbin/
+# chmod 755 /sbin/amcrypt-ossl-asym
+#
+# to /etc/services append
+# amanda 10080/tcp #amanda backup services
+# amanda 10080/udp #amanda backup services
+#
 
 

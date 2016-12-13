@@ -63,7 +63,6 @@ whatnobob.prd.blackhats.net.au patch_day=mon
 
 # Amanda backup specs
 [DailySet1]
-amelea.net.blackhats.net.au
 mikoto.net.blackhats.net.au
 
 [DailySet1:children]
@@ -73,6 +72,7 @@ email_servers
 email_relay_servers
 nfs_servers
 ds_servers
+router_bne1
 
 [DailySet2:children]
 openshift_master_servers

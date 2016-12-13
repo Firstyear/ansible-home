@@ -1,7 +1,7 @@
 bgpd_flags="-v"
-rtadvd0_flags="-c /etc/rtadvd0.conf vio0 vio1 vio2 vio3 vio4 vio5 vio6 vio7 vio8"
+rtadvd0_flags="-c /etc/rtadvd0.conf vio0 vio1 vio2 vio3 vio4 vio5 vio6 vio8"
 isc_dhcpd_flags="-4 -cf /etc/dhcpd.conf -lf /var/db/dhcpd.leases"
-# inetd_flags="/etc/inetd.conf"
+inetd_flags="/etc/inetd.conf"
 relayd_flags=""
 
 pkg_scripts="$pkg_scripts isc_dhcpd rtadvd0"
