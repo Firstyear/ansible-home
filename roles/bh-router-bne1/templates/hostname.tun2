@@ -1,0 +1,8 @@
+rdomain 0
+link0
+!/usr/local/sbin/openvpn --daemon --config /etc/openvpn/vpn-bne1.conf
+inet 172.29.240.1 255.255.255.252 NONE
+inet6 eui64
+inet6 2001:44b8:2155:2cca::1 64
+up
+

@@ -1,0 +1,4 @@
+rdomain 0
+!/usr/local/sbin/openvpn --daemon --config /etc/openvpn/roaming.conf
+
+

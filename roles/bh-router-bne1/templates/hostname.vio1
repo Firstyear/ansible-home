@@ -1,0 +1,8 @@
+rdomain 0
+description "VLAN11 Servers"
+inet 172.24.11.1 255.255.255.0 NONE
+inet6 2001:44b8:2155:2c11::1 64
+up
+
+!route add -net 172.46.0.0/16 172.24.11.19
+

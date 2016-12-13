@@ -52,6 +52,9 @@ osmaster.dev.blackhats.net.au patch_day=thu
 osnode01.dev.blackhats.net.au patch_day=fri
 osnode02.dev.blackhats.net.au patch_day=sat
 
+[router_bne1]
+lulu.net.blackhats.net.au
+
 [rsyslog_servers]
 yvett.prd.blackhats.net.au
 

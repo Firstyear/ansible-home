@@ -1,0 +1,6 @@
+rdomain 0
+description "VLAN12 Secure Clients"
+inet 172.24.12.1 255.255.255.0 NONE
+inet6 2001:44b8:2155:2c12::1 64
+up
+

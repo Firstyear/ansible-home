@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# $OpenBSD: rtadvd,v 1.1 2011/07/06 18:55:36 robert Exp $
+
+daemon="/sbin/route -T 0 exec /usr/sbin/rtadvd"
+
+. /etc/rc.d/rc.subr
+
+rc_reload=NO
+
+rc_cmd $1
+

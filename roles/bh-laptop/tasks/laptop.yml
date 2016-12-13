@@ -14,6 +14,7 @@
     - tlp
     - ansible
     - bjnplugin
+    - copr-cli
     - cowsay
     - dconf-editor
     - docker
@@ -24,6 +25,7 @@
     - irssi
     - ldapvi
     - libvirt
+    - nmap
     - powertop
     - rhythmbox
     - samba-client

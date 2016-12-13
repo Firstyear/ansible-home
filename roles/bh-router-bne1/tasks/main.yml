@@ -1,0 +1,84 @@
+
+# We need to create a symlink for python, else ansible won't work.
+# This is just here as documentation and assertion.
+
+- name: Symlink python
+  file: src=/usr/local/bin/python2.7 dest=/usr/bin/python state=link
+  become: true
+
+- name: Install packages
+  become: true
+  openbsd_pkg: name={{ item }} state=present
+  with_items:
+    - sudo
+    - python
+    - vim
+    - isc-dhcp-server
+    - wide-dhcpv6
+    - openvpn
+    - openvpn-auth-ldap
+    - zsh
+    - nmap
+
+# First, we bootstrap the router with BGP. This is used post install for connection
+# to nextyear, but initially it allows us a default route via vio7.
+
+- name: Configure Base System
+  become: true
+  template: src={{ item }} dest=/etc/{{ item }} owner=root group=wheel mode=0644
+  with_items:
+    - resolv.conf
+    - rc.conf.local
+    - dhcpd.conf
+    - rtadvd0.conf
+    - inetd.conf
+    - sysctl.conf
+    - dhcp6c.conf
+    - ssh/sshd_config
+
+- name: Deploy init scripts
+  become: true
+  template: src=rc.d/{{ item }} dest=/etc/rc.d/{{ item }} owner=root group=wheel mode=0755
+  with_items:
+    - rtadvd0
+
+- name: Configure BGP
+  become: true
+  template: src=bgpd.conf dest=/etc/bgpd.conf owner=root group=wheel mode=0640
+
+- name: Configure network interfaces
+  become: true
+  template: src={{ item }} dest=/etc/{{ item }} owner=root group=wheel mode=0640
+  with_items:
+    - hostname.vio0
+    - hostname.vio1
+    - hostname.vio2
+    - hostname.vio3
+    - hostname.vio4
+    - hostname.vio5
+    - hostname.vio6
+    - hostname.vio7
+    - hostname.tun0
+    - hostname.tun2
+
+- name: Configure openvpn
+  become: true
+  template: src=openvpn/{{ item }} dest=/etc/openvpn/{{ item }} owner=_openvpn group=wheel mode=0640
+  with_items:
+    - auth-ldap.conf
+    - roaming.conf
+    - vpn-bne1.conf
+
+- name: Configure firewall
+  become: true
+  template: src=pf.conf dest=/etc/pf.conf owner=root group=wheel mode=0600
+
+- name: Validate firewall
+  become: true
+  command: /sbin/pfctl -nf /etc/pf.conf
+
+- name: Reload firewall
+  become: true
+  command: /sbin/pfctl -f /etc/pf.conf
+
+

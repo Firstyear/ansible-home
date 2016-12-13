@@ -1,0 +1,8 @@
+---
+- hosts: router_bne1
+  #gather_facts: False
+  roles:
+    #- common-bh
+    - bh-router-bne1
+  vars_files:
+    - ~/secure/ansible_home_secrets.yml
