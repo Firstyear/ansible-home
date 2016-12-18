@@ -1,0 +1,35 @@
+
+# Unifi needs at least 4GB in /opt
+
+- name: Install needed software
+  become: true
+  yum: name={{ item }} state=present
+  with_items:
+    - lsb
+    - wget
+    - java
+    - mongodb-server
+    - unzip
+
+- name: Get unifi software
+  become: true
+  get_url: url=http://dl.ubnt.com/unifi/5.3.8/UniFi.unix.zip dest=/root/UniFi.unix.zip mode=0600
+
+# Add user unifi
+
+# http://dl.ubnt.com/unifi/5.3.8/UniFi.unix.zip
+
+- name: Deploy systemd service
+  become: true
+  template: src=unifi.service dest=/usr/lib/systemd/system/unifi.service owner=root group=root mode=0644
+
+- name: Deploy firewalld info
+  become: true
+  template: src=unifi.xml dest=/etc/firewalld/services/unifi.xml owner=root group=root mode=0644
+
+- name: Enable firewall
+  become: true
+  firewalld: service=unifi zone=internal permanent=yes state=enabled immediate=yes
+
+
+

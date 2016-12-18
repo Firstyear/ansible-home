@@ -34,6 +34,8 @@
     - vlc
     - wireshark
     - wireshark-gnome
+    - openconnect
+    - NetworkManager-openconnect
 
 - name: deploy default laptop configurations
   sudo: yes
@@ -49,7 +51,7 @@
     - yum.repos.d/google-talkplugin.repo
     - yum.repos.d/nux-desktop.repo
     - yum.repos.d/rcm-tools-rhel-7-workstation.repo
-    - yum.repos.d/redhat.repo
+    # - yum.repos.d/redhat.repo
 
     # - squid/squid.conf
     # - dnf/dnf.conf

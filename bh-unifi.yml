@@ -1,0 +1,8 @@
+---
+- hosts: unifi_servers
+  #gather_facts: False
+  roles:
+    #- common-bh
+    - bh-unifi-controller
+  vars_files:
+    - ~/secure/ansible_home_secrets.yml

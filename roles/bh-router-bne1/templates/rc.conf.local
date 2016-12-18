@@ -4,7 +4,8 @@ isc_dhcpd_flags="-4 -cf /etc/dhcpd.conf -lf /var/db/dhcpd.leases"
 inetd_flags="/etc/inetd.conf"
 relayd_flags=""
 
-pkg_scripts="$pkg_scripts isc_dhcpd rtadvd0"
-
 vnstatd_flags=""
+ocserv_flags="-d 1"
+
+pkg_scripts="$pkg_scripts isc_dhcpd rtadvd0 ocserv"
 

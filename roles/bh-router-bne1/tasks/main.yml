@@ -25,6 +25,7 @@
     - gtar
     - gnupg
     - gmake
+    - ocserv
 
 # First, we bootstrap the router with BGP. This is used post install for connection
 # to nextyear, but initially it allows us a default route via vio7.
@@ -43,6 +44,13 @@
     - relayd.conf
     - amanda-security.conf
     - ssh/sshd_config
+    - radcli/radiusclient.conf
+
+- name: Configure secure base system
+  become: true
+  template: src={{ item }} dest=/etc/{{ item }} owner=root group=wheel mode=0600
+  with_items:
+    - radcli/servers
 
 - name: Deploy init scripts
   become: true
@@ -127,4 +135,15 @@
 # amanda 10080/udp #amanda backup services
 #
 
+
+
+# /etc/radcli/radiusclient.conf
+# /etc/radcli/servers
+# /etc/ocserv/ocserv
+
+- name: Configure ocserv
+  become: true
+  template: src={{ item }} dest=/etc/{{ item }} owner=root group=_ocserv mode=0644
+  with_items:
+    - ocserv/ocserv.conf
 

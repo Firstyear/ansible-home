@@ -15,6 +15,9 @@ adara.prd.blackhats.net.au
 [deployment_servers]
 elise.prd.blackhats.net.au patch_day=tue
 
+[unifi_servers]
+elise.prd.blackhats.net.au patch_day=tue
+
 [development_servers]
 victoria.dev.blackhats.net.au patch_day=mon
 honey.dev.blackhats.net.au patch_day=tue

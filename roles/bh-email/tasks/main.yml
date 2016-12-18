@@ -68,6 +68,8 @@
     - remount xfs
   when: "'linode_servers' not in group_names"
 
+# Make /var/lib/dovecot +x
+
 - name: Create clamscan log dir
   sudo: yes
   action: file path=/var/log/clamd.scan state=directory mode=0755 owner=clamscan group=clamscan
