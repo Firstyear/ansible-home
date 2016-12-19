@@ -73,12 +73,6 @@
 - name: Create clamscan log dir
   sudo: yes
   action: file path=/var/log/clamd.scan state=directory mode=0755 owner=clamscan group=clamscan
-# Create SSL keys? How do we best manage this with IPA?
-
-- name: Deploy certificates
-  sudo: yes
-  action: command ipa-getcert request -k /etc/pki/tls/private/mail.firstyear.id.au.key -f /etc/pki/tls/certs/mail.firstyear.id.au.crt -I mail.firstyear.id.au -g 4096 -w
-  ignore_errors: yes
 
 # Deploy all the configs.
 

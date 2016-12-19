@@ -80,7 +80,6 @@ router_bne1
 [DailySet2:children]
 openshift_master_servers
 openshift_node_servers
-# freeipa_servers
 wiki_servers
 development_servers
 
@@ -94,7 +93,6 @@ amanda_servers
 deployment_servers
 development_servers
 email_servers
-# freeipa_servers
 nfs_servers
 rsyslog_servers
 ds_servers

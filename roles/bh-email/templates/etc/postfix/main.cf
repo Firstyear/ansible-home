@@ -303,7 +303,7 @@ unknown_local_recipient_reject_code = 550
 #
 #relay_domains = $mydestination
 #relay_domains = firstyear.id.au, ipa.firstyear.id.au, blackhats.net.au, ipa.blackhats.net.au
-relay_domains = runlevelone.net, artofgeek.net, brissafety.net
+relay_domains = runlevelone.net, artofgeek.net
 
 # INTERNET OR INTRANET
 
@@ -693,7 +693,7 @@ transport_maps = hash:/etc/postfix/transport
 
 recipient_canonical_maps = hash:/etc/postfix/recipientmap
 
-virtual_mailbox_domains = firstyear.id.au, ipa.firstyear.id.au, ipa.blackhats.net.au, blackhats.net.au, dev.blackhats.net.au
+virtual_mailbox_domains = firstyear.id.au, blackhats.net.au, dev.blackhats.net.au
 virtual_transport = dovecot
 dovecot_destination_recipient_limit = 1
 

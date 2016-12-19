@@ -21,9 +21,6 @@
 
 # LDAP URIs to use. You can use this instead of hosts list. Note that this
 # setting isn't supported by all LDAP libraries.
-#uris = ldap://alina.ipa.firstyear.id.au 
-#uris = ldap:///dc%3Dipa%2Cdc%3Dfirstyear%2Cdc%3Did%2Cdc%3Dau
-#uris = ldap:///dc%3Dipa%2Cdc%3Dblackhats%2Cdc%3Did%2Cdc%3Dau
 uris = ldap://ldap-linode.blackhats.net.au
 
 # Distinguished Name - the username used to login to the LDAP server.

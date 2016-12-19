@@ -1,5 +1,4 @@
 ---
-ipa_domain: ipa.blackhats.net.au
 devel_root: ~/development/
 ds_path: ~/development/389ds/ds
 lib389_path: ~/development/389ds/lib389
