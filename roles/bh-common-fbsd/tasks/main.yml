@@ -1,6 +1,11 @@
 
 # Update
 
+# Make sure /home exists.
+- name: Make /home
+  become: true
+  action: file path=/home owner=root group=wheel mode=0755 state=directory
+
 # Install auth bits
 
 - name: Install authentication libraries
@@ -49,14 +54,11 @@
     - sssd/sssd.conf
     - sudoers.d/bh_admins-sudo
 
-# Nsswitch
-
-# Pam
-
+- name: Ensure sssd enabled
+  become: true
+  action: lineinfile line='sssd_enable="YES"' dest=/etc/rc.conf
 
 # sudo
-
-
 
 
 - name: Install backup client

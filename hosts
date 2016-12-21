@@ -10,7 +10,7 @@
 ansible_python_interpreter=/usr/local/bin/python2.7
 
 [freebsd]
-mandi.dev.blackhats.net.au ansible_connection=paramiko
+mandi.dev.blackhats.net.au
 
 [laptops]
 franky.prd.blackhats.net.au
