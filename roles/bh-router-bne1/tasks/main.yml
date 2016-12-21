@@ -26,6 +26,7 @@
     - gnupg
     - gmake
     - ocserv
+    - vnstat
 
 # First, we bootstrap the router with BGP. This is used post install for connection
 # to nextyear, but initially it allows us a default route via vio7.

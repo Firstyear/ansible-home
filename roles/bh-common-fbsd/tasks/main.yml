@@ -1,0 +1,69 @@
+
+# Update
+
+# Install auth bits
+
+- name: Install authentication libraries
+  action: pkgng state=present name={{ item }}
+  become: true
+  with_items:
+    - sssd
+    - python27
+    - openldap-client
+    - vim
+    - git
+    - sudo
+    - zsh
+    - pam_mkhomedir
+
+# ntp to internode.
+# ssh + sssd user keys
+
+- name: Base configurations
+  become: true
+  action: template src={{ item }} dest=/etc/{{ item }} owner=root group=wheel mode=0644
+  with_items:
+    - ntp.conf
+    - ssh/sshd_config
+    - nsswitch.conf
+    - pam.d/sshd
+    - pam.d/system
+
+# Openldap certs
+# openldap
+
+- name: Usr configurations
+  become: true
+  action: template src={{ item }} dest=/usr/local/etc/{{ item }} owner=root group=wheel mode=0644
+  with_items:
+    - openldap/bh_ldap.crt
+    - openldap/ldap.conf
+
+
+# Configure SSSD
+
+- name: Usr secure configurations
+  become: true
+  action: template src={{ item }} dest=/usr/local/etc/{{ item }} owner=root group=wheel mode=0600
+  with_items:
+    - sssd/sssd.conf
+    - sudoers.d/bh_admins-sudo
+
+# Nsswitch
+
+# Pam
+
+
+# sudo
+
+
+
+
+- name: Install backup client
+  action: pkgng state=present name={{ item }}
+  become: true
+  with_items:
+    - amanda-client
+
+
+

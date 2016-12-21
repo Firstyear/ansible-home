@@ -2,6 +2,16 @@
 # Other times I need this to be localhost.
 # Local_action in playbooks instead?
 
+# Bootstrap with:
+#  ansible -m raw -a "pkg update -f"
+#  ansible -m raw -a "pkg install -y python27" <hostname>
+# set ansible_connection=paramiko temporarily before you have SSH keys
+[freebsd:vars]
+ansible_python_interpreter=/usr/local/bin/python2.7
+
+[freebsd]
+mandi.dev.blackhats.net.au ansible_connection=paramiko
+
 [laptops]
 franky.prd.blackhats.net.au
 rei.prd.blackhats.net.au

@@ -1,0 +1,31 @@
+#
+# $FreeBSD: releng/11.0/etc/pam.d/sshd 197769 2009-10-05 09:28:54Z des $
+#
+# PAM configuration for the "sshd" service
+#
+
+# auth
+auth        sufficient  pam_opie.so     no_warn no_fake_prompts
+auth        requisite   pam_opieaccess.so   no_warn allow_local
+# ITS CRITICAL to have this here. Without it, SSSD skips the password prompt
+# so then it falls back onto pam_unix. You need pam_krb to attempt and fail so
+# it can prime the password material for pam_sss. Fuck this shit.
+auth        sufficient  pam_krb5.so     no_warn try_first_pass
+auth        sufficient  /usr/local/lib/pam_sss.so use_first_pass
+auth        required    pam_unix.so     no_warn try_first_pass
+
+# account
+account     required    pam_nologin.so
+account     required    pam_login_access.so
+account     sufficient  /usr/local/lib/pam_sss.so ignore_unknown_user
+account     required    pam_unix.so
+
+# session
+session     required    /usr/local/lib/pam_mkhomedir.so
+session     optional    /usr/local/lib/pam_sss.so
+session     required    pam_permit.so
+
+# password
+password    sufficient  /usr/local/lib/pam_sss.so use_authtok
+password    required    pam_unix.so     no_warn try_first_pass
+
