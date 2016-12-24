@@ -17,6 +17,7 @@
     - openldap-client
     - vim
     - git
+    - gmake
     - sudo
     - zsh
     - pam_mkhomedir

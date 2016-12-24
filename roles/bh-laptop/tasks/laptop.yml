@@ -5,8 +5,27 @@
 # So run this *AFTER* common-bh, so that we can be guaranteed of firewalld
 ## The main reason is to lock down the wifi port
 
+- name: deploy default laptop configurations
+  become: true
+  action: template src=laptop/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - default/tlp
+    - modprobe.d/i915.conf
+    - yum.repos.d/abrt-rhel-7-dogfooding-rhel-7.dev.repo
+    - yum.repos.d/bluejeans.repo
+    - yum.repos.d/centos-extras.repo
+    - yum.repos.d/epel.repo
+    - yum.repos.d/epel-testing.repo
+    - yum.repos.d/google-talkplugin.repo
+    - yum.repos.d/nux-desktop.repo
+    - yum.repos.d/rcm-tools-rhel-7-workstation.repo
+    # - yum.repos.d/redhat.repo
+
+    # - squid/squid.conf
+    # - dnf/dnf.conf
+
 - name: install default laptop packages
-  sudo: yes
+  become: true
   action: yum name={{ item }} state=present
   with_items:
     - graphviz
@@ -36,30 +55,12 @@
     - wireshark-gnome
     - openconnect
     - NetworkManager-openconnect
-
-- name: deploy default laptop configurations
-  sudo: yes
-  action: template src=laptop/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
-  with_items:
-    - default/tlp
-    - modprobe.d/i915.conf
-    - yum.repos.d/abrt-rhel-7-dogfooding-rhel-7.dev.repo
-    - yum.repos.d/bluejeans.repo
-    - yum.repos.d/centos-extras.repo
-    - yum.repos.d/epel.repo
-    - yum.repos.d/epel-testing.repo
-    - yum.repos.d/google-talkplugin.repo
-    - yum.repos.d/nux-desktop.repo
-    - yum.repos.d/rcm-tools-rhel-7-workstation.repo
-    # - yum.repos.d/redhat.repo
-
-    # - squid/squid.conf
-    # - dnf/dnf.conf
+    - python2-pip
 
 # Should I restart these ? 
 
 - name: ensure default laptop services
-  sudo: yes
+  become: true
   action: service name={{ item }} state=started enabled=yes
   with_items:
     - tlp
@@ -68,6 +69,14 @@
 # Add docker0 to trusted zone
 
 - name: Change default zone
-  sudo: yes
+  become: true
   shell: /usr/bin/firewall-cmd --permanent --zone=trusted --add-interface=docker0
+
+- name: Install docker-py
+  pip: name=docker-py executable=/usr/bin/pip
+  become: true
+
+- name: Ensure base images
+  become: true
+  action: docker_image name=centos:7
 

@@ -4,6 +4,7 @@ baseurl=http://download.devel.redhat.com/rel-eng/latest-RCMTOOLS-1-RHEL-7/compos
 enabled=1
 gpgcheck=0
 priority=1
+skip_if_unavailable=1
 
 [rcm-tools-rhel-7-workstation-optional-rpms]
 name=RCM Tools for Red Hat Enterprise Linux $releasever Workstation - Optional (RPMs)
@@ -11,3 +12,4 @@ baseurl=http://download.devel.redhat.com/rel-eng/latest-RCMTOOLS-1-RHEL-7/compos
 enabled=1
 gpgcheck=0
 priority=1
+skip_if_unavailable=1

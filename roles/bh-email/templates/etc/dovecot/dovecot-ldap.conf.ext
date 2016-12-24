@@ -21,7 +21,7 @@
 
 # LDAP URIs to use. You can use this instead of hosts list. Note that this
 # setting isn't supported by all LDAP libraries.
-uris = ldap://ldap-linode.blackhats.net.au
+uris = ldaps://ldap-linode.blackhats.net.au
 
 # Distinguished Name - the username used to login to the LDAP server.
 # Leave it commented out to bind anonymously (useful with auth_bind=yes).
@@ -43,7 +43,7 @@ uris = ldap://ldap-linode.blackhats.net.au
 #sasl_authz_id =
 
 # Use TLS to connect to the LDAP server.
-tls = yes
+tls = no
 # TLS options, currently supported only with OpenLDAP:
 tls_ca_cert_file = /etc/pki/tls/certs/bh_ldap.crt
 #tls_ca_cert_dir =

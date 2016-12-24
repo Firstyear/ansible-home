@@ -18,13 +18,13 @@ ldap {
 	#
 	#  Otherwise, it will use just one server.
     ### We make the assumption of running RADIUSD on the same machine as IPA
-	#server = "ldap01.blackhats.net.au"
+	#server = "ldap.blackhats.net.au"
     # SERVER IS IN THE LDAP_BIND FILE
 
 	#  Port to connect on, defaults to 389. Setting this to
 	#  636 will enable LDAPS if start_tls (see below) is not
 	#  able to be used.
-#	port = 389
+    #	port = 389
 
 	# Administrator account for searching and possibly modifying.
     $INCLUDE /etc/raddb/mods-enabled/ldap-bind

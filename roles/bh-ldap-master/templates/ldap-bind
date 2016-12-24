@@ -1,5 +1,6 @@
 
-    server = {{ inventory_hostname }}
+    server = ldap.blackhats.net.au
+    port = 389
 
 	identity = "cn=radius/tokiha.prd.blackhats.net.au,ou=Services,dc=blackhats,dc=net,dc=au"
 	password = {{ radiusd_ldap_password }}

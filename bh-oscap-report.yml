@@ -1,5 +1,0 @@
----
-- hosts: all
-  roles:
-    - bh-oscap-report
-

@@ -1,9 +1,0 @@
----
-# We only patch virtual machines here just because of the 
-#  issues with patching vdsm
-- hosts: all
-  serial: 1
-  roles:
-    - bh-common-facts
-    - bh-patch-me
-    #- bh-common

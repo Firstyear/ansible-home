@@ -1,6 +1,0 @@
----
-- hosts: wiki_servers
-  gather_facts: False
-  roles:
-    - bs-wiki
-

@@ -34,7 +34,7 @@ oauthConfig:
       - uid
      ca: /etc/pki/tls/certs/bh_ldap.crt
      insecure: false
-     url: "ldap://ldap01.blackhats.net.au/ou=People,dc=blackhats,dc=net,dc=au?uid?sub?(memberOf=cn=bh_admins,ou=Groups,dc=blackhats,dc=net,dc=au)"
+     url: "ldap://ldap.blackhats.net.au/ou=People,dc=blackhats,dc=net,dc=au?uid?sub?(memberOf=cn=bh_admins,ou=Groups,dc=blackhats,dc=net,dc=au)"
   masterCA: ca-bundle.crt
   masterPublicURL: https://osmaster.dev.blackhats.net.au:8443
   masterURL: https://osmaster.dev.blackhats.net.au:8443
@@ -310,4 +310,49 @@ The key is "Error initializing network controller: could". Solution is in https:
 [root@osnode02]/var/lib/docker/network# mv files files-backup
 
 Fixed.
+
+### Deploying squid
+
+Build and push the container.
+
+sudo docker login -u william -p `oc whoami -t` docker-registry-default.openshift.dev.blackhats.net.au:80
+sudo docker tag centos_squid:7 docker-registry-default.openshift.dev.blackhats.net.au:80/squid-demo/centos_squid:7
+sudo docker push docker-registry-default.openshift.dev.blackhats.net.au:80/squid-demo/centos_squid:7
+
+First make the new app on the oc cluster
+
+oc project <name>
+oc new-app centos_squid:7
+
+Attach storage to the deployment configuration.
+
+oc volume dc/centossquid --add --name=centossquid-volume-1 -t pvc --claim-name=centossquid-volume-1 --overwrite
+
+# Now debug in a terminal to run the FS fixes
+
+
+
+### Give a server an external IP
+
+deploy it
+
+
+Then you can map with yml like
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: squid-1
+spec:
+  ports:
+  - name: squid
+    port: 3128
+  type: LoadBalancer
+  selector:
+    name: squid-selector
+
+
+Key is to match the name to the 
+
+
 

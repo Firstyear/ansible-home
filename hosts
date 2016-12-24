@@ -71,9 +71,6 @@ lulu.net.blackhats.net.au
 [rsyslog_servers]
 yvett.prd.blackhats.net.au
 
-[wiki_servers]
-whatnobob.prd.blackhats.net.au patch_day=mon
-
 # Amanda backup specs
 [DailySet1]
 mikoto.net.blackhats.net.au
@@ -90,8 +87,8 @@ router_bne1
 [DailySet2:children]
 openshift_master_servers
 openshift_node_servers
-wiki_servers
 development_servers
+freebsd
 
 [ManualSet:children]
 laptops
