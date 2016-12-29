@@ -68,5 +68,35 @@
   with_items:
     - amanda-client
 
+# Amanda config expects /var/lib/amanda, but freebsd uses /var/db/amanda
+- name: Make expected file paths
+  become: true
+  action: file path={{ item }} state=directory mode=0755 owner=root group=wheel
+  with_items:
+    - /var/lib
+    - /var/log/audit
+    - /srv
+    - /opt
+
+- name: Link amanda locations
+  become: true
+  action: file state=link src=/var/db/amanda dest=/var/lib/amanda
+
+- name: Amanda secure configuration
+  become: true
+  template: src=amanda/{{ item }} dest=/var/db/amanda/{{ item }} owner=amanda group=amanda mode=0600
+  with_items:
+    - exclude
+    - backup-pubkey.pem
+    - .amandahosts
+
+
+- name: Configure inetd service.
+  become: true
+  action: lineinfile dest="/etc/inetd.conf" line="amanda stream tcp6 nowait amanda /usr/local/libexec/amanda/amandad amandad -auth=bsdtcp amdump amindexd amidxtaped"
+
+- name: Start inetd service.
+  become: true
+  action: lineinfile dest="/etc/rc.conf" line='inetd_enable="YES"'
 
 

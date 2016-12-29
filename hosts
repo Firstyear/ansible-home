@@ -6,6 +6,7 @@
 #  ansible -m raw -a "pkg update -f"
 #  ansible -m raw -a "pkg install -y python27" <hostname>
 # set ansible_connection=paramiko temporarily before you have SSH keys
+
 [freebsd:vars]
 ansible_python_interpreter=/usr/local/bin/python2.7
 
@@ -50,7 +51,7 @@ tokiha.prd.blackhats.net.au patch_day=sun
 [ds_servers]
 tokiha.prd.blackhats.net.au patch_day=sun
 ariel.prd.blackhats.net.au patch_day=sat
-bubo.dev.blackhats.net.au
+# bubo.dev.blackhats.net.au
 
 [libvirt_servers]
 mion.prd.blackhats.net.au
@@ -59,11 +60,11 @@ mion.prd.blackhats.net.au
 lorna.prd.blackhats.net.au patch_day=wed
 
 [openshift_master_servers]
-osmaster.dev.blackhats.net.au patch_day=thu
+osmaster.prd.blackhats.net.au patch_day=thu
 
 [openshift_node_servers]
-osnode01.dev.blackhats.net.au patch_day=fri
-osnode02.dev.blackhats.net.au patch_day=sat
+#osnode01.prd.blackhats.net.au patch_day=fri
+#osnode02.prd.blackhats.net.au patch_day=sat
 
 [router_bne1]
 lulu.net.blackhats.net.au
@@ -72,8 +73,8 @@ lulu.net.blackhats.net.au
 yvett.prd.blackhats.net.au
 
 # Amanda backup specs
-[DailySet1]
-mikoto.net.blackhats.net.au
+# [DailySet1]
+# mikoto.net.blackhats.net.au
 
 [DailySet1:children]
 amanda_servers
