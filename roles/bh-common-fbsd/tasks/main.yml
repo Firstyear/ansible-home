@@ -21,6 +21,9 @@
     - sudo
     - zsh
     - pam_mkhomedir
+    - screen
+    # For ports
+    - subversion
 
 # ntp to internode.
 # ssh + sssd user keys
@@ -78,9 +81,13 @@
     - /srv
     - /opt
 
-- name: Link amanda locations
+- name: Link amanda home location
   become: true
   action: file state=link src=/var/db/amanda dest=/var/lib/amanda
+
+- name: Link amcrypt-ossl location
+  become: true
+  action: file state=link src=/usr/local/sbin/amcrypt-ossl-asym dest=/sbin/amcrypt-ossl-asym
 
 - name: Amanda secure configuration
   become: true
