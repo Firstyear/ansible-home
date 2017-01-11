@@ -53,14 +53,20 @@
 # Now apply the ldif setup.ldif also on tokiha
 # 
 # Now on the ldap server make the cert request.
+# Make the pwdfile and pin.txt. Remember Internal (Software) Token:
 #
-# certutil -d . -R -o ldap-linode.blackhats.net.au -f pwdfile.txt -s "CN=ldap-linode.blackhats.net.au,O=Blackhats,L=Brisbane,ST=Queensland,C=AU" -v 24 -8 .......
+# certutil -d . -N -f pwdfile.txt
+#
+# certutil -d . -R -a -o ldap-linode.blackhats.net.au.csr -f pwdfile.txt -s "CN=ldap-linode.blackhats.net.au,O=Blackhats,L=Brisbane,ST=Queensland,C=AU" -v 24 -8 .......
 # Sign it
-# certutil -C -d . -v 24 -i /home/william/ldap-linode.blackhats.net.au.csr -o /home/william/ldap-linode.blackhats.net.au.crt -c BH_LDAP_CA
+# certutil -C -d . -v 24 -i /home/william/ldap-linode.blackhats.net.au.csr -a -o /home/william/ldap-linode.blackhats.net.au.crt -c BH_LDAP_CA
 # Now add
+#  certutil -A -d . -n "BH_LDAP_CA" -t "C,C,C" -i /etc/pki/tls/certs/bh_ldap.crt
 #  certutil -A -d . -n "Server-Cert" -t ",," -i /tmp/ldap-linode.blackhats.net.au.crt
 # 
 # Now apply the changelog enable ldif
 # Then add the agreements
+#
+#
 
 

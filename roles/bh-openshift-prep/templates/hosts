@@ -8,6 +8,7 @@ nodes
 [OSEv3:vars]
 # SSH user, this user should allow ssh based auth without requiring a password
 ansible_ssh_user=root
+# openshift_hosted_metrics_deploy=true
 
 # If ansible_ssh_user is not root, ansible_sudo must be set to true
 #ansible_sudo=true
@@ -18,18 +19,20 @@ deployment_type=origin
 
 # uncomment the following to enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
 #openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+containerized=true
+openshift_release="1.2"
 
 ### WARNING. DO NOT SET AAAA on these hostnames!!!
 
 # host group for masters
 [masters]
-osmaster.dev.blackhats.net.au
+osmaster.prd.blackhats.net.au
 
 # host group for nodes, includes region info
 [nodes]
-osmaster.dev.blackhats.net.au openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-osnode01.dev.blackhats.net.au openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
-osnode02.dev.blackhats.net.au openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+osmaster.prd.blackhats.net.au openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true
+#osnode01.dev.blackhats.net.au openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+#osnode02.dev.blackhats.net.au openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
 
 # NOTE 2bb4266be4f3e30f4ab1b22354bbeb68f3432df7 is a good repo version
 

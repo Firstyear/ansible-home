@@ -684,7 +684,7 @@ transport_maps = hash:/etc/postfix/transport
 
 recipient_canonical_maps = hash:/etc/postfix/recipientmap
 
-smtpd_recipient_restrictions =   permit_mynetworks reject_unauth_destination
+# smtpd_recipient_restrictions =   permit_mynetworks reject_unauth_destination
 relay_recipient_maps = hash:/etc/postfix/relay_recipients
 #inet_protocols = ipv4
 

@@ -51,6 +51,8 @@ tokiha.prd.blackhats.net.au patch_day=sun
 [ds_servers]
 tokiha.prd.blackhats.net.au patch_day=sun
 ariel.prd.blackhats.net.au patch_day=sat
+adara.prd.blackhats.net.au patch_day=thu
+cassia.prd.blackhats.net.au patch_day=fri
 # bubo.dev.blackhats.net.au
 
 [libvirt_servers]
