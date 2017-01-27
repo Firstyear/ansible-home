@@ -53,6 +53,7 @@ tokiha.prd.blackhats.net.au patch_day=sun
 ariel.prd.blackhats.net.au patch_day=sat
 adara.prd.blackhats.net.au patch_day=thu
 cassia.prd.blackhats.net.au patch_day=fri
+jinjo.prd.blackhats.net.au patch_day=tue
 # bubo.dev.blackhats.net.au
 
 [libvirt_servers]
@@ -109,6 +110,14 @@ ds_servers
 openshift_master_servers
 openshift_node_servers
 
+[syd1_servers]
+jinjo.prd.blackhats.net.au
+
+[bne1_servers]
+lulu.net.blackhats.net.au
+
+[adl1_servers]
+mikoto.net.blackhats.net.au
 
 [linode_servers]
 ariel.prd.blackhats.net.au

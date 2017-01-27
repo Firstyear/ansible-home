@@ -1,0 +1,9 @@
+rdomain 0
+inet 172.29.241.1 255.255.255.0 NONE
+!/usr/local/sbin/openvpn --daemon --config /etc/openvpn/vpn-bne1-syd1.conf
+# inet6 eui64
+# inet6 2001:44b8:2155:2ccb::1 64
+up
+!route add -inet 172.29.241.0/24 -link -iface tun3
+!route add -net 172.20.0.0/16 172.29.241.14
+

@@ -1,7 +1,18 @@
 
-- name: Update timezone
+- name: Update Brisbane timezone
   sudo: yes
   action: file state=link src=/usr/share/zoneinfo/Australia/Brisbane dest=/etc/localtime
+  when: "'bne1_servers' in group_names or 'linode_servers' in group_names"
+
+- name: Update Sydney timezone
+  sudo: yes
+  action: file state=link src=/usr/share/zoneinfo/Australia/Brisbane dest=/etc/localtime
+  when: "'syd1_servers' in group_names"
+
+- name: Update Adelaide timezone
+  sudo: yes
+  action: file state=link src=/usr/share/zoneinfo/Australia/Brisbane dest=/etc/localtime
+  when: "'adl1_servers' in group_names"
 
 - name: Ensure cron email correct
   sudo: yes

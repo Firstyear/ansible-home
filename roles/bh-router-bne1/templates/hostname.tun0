@@ -1,4 +1,6 @@
 rdomain 0
+
+# THIS NOW EXISTS FOR OCSERV, NOT OPENVPN
 # !/usr/local/sbin/openvpn --daemon --config /etc/openvpn/roaming.conf
 
 

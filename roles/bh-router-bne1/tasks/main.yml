@@ -16,15 +16,15 @@
     - isc-dhcp-server
     - wide-dhcpv6
     - openvpn
-    - openvpn-auth-ldap
+    # - openvpn-auth-ldap
     - zsh
     - nmap
-    - gcc-libs # This resolves a problem with openbsd 6 and openvpn ldap
-    - curl
-    - glib2
-    - gtar
-    - gnupg
-    - gmake
+    # - gcc-libs # This resolves a problem with openbsd 6 and openvpn ldap
+    # - curl
+    # - glib2
+    # - gtar
+    # - gnupg
+    # - gmake
     - ocserv
     - vnstat
 
@@ -43,7 +43,7 @@
     - sysctl.conf
     - dhcp6c.conf
     - relayd.conf
-    - amanda-security.conf
+    # - amanda-security.conf
     - ssh/sshd_config
     - radcli/radiusclient.conf
 
@@ -59,9 +59,12 @@
   with_items:
     - rtadvd0
 
-- name: Configure BGP
+- name: Configure Routing
   become: true
-  template: src=bgpd.conf dest=/etc/bgpd.conf owner=root group=wheel mode=0640
+  template: src={{ item }} dest=/etc/{{ item }} owner=root group=wheel mode=0640
+  with_items:
+    - bgpd.conf
+    - ospfd.conf
 
 - name: Configure network interfaces
   become: true
@@ -78,14 +81,27 @@
     - hostname.vio8
     - hostname.tun0
     - hostname.tun2
+    - hostname.tun3
+
+- name: Config openvpn client dirs
+  become: true
+  file: path=/etc/openvpn/syd1-clients/ owner=root group=wheel mode=0755 state=directory
 
 - name: Configure openvpn
   become: true
   template: src=openvpn/{{ item }} dest=/etc/openvpn/{{ item }} owner=_openvpn group=wheel mode=0640
   with_items:
-    - auth-ldap.conf
-    - roaming.conf
-    - vpn-bne1.conf
+    # - auth-ldap.conf
+    # - roaming.conf
+    - vpn-bne1-adl1.conf
+    - vpn-bne1-syd1.conf
+    - syd1-clients/vpn-syd1.net.blackhats.net.au
+
+- name: Configure openvpn scripts
+  become: true
+  template: src=openvpn/{{ item }} dest=/etc/openvpn/{{ item }} owner=_openvpn group=wheel mode=0755
+  with_items:
+    - vpn-syd1.sh
 
 - name: Configure firewall
   become: true
@@ -99,24 +115,24 @@
   become: true
   command: /sbin/pfctl -f /etc/pf.conf
 
-- name: Amanda configuration
-  become: true
-  template: src=amanda/{{ item }} dest=/var/lib/amanda/{{ item }} owner=amanda group=backup mode=0644
-  with_items:
-    - exclude
-    - backup-pubkey.pem
-
-- name: Amanda secure configuration
-  become: true
-  template: src=amanda/{{ item }} dest=/var/lib/amanda/{{ item }} owner=amanda group=backup mode=0600
-  with_items:
-    - exclude
-    - backup-pubkey.pem
-    - .amandahosts
-
-- name: Amanda tarlists
-  become: true
-  file: path=/usr/local/amanda/var/amanda/gnutar-lists owner=amanda group=backup mode=0755 state=directory
+# - name: Amanda configuration
+#   become: true
+#   template: src=amanda/{{ item }} dest=/var/lib/amanda/{{ item }} owner=amanda group=backup mode=0644
+#   with_items:
+#     - exclude
+#     - backup-pubkey.pem
+# 
+# - name: Amanda secure configuration
+#   become: true
+#   template: src=amanda/{{ item }} dest=/var/lib/amanda/{{ item }} owner=amanda group=backup mode=0600
+#   with_items:
+#     - exclude
+#     - backup-pubkey.pem
+#     - .amandahosts
+# 
+# - name: Amanda tarlists
+#   become: true
+#   file: path=/usr/local/amanda/var/amanda/gnutar-lists owner=amanda group=backup mode=0755 state=directory
 
 # To build amanda client:
 #
