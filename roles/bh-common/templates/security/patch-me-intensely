@@ -35,7 +35,7 @@ class PatchMeIntensely(object):
     }
     # These excludes should be in functions.
     _EXCLUDE = []
-    _MINVER = 5
+    _MINVER = 7
     major = 0
     minor = 0
     model = None
@@ -176,10 +176,7 @@ class PatchMeIntensely(object):
 
     def _info_running_services(self):
         service_set = []
-        result, err = self._run_command("/sbin/chkconfig --list | grep on")
-        if self.major >= 7:
-            sresult, serr = self._run_command("systemctl list-unit-files | grep enabled")
-            result += sresult
+        result, err = self._run_command("systemctl list-unit-files | grep enabled")
         for line in result.split('\n'):
             if line == '':
                 continue
@@ -236,16 +233,6 @@ class PatchMeIntensely(object):
         self.log('raid models : %s' % self.raid_model)
         self.log('ilo : %s' % self.ilo_model)
 
-    def _prep_yum_reconfigure(self):
-        """
-        Reconfigure the yum command. This mainly is needed on EL7.
-        This also lets us avoid un-needed package removal of kernels.
-        """
-        if not self.dryrun:
-            self._run_command("sed -i /etc/yum.conf -e 's/installonly_limit.*/installonly_limit=2/'")
-            if self.major == 7:
-                self._run_command("sed -i /etc/yum.conf -e 's/debuglevel.*/debuglevel=2/'")
-
     def _prep_yum_clean(self):
         """
         Clean out stale yum metadata
@@ -279,7 +266,7 @@ class PatchMeIntensely(object):
     def _prep_yum_exclusions(self):
         """
         Prepare our exclusion set for yum --exclude.
-        
+
         This will be inserted to every yum command AFTER this point.
         """
         self.yum_exclude = ""
@@ -287,15 +274,6 @@ class PatchMeIntensely(object):
             self.yum_exclude = "--exclude=" + self._prep_str_list(self._EXCLUDE, ',')
         if self.debug:
             self.log('Will exclude : %s' % self.yum_exclude)
-
-    def _prep_service_rhnsd(self):
-        """
-        Make sure we restart rhnsd after an update.
-        """
-        self.stop_service_set.append('rhnsd')
-        self.stop_service_set.append('osad')
-        self.start_service_set.append('rhnsd')
-        self.start_service_set.append('osad')
 
     def _prep_hp_firmware_maps(self):
         stdoutdata, stderrdata = self._run_command("yum search -d 2 hp-firmware-system | grep -e '^hp-firmware-system'")
@@ -394,9 +372,7 @@ class PatchMeIntensely(object):
     def _service_enable(self):
         if self.debug:
             self.log("Will enable : %s" % self.enable_service_set)
-        command = "/sbin/chkconfig %s on"
-        if self.major >= 7:
-            command = "/usr/bin/systemctl enable %s"
+        command = "/usr/bin/systemctl enable %s"
         for service in self.enable_service_set:
             if not self.dryrun:
                 self._run_command(command % service)
@@ -404,9 +380,7 @@ class PatchMeIntensely(object):
     def _service_disable(self):
         if self.debug:
             self.log("Will disable : %s" % self.disable_service_set)
-        command = "/sbin/chkconfig %s off"
-        if self.major >= 7:
-            command = "/usr/bin/systemctl disable %s"
+        command = "/usr/bin/systemctl disable %s"
         for service in self.disable_service_set:
             if not self.dryrun:
                 self._run_command(command % service)
@@ -481,36 +455,6 @@ class PatchMeIntensely(object):
         else:
             pass
 
-    def _post_config_auth(self):
-        """
-        Mark our auth service for "start" to make sure it's running.
-        """
-        #### We need a way to make services "enabled" too ...
-        # self.satellite_config_set.append('/etc/pam.d/system-auth')
-        # self.satellite_config_set.append('/etc/pam.d/system-auth-ac')
-        # self.satellite_config_set.append('/etc/pam.d/password-auth')
-        # self.satellite_config_set.append('/etc/pam.d/password-auth-ac')
-        # self.satellite_config_set.append('/etc/nsswitch.conf')
-        # self.satellite_config_set.append('/etc/sudoers')
-        # self.satellite_config_set.append('/etc/ssh/sshd_config')
-        # self.satellite_config_set.append('/etc/ssh/sshd_banner.txt')
-        # self.satellite_config_set.append('/etc/openldap/ldap.conf')
-        # This will rely on changes to pam and nsswitch
-        if self.major >= 6:
-            self.start_service_set.append('sssd')
-            self.enable_service_set.append('sssd')
-            # self.satellite_config_set.append('/etc/sssd/sssd.conf')
-        if self.major == 7:
-            self.disable_service_set.append('nslcd')
-            #self.satellite_config_set.append('/etc/nslcd.conf')
-
-    def _post_satellite_fetch(self):
-        command = 'rhncfg-client get '
-        if self.dryrun:
-            command = 'rhncfg-client diff '
-        rlist = self._prep_str_list(self.satellite_config_set, delim=' ')
-        self._run_command(command + rlist)
-
     def doit(self):
         """
         Do the thing, and do it well. Patch this box intensley!
@@ -529,7 +473,6 @@ class PatchMeIntensely(object):
 
         #### Prep what we will do
         # * Preparation
-        # self._prep_yum_reconfigure()
         self._prep_yum_clean()
         self._prep_yum_inconsistent()
         # ** If needed, add packages to the installation set. 
@@ -545,7 +488,6 @@ class PatchMeIntensely(object):
         signal.signal(signal.SIGQUIT, signal_handler)
         signal.signal(signal.SIGHUP, signal_handler)
         # Final prep
-        # self._prep_service_rhnsd() # Don't get actions during update
         self._prep_yum_exclusions() # We have all the excludes now, finalise
         # Do it.
         if not self.firmwareonly:
@@ -563,15 +505,11 @@ class PatchMeIntensely(object):
 
         #### POST, add jobs here that request configs, services etc
         # ** Make sure our auth services are running
-        # self._post_config_auth()
-        # self._post_radius_fix()
-        # self._post_config_nb()
         ####
 
         ###### REALLY ITS IMPORTANT THESE ARE LAST
         # At the end, get configs that are pending
         if not self.firmwareonly:
-            # self._post_satellite_fetch()
             # ** Restart pending services
             self._service_enable()
             self._service_disable()

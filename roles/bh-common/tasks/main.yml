@@ -17,6 +17,7 @@
 - name: Ensure cron email correct
   sudo: yes
   action: cron name=MAILTO env=yes value=william@blackhats.net.au state=present
+  when: ansible_form_factor != "Notebook" and ansible_distribution_major_version >= '7'
 
 # Only apply this to static CentOS hosts
 - include: repos.yml
