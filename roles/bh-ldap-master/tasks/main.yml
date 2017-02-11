@@ -10,8 +10,9 @@
   action: yum name={{ item }} state=present
   with_items:
     - 389-ds-base
-    - python2-rest389
-    - python2-idm389
+    # - python2-rest389
+    # - python2-idm389
+    - python2-lib389
     - freeradius
     - freeradius-utils
     - freeradius-ldap

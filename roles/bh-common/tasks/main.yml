@@ -35,8 +35,12 @@
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version >= "7"
 
 # Potentially capture coredumps if things go bad.
-- include: kdump.yml
-  when: "'linode_servers' not in group_names"
+# - include: kdump.yml
+#  when: "'linode_servers' not in group_names"
+
+- name: ensure kdump disabled
+  sudo: yes
+  service: name=kdump state=started enabled=no
 
 # Enable the backup client on hosts that we can backup.
 - include: amanda.yml
