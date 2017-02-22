@@ -5,12 +5,28 @@
 # So run this *AFTER* common-bh, so that we can be guaranteed of firewalld
 ## The main reason is to lock down the wifi port
 
+# For this to work on fedora 25 or more:
+# yum install -y python2-dnf
+
 - name: deploy default laptop configurations
   become: true
   action: template src=laptop/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     - default/tlp
     - modprobe.d/i915.conf
+
+- name: deploy VGA disable on startup
+  become: true
+  action: template src=laptop/rc.d/rc.local dest=/etc/rc.d/rc.local owner=root group=root mode=0644
+
+- name: deploy VGA switch on resume
+  become: true
+  action: template src=laptop/systemd/vgaswitch.service dest=/etc/systemd/system/vgaswitch.service owner=root group=root mode=0644
+
+- name: deploy RHEL repos
+  become: true
+  action: template src=laptop/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
     - yum.repos.d/abrt-rhel-7-dogfooding-rhel-7.dev.repo
     - yum.repos.d/bluejeans.repo
     - yum.repos.d/centos-extras.repo
@@ -19,25 +35,20 @@
     - yum.repos.d/google-talkplugin.repo
     - yum.repos.d/nux-desktop.repo
     - yum.repos.d/rcm-tools-rhel-7-workstation.repo
-    # - yum.repos.d/redhat.repo
-
-    # - squid/squid.conf
-    # - dnf/dnf.conf
+  when: ansible_distribution != 'Fedora'
 
 - name: install default laptop packages
   become: true
-  action: yum name={{ item }} state=present
+  package: name={{ item }} state=present
   with_items:
     - graphviz
     - pwgen
     - tlp
     - ansible
-    - bjnplugin
     - copr-cli
     - cowsay
     - dconf-editor
     - docker
-    - dia
     - evolution
     - git
     - gimp
@@ -55,8 +66,7 @@
     - wireshark-gnome
     - openconnect
     - NetworkManager-openconnect
-    - python2-pip
-    - yum-plugin-changelog
+    - python-pip
 
 # Should I restart these ? 
 
@@ -73,11 +83,11 @@
   become: true
   shell: /usr/bin/firewall-cmd --permanent --zone=trusted --add-interface=docker0
 
-- name: Install docker-py
-  pip: name=docker-py executable=/usr/bin/pip
-  become: true
+#- name: Install docker-py
+#  pip: name=docker-py executable=/usr/bin/pip
+#  become: true
 
-- name: Ensure base images
-  become: true
-  action: docker_image name=centos:7
+#- name: Ensure base images
+#  become: true
+#  action: docker_image name=centos:7
 

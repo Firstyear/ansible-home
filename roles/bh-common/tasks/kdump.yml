@@ -1,7 +1,7 @@
 
 - name: install kdump
   sudo: yes
-  yum: name=kexec-tools state=present
+  package: name=kexec-tools state=present
 
 - name: deploy kdump configuration
   sudo: yes

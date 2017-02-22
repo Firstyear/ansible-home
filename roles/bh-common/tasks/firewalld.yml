@@ -1,13 +1,13 @@
 
 - name: Install firewalld
   sudo: yes
-  action: yum name=firewalld state=present
+  package: name=firewalld state=present
 
 # Make sure we don't have iptables
 
 - name: Remove iptables scripts
   sudo: yes
-  action: yum name=iptables-services state=absent
+  package: name=iptables-services state=absent
 
 - name: Activate firewalld
   sudo: yes

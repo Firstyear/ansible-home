@@ -41,6 +41,7 @@
 - name: ensure kdump disabled
   sudo: yes
   service: name=kdump state=started enabled=no
+  when: ansible_form_factor != "Notebook"
 
 # Enable the backup client on hosts that we can backup.
 - include: amanda.yml

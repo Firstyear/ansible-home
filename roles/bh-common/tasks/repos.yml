@@ -44,5 +44,5 @@
 
 - name: Install epel repo
   sudo: yes
-  action: yum state=present name=epel-release
+  package: state=present name=epel-release
 

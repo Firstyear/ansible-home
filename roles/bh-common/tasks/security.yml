@@ -36,4 +36,5 @@
   notify:
     - postmap generic
     - newaliases
+  when: ansible_form_factor != "Notebook"
 
