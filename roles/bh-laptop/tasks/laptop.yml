@@ -8,6 +8,12 @@
 # For this to work on fedora 25 or more:
 # yum install -y python2-dnf
 
+## WARNING:
+
+# Macbook pro add this to grub line
+#   radeon.modeset=0 i915.modeset=1 i915.lvds_channel_mode=2
+# REMOVE RHGB
+
 - name: deploy default laptop configurations
   become: true
   action: template src=laptop/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
@@ -15,9 +21,9 @@
     - default/tlp
     - modprobe.d/i915.conf
 
-- name: deploy VGA disable on startup
+- name: deploy VGA switch on startup
   become: true
-  action: template src=laptop/rc.d/rc.local dest=/etc/rc.d/rc.local owner=root group=root mode=0644
+  action: template src=laptop/systemd/vgaswitch-boot.service dest=/etc/systemd/system/vgaswitch-boot.service owner=root group=root mode=0644
 
 - name: deploy VGA switch on resume
   become: true
@@ -76,6 +82,8 @@
   with_items:
     - tlp
     - docker
+    - vgaswitch
+    - vgaswitch-boot
 
 # Add docker0 to trusted zone
 

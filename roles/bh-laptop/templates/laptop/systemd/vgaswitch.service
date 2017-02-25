@@ -1,5 +1,5 @@
 [Unit]
-Description=vgaswitch disable
+Description=vgaswitch resume disable
 After=suspend.target
 
 [Service]
