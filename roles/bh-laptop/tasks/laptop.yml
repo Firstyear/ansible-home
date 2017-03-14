@@ -11,7 +11,7 @@
 ## WARNING:
 
 # Macbook pro add this to grub line
-#   radeon.modeset=0 i915.modeset=1 i915.lvds_channel_mode=2
+#   rd.blacklist=radeon
 # REMOVE RHGB
 
 - name: deploy default laptop configurations
@@ -20,6 +20,8 @@
   with_items:
     - default/tlp
     - modprobe.d/i915.conf
+    - modprobe.d/sdhci.conf
+    - modprobe.d/radeon.conf
 
 - name: deploy VGA switch on startup
   become: true
@@ -58,6 +60,7 @@
     - evolution
     - git
     - gimp
+    - gnome-tweak-tool
     - irssi
     - ldapvi
     - libvirt

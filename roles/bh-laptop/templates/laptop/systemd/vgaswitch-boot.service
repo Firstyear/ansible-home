@@ -4,7 +4,8 @@ Before=display-manager.service getty@tty1.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/sh -c "echo OFF > /sys/kernel/debug/vgaswitcheroo/switch"
+# ExecStart=/usr/bin/sh -c "echo OFF > /sys/kernel/debug/vgaswitcheroo/switch"
+ExecStart=/usr/local/sbin/fixgpu
 
 [Install]
 WantedBy=multi-user.target

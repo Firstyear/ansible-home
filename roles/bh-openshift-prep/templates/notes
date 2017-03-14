@@ -356,3 +356,5 @@ Key is to match the name to the
 
 
 
+### If the registry is redeployed, you should restart the master else it MAY fuck shit up
+
