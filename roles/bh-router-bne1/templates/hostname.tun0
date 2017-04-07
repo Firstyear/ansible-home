@@ -2,5 +2,7 @@ rdomain 0
 
 # THIS NOW EXISTS FOR OCSERV, NOT OPENVPN
 # !/usr/local/sbin/openvpn --daemon --config /etc/openvpn/roaming.conf
-
+inet6 eui64
+inet6 2001:44b8:2155:2cd0::1 60
+# !/sbin/route -T 0 add -inet6 2001:44b8:2155:2cd0::/60 -iface tun0
 

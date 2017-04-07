@@ -1,0 +1,16 @@
+
+{% for item in groups['AtomicSet'] %}
+{{ item }} /sysroot/etc comp-root-tar-ssl
+{{ item }} /sysroot/home comp-root-tar-ssl
+{{ item }} /sysroot/root comp-root-tar-ssl
+{{ item }} /sysroot/opt comp-root-tar-ssl
+{{ item }} /sysroot/srv comp-root-tar-ssl
+{{ item }} /sysroot/var comp-root-tar-ssl
+{{ item }} /sysroot/var/lib comp-root-tar-ssl
+{{ item }} /sysroot/var/log comp-root-tar-ssl
+{{ item }} /sysroot/var/log/audit comp-root-tar-ssl
+{{ item }} /sysroot/usr/local/etc comp-root-tar-ssl
+
+{% endfor %}
+
+

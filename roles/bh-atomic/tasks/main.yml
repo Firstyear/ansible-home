@@ -1,0 +1,47 @@
+
+- name: sysctl for atomic hosts
+  template: src=sysctl/01-uofa.conf dest=/etc/sysctl.d/01-uofa.conf owner=root group=root mode=0644
+  sudo: yes
+
+- name: static network for atomic hosts
+  template: src=scripts/network.sh dest=/root/network.sh owner=root group=root mode=0750
+  sudo: yes
+
+- name: Configure secure LDAP configurations
+  sudo: yes
+  template: src=ldap/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
+  with_items:
+    - sssd/sssd.conf
+    - sudoers.d/bh_admins-sudo
+
+- name: Configure LDAP configurations
+  sudo: yes
+  template: src=ldap/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - pki/tls/certs/bh_ldap.crt
+    - hostname
+    - pam.d/password-auth-ac
+    - pam.d/system-auth-ac
+
+- name: Ensure services running
+  sudo: yes
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - sssd
+    - sshd
+
+- name: deploy ssh configurations
+  sudo: yes
+  action: template src=security/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - ssh/sshd_config
+
+- name: deploy docker configurations
+  sudo: yes
+  action: template src=docker/{{ item }} dest=/etc/sysconfig/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - docker-storage-setup
+
+
+# rpm-ostree pkg-add remember!
+

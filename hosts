@@ -7,6 +7,9 @@
 #  ansible -m raw -a "pkg install -y python27" <hostname>
 # set ansible_connection=paramiko temporarily before you have SSH keys
 
+[atomic]
+emerald.dev.blackhats.net.au
+
 [freebsd:vars]
 ansible_python_interpreter=/usr/local/bin/python2.7
 
@@ -96,6 +99,9 @@ freebsd
 
 [ManualSet:children]
 laptops
+
+[AtomicSet:children]
+atomic
 
 # Other groups
 
