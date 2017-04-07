@@ -145,7 +145,7 @@
   with_items:
     - learn.sh
     - mailbox-rollover.sh
-
+    - learn-folders
 
 # Need a notify to restart bits ...
 
