@@ -7,13 +7,13 @@
     - postgrey
     - dovecot
     - dovecot-pigeonhole
-    - clamav-milter
+    #- clamav-milter
     - spamass-milter
     - spamass-milter-postfix
-    - clamav-milter-systemd
-    - clamav-server-systemd
-    - clamav-scanner
-    - clamav-scanner-systemd
+    #- clamav-milter-systemd
+    #- clamav-server-systemd
+    #- clamav-scanner
+    #- clamav-scanner-systemd
     - spamassassin
     - opendkim
 
@@ -23,15 +23,15 @@
 
 - name: Alter postfix user
   sudo: yes
-  action: user name=postfix append=yes groups=clamilt,sa-milt
+  action: user name=postfix append=yes groups=sa-milt
 
-- name: Alter clamscan user
-  sudo: yes
-  action: user name=clamscan append=yes groups=clamilt
+#- name: Alter clamscan user
+#  sudo: yes
+#  action: user name=clamscan append=yes groups=clamilt
 
-- name: Create smtpd link
-  sudo: yes
-  action: file src=/usr/lib/systemd/system/clamd@.service dest=/etc/systemd/system/clamd@clamsmtp.service state=link
+#- name: Create smtpd link
+#  sudo: yes
+#  action: file src=/usr/lib/systemd/system/clamd@.service dest=/etc/systemd/system/clamd@clamsmtp.service state=link
 
 - name: config email firewalld
   sudo: yes
@@ -70,9 +70,9 @@
 
 # Make /var/lib/dovecot +x
 
-- name: Create clamscan log dir
-  sudo: yes
-  action: file path=/var/log/clamd.scan state=directory mode=0755 owner=clamscan group=clamscan
+#- name: Create clamscan log dir
+#  sudo: yes
+#  action: file path=/var/log/clamd.scan state=directory mode=0755 owner=clamscan group=clamscan
 
 # Deploy all the configs.
 
@@ -116,15 +116,15 @@
 
 ## When some things like transport are deployed, rehash them
 
-- name: Deploy clam milter config
-  sudo: yes
-  template: src=etc/mail/clamav-milter.conf dest=/etc/mail/clamav-milter.conf owner=root group=root mode=0644
-  notify: restart clamav-milter
-
-- name: Deploy clam config
-  sudo: yes
-  template: src=etc/clamd.d/clamsmtp.conf dest=/etc/clamd.d/clamsmtp.conf owner=root group=root mode=0644
-  notify: restart clamd
+#- name: Deploy clam milter config
+#  sudo: yes
+#  template: src=etc/mail/clamav-milter.conf dest=/etc/mail/clamav-milter.conf owner=root group=root mode=0644
+#  notify: restart clamav-milter
+#
+#- name: Deploy clam config
+#  sudo: yes
+#  template: src=etc/clamd.d/clamsmtp.conf dest=/etc/clamd.d/clamsmtp.conf owner=root group=root mode=0644
+#  notify: restart clamd
 
 - name: Deploy spamassassin config
   sudo: yes
@@ -157,8 +157,8 @@
   with_items:
     - opendkim
     - spamass-milter
-    - clamd@clamsmtp
-    - clamav-milter
+    #- clamd@clamsmtp
+    #- clamav-milter
     - postfix
     - postgrey
     - dovecot

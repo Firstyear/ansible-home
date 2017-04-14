@@ -29,11 +29,4 @@
     - transport
     - recipientmap
 
-- name: restart clamav-milter
-  sudo: yes
-  service: name=clamav-milter state=restarted
-
-- name: restart clamd
-  sudo: yes
-  service: name=clamd@clamsmtp state=restarted
 

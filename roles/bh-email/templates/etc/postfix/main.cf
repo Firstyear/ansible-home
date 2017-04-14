@@ -728,6 +728,6 @@ smtpd_tls_protocols = TLSv1, !SSLv2, !SSLv3
 #content_filter = scan:127.0.0.1:10025
 #receive_override_options = no_address_mappings
 
-smtpd_milters = inet:localhost:8891, unix:/run/clamav-milter/clamav-milter.socket, unix:/run/spamass-milter/postfix/sock
-non_smtpd_milters = inet:localhost:8891, unix:/run/clamav-milter/clamav-milter.socket, unix:/run/spamass-milter/postfix/sock
+smtpd_milters = inet:localhost:8891, unix:/run/spamass-milter/postfix/sock
+non_smtpd_milters = inet:localhost:8891, unix:/run/spamass-milter/postfix/sock
 

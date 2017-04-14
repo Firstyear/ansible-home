@@ -4,7 +4,7 @@
 # These should be safe assumptions and allow for simple visual sifting
 # without risking lost emails.
 
-required_hits 5
+# required_hits 5
 report_safe 0
 rewrite_header Subject [SPAM]
 use_bayes 1
