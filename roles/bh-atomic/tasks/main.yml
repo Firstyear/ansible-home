@@ -1,47 +1,80 @@
 
+- name: Deploy grub serial console changes
+  become: yes
+  action: template src=libvirt/etc/default/grub dest=/etc/default/grub owner=root group=root mode=644
+  notify:
+    - rebuild grub2
+
 - name: sysctl for atomic hosts
-  template: src=sysctl/01-uofa.conf dest=/etc/sysctl.d/01-uofa.conf owner=root group=root mode=0644
-  sudo: yes
+  template: src=sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
+  become: yes
+  with_items:
+    - 01-uofa.conf
+    - 02-atomic.conf
 
 - name: static network for atomic hosts
-  template: src=scripts/network.sh dest=/root/network.sh owner=root group=root mode=0750
-  sudo: yes
+  template: src=scripts/{{ item }} dest=/root/{{ item }} owner=root group=root mode=0750
+  become: yes
+  with_items:
+    - network.sh
+    - docker-post.sh
+  notify:
+    - run network.sh
+    - run docker-post.sh
 
 - name: Configure secure LDAP configurations
-  sudo: yes
-  template: src=ldap/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
+  become: yes
+  template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
   with_items:
     - sssd/sssd.conf
     - sudoers.d/bh_admins-sudo
 
-- name: Configure LDAP configurations
-  sudo: yes
-  template: src=ldap/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+- name: Configure AUTH configurations
+  become: yes
+  template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     - pki/tls/certs/bh_ldap.crt
     - hostname
     - pam.d/password-auth-ac
     - pam.d/system-auth-ac
+    - ssh/sshd_config
+# DO NOT include nsswitch here ....
 
 - name: Ensure services running
-  sudo: yes
+  become: yes
   service: name={{ item }} enabled=yes state=started
   with_items:
     - sssd
     - sshd
 
-- name: deploy ssh configurations
-  sudo: yes
-  action: template src=security/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
-  with_items:
-    - ssh/sshd_config
-
 - name: deploy docker configurations
-  sudo: yes
+  become: yes
   action: template src=docker/{{ item }} dest=/etc/sysconfig/{{ item }} owner=root group=root mode=0644
   with_items:
+    - docker
     - docker-storage-setup
+
+- name: deploy docker init script
+  become: yes
+  action: template src=systemd/localdocker@.service dest=/etc/systemd/system/localdocker@.service owner=root group=root mode=0644
+
+# Create the docker ipv6 network for some of our container services.
+# Normally we can use the default, but for shells and backups, we need this.
+
+# Ansible docker doesn't support ipv6
+#- name: create v6 network
+#  become: yes
+#  docker_network:
+#    name: v6br
+#    state: present
+#    driver: bridge
+#    ipam_options:
+#        subnet: 2001:44b8:2155:2c24::/64
+#        gateway: 2001:44b8:2155:2c24::1
+#        iprange: 2001:44b8:2155:2c24:1::/80
+
 
 
 # rpm-ostree pkg-add remember!
+# rpm-ostree pkg-add vim zsh quagga
 

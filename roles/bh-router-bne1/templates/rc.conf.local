@@ -1,6 +1,8 @@
 # bgpd_flags="-v"
 
 ospfd_flags="-v"
+ospf6d_flags="-v"
+
 
 
 rtadvd_flags="-s -c /etc/rtadvd0.conf vio0 vio1 vio2 vio3 vio4 vio5 vio6 vio8"

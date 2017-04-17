@@ -1,0 +1,14 @@
+[Unit]
+Description=Docker container %i
+After=docker.service
+Requires=docker.service
+
+[Service]
+# ExecStart=/usr/bin/docker run --rm 
+ExecStart=/usr/bin/docker start -a %i
+ExecStop=/usr/bin/docker stop -t 60 %i
+
+[Install]
+WantedBy=multi-user.target
+
+

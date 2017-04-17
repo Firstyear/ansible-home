@@ -1,0 +1,14 @@
+
+- name: rebuild grub2
+  become: yes
+  shell: grub2-mkconfig -o /boot/grub2/grub.cfg
+
+- name: run network.sh
+  become: yes
+  shell: /root/network.sh
+
+- name: run docker-post.sh
+  become: yes
+  shell: /root/docker-post.sh
+
+

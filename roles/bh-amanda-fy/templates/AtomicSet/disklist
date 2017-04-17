@@ -1,15 +1,19 @@
 
 {% for item in groups['AtomicSet'] %}
+# This goes to /var on atomic
+# {{ item }} /sysroot/home comp-root-tar-ssl
+# Goes to /var/roothome
+# {{ item }} /sysroot/root comp-root-tar-ssl
+# /var/opt
+# {{ item }} /sysroot/opt comp-root-tar-ssl
+# /var/srv
+# {{ item }} /sysroot/srv comp-root-tar-ssl
+
+# These are the items we actually need to backup
 {{ item }} /sysroot/etc comp-root-tar-ssl
-{{ item }} /sysroot/home comp-root-tar-ssl
-{{ item }} /sysroot/root comp-root-tar-ssl
-{{ item }} /sysroot/opt comp-root-tar-ssl
-{{ item }} /sysroot/srv comp-root-tar-ssl
 {{ item }} /sysroot/var comp-root-tar-ssl
-{{ item }} /sysroot/var/lib comp-root-tar-ssl
-{{ item }} /sysroot/var/log comp-root-tar-ssl
-{{ item }} /sysroot/var/log/audit comp-root-tar-ssl
-{{ item }} /sysroot/usr/local/etc comp-root-tar-ssl
+# This is the atomic host os
+# {{ item }} /sysroot/sysroot comp-root-tar-ssl
 
 {% endfor %}
 

@@ -65,6 +65,7 @@
   with_items:
     - bgpd.conf
     - ospfd.conf
+    - ospf6d.conf
 
 - name: Configure network interfaces
   become: true

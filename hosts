@@ -100,8 +100,8 @@ freebsd
 [ManualSet:children]
 laptops
 
-[AtomicSet:children]
-atomic
+[AtomicSet]
+emerald-backup.dev.blackhats.net.au
 
 # Other groups
 
