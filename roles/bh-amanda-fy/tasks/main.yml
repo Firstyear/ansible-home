@@ -40,6 +40,10 @@
     - DailySet2
     - ManualSet
     - AtomicSet
+    - holding/DailySet1
+    - holding/DailySet2
+    - holding/ManualSet
+    - holding/AtomicSet
 
 - name: Create config directories
   sudo: yes

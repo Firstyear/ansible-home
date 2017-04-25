@@ -71,6 +71,8 @@
     container_image: amanda_client
     container_opts: --privileged=true -v /:/sysroot --network=v6br --ip6={{ docker_v6_prefix }}:1::2
 
+#### Make this a create instead!!!
+
 - name: Enable nabina container
   become: yes
   template: src=container.service dest=/etc/systemd/system/nabina.service owner=root group=root mode=0644
