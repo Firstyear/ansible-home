@@ -4,7 +4,9 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-ExecStart=/usr/bin/docker run --rm --name={{ container_name }} {{ container_opts }} {{ container_image }}
+
+ExecStartPre=-/usr/bin/docker create --name={{ container_name }} {{ container_opts }} {{ container_image }}
+ExecStart=/usr/bin/docker start -a {{ container_name }}
 ExecStop=/usr/bin/docker stop -t 60 {{ container_name }}
 
 [Install]

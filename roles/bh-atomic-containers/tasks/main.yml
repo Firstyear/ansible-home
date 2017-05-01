@@ -75,7 +75,7 @@
 
 - name: Enable nabina container
   become: yes
-  template: src=container.service dest=/etc/systemd/system/nabina.service owner=root group=root mode=0644
+  template: src=container-create.service dest=/etc/systemd/system/nabina.service owner=root group=root mode=0644
   vars:
     container_name: nabina
     container_image: centos_sshd:7

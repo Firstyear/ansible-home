@@ -18,41 +18,18 @@
   sudo: yes
   template: src=amandahosts dest=/var/lib/amanda/.amandahosts owner=amandabackup group=disk mode=0600
 
-#- name: Configure holding disk
-#  sudo: yes
-#  action: lvol vg=vg01 lv=amanda_lv size=300g
-
-#- name: Configure DailySet1 disk
-#  sudo: yes
-#  action: lvol vg=vg02 lv=DailySet1_lv size=100g
-#
-#- name: Configure ManualSet disk
-#  sudo: yes
-#  action: lvol vg=vg02 lv=ManualSet_lv size=140g
-
-### Should create filessytems and mount these later
-
 - name: Create amanda mountpoints
   sudo: yes
   action: file path=/var/lib/amanda/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
   with_items:
     - DailySet1
-    - DailySet2
-    - ManualSet
-    - AtomicSet
     - holding/DailySet1
-    - holding/DailySet2
-    - holding/ManualSet
-    - holding/AtomicSet
 
 - name: Create config directories
   sudo: yes
   action: file path=/etc/amanda/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
   with_items:
     - DailySet1
-    - DailySet2
-    - ManualSet
-    - AtomicSet
 
 - name: Configure amanda
   sudo: yes
@@ -61,53 +38,20 @@
     - DailySet1/disklist
     - DailySet1/amanda.conf
     - DailySet1/amanda-client.conf
-    - DailySet2/disklist
-    - DailySet2/amanda.conf
-    - DailySet2/amanda-client.conf
-    - ManualSet/disklist
-    - ManualSet/amanda.conf
-    - ManualSet/amanda-client.conf
-    - AtomicSet/disklist
-    - AtomicSet/amanda.conf
-    - AtomicSet/amanda-client.conf
 
 - name: Create amanda directories
   sudo: yes
   action: file path=/var/lib/amanda/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
   with_items:
     - DailySet1/vtapes
-    - DailySet2/vtapes
-    - ManualSet/vtapes
-    - AtomicSet/vtapes
 
 - name: Create vtape directories DailySet1
   sudo: yes
   action: file path=/var/lib/amanda/sets/DailySet1/vtapes/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
-  with_sequence: start=1 end=50 format=slot%d
+  with_sequence: start=1 end=60 format=slot%d
 
-- name: Create vtape directories DailySet2
-  sudo: yes
-  action: file path=/var/lib/amanda/sets/DailySet2/vtapes/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
-  with_sequence: start=1 end=35 format=slot%d
-
-- name: Create vtape directories ManualSet
-  sudo: yes
-  action: file path=/var/lib/amanda/sets/ManualSet/vtapes/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
-  with_sequence: start=1 end=35 format=slot%d
-
-- name: Create vtape directories AtomicSet
-  sudo: yes
-  action: file path=/var/lib/amanda/sets/AtomicSet/vtapes/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
-  with_sequence: start=1 end=35 format=slot%d
-
-# This needs to change .... We need to make a cronjob *per* host I think ..., but we need to stagger times.
-- name: Cron backup job DailySet1
-  sudo: yes
-  action: cron name="Run amanda DailySet1" minute="0" hour="1" job="/usr/sbin/amdump DailySet1" user="amandabackup"
-
-- name: Cron backup job DailySet2
-  sudo: yes
-  action: cron name="Run amanda DailySet2" minute="0" hour="11" job="/usr/sbin/amdump DailySet2" user="amandabackup"
-
+- name: Configure amanda cron
+  become: true
+  template: src=1amandacron dest=/etc/cron.d/1amandacron owner=root group=root mode=0644
 
 

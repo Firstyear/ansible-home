@@ -1,4 +1,5 @@
 
+### DailySet hosts
 {% for item in groups['DailySet1'] %}
 {{ item }} /etc comp-root-tar-ssl
 {{ item }} /home comp-root-tar-ssl
@@ -12,5 +13,101 @@
 {{ item }} /usr/local/etc comp-root-tar-ssl
 
 {% endfor %}
+{% for item in groups['DailySet2'] %}
+{{ item }} /etc comp-root-tar-ssl
+{{ item }} /home comp-root-tar-ssl
+{{ item }} /root comp-root-tar-ssl
+{{ item }} /opt comp-root-tar-ssl
+{{ item }} /srv comp-root-tar-ssl
+{{ item }} /var comp-root-tar-ssl
+{{ item }} /var/lib comp-root-tar-ssl
+{{ item }} /var/log comp-root-tar-ssl
+{{ item }} /var/log/audit comp-root-tar-ssl
+{{ item }} /usr/local/etc comp-root-tar-ssl
+
+{% endfor %}
+
+### Atomic hosts
+
+{% for item in groups['AtomicSet'] %}
+# This goes to /var on atomic
+# {{ item }} /sysroot/home comp-root-tar-ssl
+# Goes to /var/roothome
+# {{ item }} /sysroot/root comp-root-tar-ssl
+# /var/opt
+# {{ item }} /sysroot/opt comp-root-tar-ssl
+# /var/srv
+# {{ item }} /sysroot/srv comp-root-tar-ssl
+
+# These are the items we actually need to backup
+{{ item }} /sysroot/etc comp-root-tar-ssl
+{{ item }} /sysroot/var comp-root-tar-ssl
+# This is the atomic host os
+# {{ item }} /sysroot/sysroot comp-root-tar-ssl
+
+{% endfor %}
+
+### ManualSet Hosts
+{% for item in groups['ManualSet'] %}
+{{ item }} /etc comp-root-tar-ssl
+{{ item }} /home comp-root-tar-ssl
+{{ item }} /root comp-root-tar-ssl
+{{ item }} /opt comp-root-tar-ssl
+{{ item }} /srv comp-root-tar-ssl
+{{ item }} /var comp-root-tar-ssl
+{{ item }} /var/lib comp-root-tar-ssl
+{{ item }} /var/log comp-root-tar-ssl
+{{ item }} /var/log/audit comp-root-tar-ssl
+
+{% endfor %}
 
 
+
+### DailySet DECOM hosts
+{% for item in groups['DailySet1DECOM'] %}
+{{ item }} /etc comp-root-tar-ssl
+{{ item }} /home comp-root-tar-ssl
+{{ item }} /root comp-root-tar-ssl
+{{ item }} /opt comp-root-tar-ssl
+{{ item }} /srv comp-root-tar-ssl
+{{ item }} /var comp-root-tar-ssl
+{{ item }} /var/lib comp-root-tar-ssl
+{{ item }} /var/log comp-root-tar-ssl
+{{ item }} /var/log/audit comp-root-tar-ssl
+{{ item }} /usr/local/etc comp-root-tar-ssl
+
+{% endfor %}
+
+### Atomic hosts
+
+{% for item in groups['AtomicSetDECOM'] %}
+# This goes to /var on atomic
+# {{ item }} /sysroot/home comp-root-tar-ssl
+# Goes to /var/roothome
+# {{ item }} /sysroot/root comp-root-tar-ssl
+# /var/opt
+# {{ item }} /sysroot/opt comp-root-tar-ssl
+# /var/srv
+# {{ item }} /sysroot/srv comp-root-tar-ssl
+
+# These are the items we actually need to backup
+{{ item }} /sysroot/etc comp-root-tar-ssl
+{{ item }} /sysroot/var comp-root-tar-ssl
+# This is the atomic host os
+# {{ item }} /sysroot/sysroot comp-root-tar-ssl
+
+{% endfor %}
+
+### ManualSet Hosts
+{% for item in groups['ManualSetDECOM'] %}
+{{ item }} /etc comp-root-tar-ssl
+{{ item }} /home comp-root-tar-ssl
+{{ item }} /root comp-root-tar-ssl
+{{ item }} /opt comp-root-tar-ssl
+{{ item }} /srv comp-root-tar-ssl
+{{ item }} /var comp-root-tar-ssl
+{{ item }} /var/lib comp-root-tar-ssl
+{{ item }} /var/log comp-root-tar-ssl
+{{ item }} /var/log/audit comp-root-tar-ssl
+
+{% endfor %}

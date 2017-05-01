@@ -17,7 +17,6 @@ ansible_python_interpreter=/usr/local/bin/python2.7
 mandi.dev.blackhats.net.au
 
 [laptops]
-franky.prd.blackhats.net.au
 rei.prd.blackhats.net.au
 
 [amanda_servers]
@@ -79,8 +78,6 @@ lulu.net.blackhats.net.au
 yvett.prd.blackhats.net.au
 
 # Amanda backup specs
-# [DailySet1]
-# mikoto.net.blackhats.net.au
 
 [DailySet1:children]
 amanda_servers
@@ -102,6 +99,11 @@ laptops
 
 [AtomicSet]
 emerald-backup.dev.blackhats.net.au
+
+[DailySet1DECOM]
+[ManualSetDECOM]
+franky.prd.blackhats.net.au
+[AtomicSetDECOM]
 
 # Other groups
 
