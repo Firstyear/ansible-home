@@ -1,0 +1,23 @@
+
+- name: deploy atomic buildscripts
+  become: yes
+  action: copy src=atomic-buildscripts dest=/root/
+
+# - name: sync pxeboot mirror
+#   become: true
+#   action: shell RSYNC_PROXY=proxy-bne1.net.blackhats.net.au:3128 rsync -avz --exclude='*.iso' rsync://mirror.internode.on.net/centos/7/os/x86_64/images/pxeboot/ /var/www/html/pub/centos/7/os/x86_64/images/pxeboot/
+# 
+# - name: sync treeinfo
+#   become: true
+#   action: shell RSYNC_PROXY=proxy-bne1.net.blackhats.net.au:3128 rsync -avz --exclude='*.iso' rsync://mirror.internode.on.net/centos/7/os/x86_64/.treeinfo /var/www/html/pub/centos/7/os/x86_64/.treeinfo
+# 
+# - name: sync LiveOS
+#   become: true
+#   action: shell RSYNC_PROXY=proxy-bne1.net.blackhats.net.au:3128 rsync -avz --exclude='*.iso' rsync://mirror.internode.on.net/centos/7/os/x86_64/LiveOS/ /var/www/html/pub/centos/7/os/x86_64/LiveOS/
+# 
+# - name: Cron a mirror sync and build?
+
+- name: build test tree
+  become: true
+  action: shell http_proxy=http://proxy-bne1.net.blackhats.net.au:3128 rpm-ostree compose tree --repo=/var/www/html/repo /root/atomic-buildscripts/centos-atomic-host-test.json
+

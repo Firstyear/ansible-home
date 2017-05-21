@@ -4,6 +4,7 @@
   action: template src=libvirt/etc/default/grub dest=/etc/default/grub owner=root group=root mode=644
   notify:
     - rebuild grub2
+  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
 - name: sysctl for atomic hosts
   template: src=sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
@@ -21,6 +22,7 @@
   notify:
     - run network.sh
     - run docker-post.sh
+  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
 - name: Configure secure LDAP configurations
   become: yes
@@ -57,6 +59,8 @@
 - name: deploy docker init script
   become: yes
   action: template src=systemd/localdocker@.service dest=/etc/systemd/system/localdocker@.service owner=root group=root mode=0644
+
+#### FIX CHRONY!!!!
 
 # Create the docker ipv6 network for some of our container services.
 # Normally we can use the default, but for shells and backups, we need this.

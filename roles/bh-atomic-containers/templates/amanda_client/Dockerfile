@@ -10,7 +10,10 @@ RUN cd /etc && ln -sf ../usr/share/zoneinfo/Australia/Brisbane localtime
 
 RUN localedef -i en_AU -c -f UTF-8 en_AU.UTF-8
 
-RUN yum install -y which openssl amanda-client "/sbin/init" && yum clean all && rpm --rebuilddb
+RUN yum upgrade -y && \
+    yum install -y which openssl amanda-client "/sbin/init" && \
+    yum clean all && \
+    rpm --rebuilddb
 
 COPY amandahosts /var/lib/amanda/.amandahosts
 COPY backup-pubkey.pem /var/lib/amanda/backup-pubkey.pem

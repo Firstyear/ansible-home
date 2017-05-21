@@ -1,0 +1,21 @@
+VIRTHOST
+
+run the install-atomic-vm.sh
+
+CLIENT SIDE
+
+ostree remote add testrepo http://ostree.net.blackhats.net.au/repo/ --no-gpg-verify
+
+ostree pull testrepo centos-atomic-host/7/x86_64/standard
+rpm-ostree status
+rpm-ostree rebase testrepo:centos-atomic-host/7/x86_64/standard
+
+
+
+SERVER SIDE
+
+cd /var/www/html
+ostree --repo=repo init --mode=archive-z2
+
+http_proxy=http://proxy-bne1.net.blackhats.net.au:3128 rpm-ostree compose tree --repo=/var/www/html/repo /root/atomic-buildscripts/centos-atomic-host-test.json
+

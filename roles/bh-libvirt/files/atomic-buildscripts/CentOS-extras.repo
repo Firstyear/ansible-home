@@ -1,0 +1,9 @@
+[CentOS-extras]
+name=CentOS-$releasever - Extras
+#mirrorlist=http://mirrorlist.centos.org/?release=7&arch=$basearch&repo=extras&infra=$infra
+baseurl=http://mirror.internode.on.net/pub/centos/$releasever/extras/$basearch/
+gpgcheck=0
+gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
+# List excludes here that have higher versions due to missing git tags, until we implement
+# priorities: https://github.com/CentOS/sig-atomic-buildscripts/issues/138
+exclude=cloud-utils-growpart

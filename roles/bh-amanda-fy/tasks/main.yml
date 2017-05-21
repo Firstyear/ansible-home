@@ -39,12 +39,6 @@
     - DailySet1/amanda.conf
     - DailySet1/amanda-client.conf
 
-- name: Create amanda directories
-  sudo: yes
-  action: file path=/var/lib/amanda/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
-  with_items:
-    - DailySet1/vtapes
-
 - name: Create vtape directories DailySet1
   sudo: yes
   action: file path=/var/lib/amanda/sets/DailySet1/vtapes/{{ item }} owner=amandabackup group=disk mode=0750 state=directory

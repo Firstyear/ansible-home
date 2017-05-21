@@ -24,3 +24,26 @@
   sudo: yes
   action: firewalld service=dns zone=internal permanent=yes state=enabled immediate=yes
 
+# DNS master also acts as the CA master now.
+
+- name: Install certbot
+  become: true
+  action: package name={{ item }} state=present
+  with_items:
+    - certbot
+
+- name: deploy authhook
+  sudo: yes
+  action: template src={{ item }} dest=/root/{{ item }} owner=root group=named mode=0750
+  with_items:
+    - manual-hook.sh
+    - request.sh
+    - renew.sh
+
+
+###
+# https_proxy=http://proxy-bne1.net.blackhats.net.au:3128 certbot certonly --staging -m william@blackhats.net.au --manual --preferred-challenges=dns
+#
+# https_proxy=http://proxy-bne1.net.blackhats.net.au:3128 certbot certonly --staging -m william@blackhats.net.au --manual --preferred-challenges=dns --manual-public-ip-logging-ok --agree-tos -d fy.cloud.blackhats.net.au
+#
+

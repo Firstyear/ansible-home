@@ -1,0 +1,104 @@
+{
+    "comment": "CentOS Atomic host, William build",
+
+    "osname": "centos-atomic-host-test",
+    "ref": "centos-atomic-host-test/7/x86_64/standard",
+
+    "repos": ["CentOS-Base", "CentOS-updates", "CentOS-extras",
+	      "virt7-docker-common-candidate", "atomic7-testing",
+              "rhel-atomic-rebuild", "CentOS-CR"],
+
+    "selinux": true,
+
+    "install-langs-comment": "Keep this in sync with treecompose-post.sh",
+    "install-langs": [
+	"en_AU"
+    ],
+
+    "documentation": true,
+
+    "initramfs-args": ["--no-hostonly", "--add", "iscsi"],
+
+    "mutate-os-release": "7",
+    "postprocess-script": "treecompose-post.sh",
+
+    "etc-group-members": ["wheel", "docker"],
+
+    "ignore-removed-users": ["root"],
+    "ignore-removed-groups": ["root"],
+    "check-passwd": { "type": "file", "filename": "passwd" },
+    "check-groups": { "type": "file", "filename": "group" },
+
+    "packages": ["atomic",
+		 "glibc", "nss-altfiles", "shadow-utils",
+                 "runc",
+		 "systemd", "kernel", "rpm-ostree",
+		 "dracut-network",
+		 "biosdevname",
+		 "coreutils",
+		 "cryptsetup",
+		 "lvm2",
+		 "grub2", "grub2-efi", "ostree-grub2",
+		 "efibootmgr", "shim",
+		 "xfsprogs",
+		 "mdadm",
+		 "docker",
+		 "docker-lvm-plugin",
+		 "docker-novolume-plugin",
+		 "selinux-policy-targeted",
+		 "sssd",
+		 "tar", "xz", "gzip", "bzip2",
+		 "less",
+		 "kexec-tools",
+		 "iscsi-initiator-utils",
+		 "bridge-utils",
+                 "nfs-utils",
+		 "subscription-manager",
+		 "subscription-manager-plugin-ostree",
+		 "subscription-manager-plugin-container",
+		 "openssh-server", "openssh-clients",
+		 "chrony",
+		 "logrotate",
+		 "passwd",
+                 "iptables-services",
+		 "NetworkManager", "vim-minimal",
+		 "sudo",
+		 "tuned", "tuned-profiles-atomic",
+		 "bubblewrap",
+		 "fuse",
+		 "irqbalance",
+		 "bash-completion",
+		 "rsync", "tmux",
+		 "net-tools", "nmap-ncat",
+		 "bind-utils",
+		 "authconfig",
+		 "policycoreutils-python",
+		 "setools-console",
+                 "sg3_utils",
+                 "attr",
+
+                 "strace",
+		 "vim",
+                 "zsh",
+                 "sssd",
+                 "nmap",
+                 "openssh-clients",
+                 "openssh-server"
+		],
+
+    "remove-from-packages": [["yum", "/usr/bin/.*"],
+			     ["kernel", "/lib/modules/.*/drivers/gpu"],
+			     ["linux-firmware", "/usr/lib/firmware/radeon/.*"],
+			     ["filesystem", "/usr/share/backgrounds"]],
+
+    "units": ["docker.service",
+              "tuned.service",
+              "docker-storage-setup.service",
+              "sssd.service",
+              "sshd.service"
+             ],
+
+    "default_target": "multi-user.target"
+}
+
+

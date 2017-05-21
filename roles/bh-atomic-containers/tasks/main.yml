@@ -1,3 +1,8 @@
+##### DANGER DANGER DANGER
+# Selinux doesnt allow containers to access the default volumes location, so set policy to permissive!!!!
+- name: set containers to permissive
+  become: yes
+  action: selinux_permissive name=svirt_lxc_net_t permissive=true
 
 # Create the docker folders
 - name: create docker folders
@@ -6,6 +11,7 @@
   with_items:
     - amanda_client
     - centos_sshd
+    - squid
 
 # Deploy the container dockerfiles.
 - name: deploy docker templates
@@ -19,6 +25,9 @@
     - amanda_client/exclude
     - centos_sshd/Dockerfile
     - centos_sshd/sssd-log.conf
+    - squid/Dockerfile
+    - squid/squid.conf
+    - squid/squid-log.conf
 
 - name: deploy bh auth templates
   become: yes
@@ -40,9 +49,10 @@
     tag: latest
     push: no
     nocache: yes
-    force: no
+    force: yes
   with_items:
     - amanda_client
+    - squid
 
 - name: Build docker 7 images
   become: yes
@@ -52,7 +62,7 @@
     tag: 7
     push: no
     nocache: yes
-    force: no
+    force: yes
   with_items:
     - centos_sshd
 
@@ -63,6 +73,12 @@
     - nabina/home
     - nabina/opt
 
+- name: Create squid volumes
+  become: yes
+  file: path=/var/lib/docker/volumes/{{ item }} state=directory owner=23 group=23 mode=0775
+  with_items:
+    - squid/cache/
+
 - name: Enable amanda container
   become: yes
   template: src=container.service dest=/etc/systemd/system/amanda_client.service owner=root group=root mode=0644
@@ -71,7 +87,13 @@
     container_image: amanda_client
     container_opts: --privileged=true -v /:/sysroot --network=v6br --ip6={{ docker_v6_prefix }}:1::2
 
-#### Make this a create instead!!!
+- name: Enable squid container
+  become: yes
+  template: src=container.service dest=/etc/systemd/system/squid.service owner=root group=root mode=0644
+  vars:
+    container_name: squid
+    container_image: squid
+    container_opts: -v /var/lib/docker/volumes/squid/cache:/var/spool/squid -p 3128:3128
 
 - name: Enable nabina container
   become: yes
@@ -79,7 +101,7 @@
   vars:
     container_name: nabina
     container_image: centos_sshd:7
-    container_opts: --privileged -v /var/lib/docker/volumes/nabina/home:/home -v /var/lib/docker/volumes/nabina/opt:/opt --network=v6br --ip6={{ docker_v6_prefix }}:1::3
+    container_opts: --privileged=true -v /var/lib/docker/volumes/nabina/home:/home -v /var/lib/docker/volumes/nabina/opt:/opt --network=v6br --ip6={{ docker_v6_prefix }}:1::3
     # Without --privileged we can't create directories or change their perms. Needed for working shell in some cases.
 
 - name: Ensure containers
@@ -87,4 +109,6 @@
   service: name={{ item }} enabled=yes state=started
   with_items:
     - amanda_client
+    - squid
+    - nabina
 

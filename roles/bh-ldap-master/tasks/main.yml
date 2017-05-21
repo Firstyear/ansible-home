@@ -7,7 +7,7 @@
 
 - name: install directory server
   sudo: yes
-  action: yum name={{ item }} state=present
+  action: package name={{ item }} state=present
   with_items:
     - 389-ds-base
     # - python2-rest389
@@ -22,7 +22,6 @@
   sudo: yes
   firewalld: zone=internal permanent=true state=enabled service={{ item }} immediate=true
   with_items:
-    - ldap
     - ldaps
   when: "'linode_servers' not in group_names"
 
@@ -30,7 +29,7 @@
   sudo: yes
   firewalld: zone=internal permanent=yes state=enabled immediate=yes rich_rule='rule family="ipv6" source address="{{ item[1] }}" service name="{{ item[0] }}" accept'
   with_nested:
-    - [ 'ldap', 'ldaps' ]
+    - [ 'ldaps' ]
     - [ '2001:44b8:2155:2c00::/56', '2a01:7e00::f03c:91ff:fe84:9e3e', '2400:8901::f03c:91ff:fe98:4593', '2a01:7e00::f03c:91ff:feae:5d82' ]
   when: "'linode_servers' in group_names"
 
@@ -69,5 +68,6 @@
 # Then add the agreements
 #
 #
+
 
 

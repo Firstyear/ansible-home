@@ -1,0 +1,6 @@
+---
+- hosts: libvirt_servers
+  roles:
+    - bh-atomic
+    - bh-libvirt
+
