@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 # Persistent journal by default, because Atomic doesn't have syslog
 echo 'Storage=persistent' >> /etc/systemd/journald.conf
 
@@ -31,3 +29,4 @@ cp -f /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive.tmpl
 build-locale-archive
 
 echo "TREE COMPOSE complete"
+

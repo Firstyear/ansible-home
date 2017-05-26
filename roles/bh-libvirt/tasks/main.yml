@@ -17,7 +17,7 @@
 # 
 # - name: Cron a mirror sync and build?
 
-- name: build test tree
-  become: true
-  action: shell http_proxy=http://proxy-bne1.net.blackhats.net.au:3128 rpm-ostree compose tree --repo=/var/www/html/repo /root/atomic-buildscripts/centos-atomic-host-test.json
-
+# - name: build test tree
+#   become: true
+#   action: shell http_proxy=http://proxy-bne1.net.blackhats.net.au:3128 rpm-ostree compose tree --repo=/var/www/html/repo /root/atomic-buildscripts/centos-atomic-host-test.json
+# 

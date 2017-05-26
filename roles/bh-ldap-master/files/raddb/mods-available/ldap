@@ -61,7 +61,7 @@ ldap {
 	#  attribute ref.
 	#
 	update {
-		control:Password-With-Header	+= 'userPassword'
+#		control:Password-With-Header	+= 'userPassword'
 		control:NT-Password		:= 'ntUserNtPassword'
 #		reply:Reply-Message		:= 'radiusReplyMessage'
 #		reply:Tunnel-Type		:= 'radiusTunnelType'
@@ -376,7 +376,7 @@ ldap {
 		# The StartTLS operation is supposed to be
 		# used with normal ldap connections instead of
 		# using ldaps (port 636) connections
-		start_tls = yes
+		start_tls = no
 
 		ca_file	= /etc/pki/tls/certs/bh_ldap.crt
 

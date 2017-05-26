@@ -5,7 +5,7 @@ then
     exit 1
 fi
 
-DISKSIZE=20
+DISKSIZE=40
 MIRROR=ostree.net.blackhats.net.au
 KSNAME=${1}.cfg
 KSPATH=/root/vmscripts/ks/${KSNAME}

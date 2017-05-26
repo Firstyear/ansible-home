@@ -27,7 +27,7 @@ eap {
 	#  then that EAP type takes precedence over the
 	#  default type configured here.
 	#
-	default_eap_type = md5
+	default_eap_type = peap
 
 	#  A list is maintained to correlate EAP-Response
 	#  packets with EAP-Request packets.  After a
@@ -72,8 +72,8 @@ eap {
 	#  for wireless connections.  It is insecure, and does
 	#  not provide for dynamic WEP keys.
 	#
-	md5 {
-	}
+	# md5 {
+	# }
 
 	#
 	# EAP-pwd -- secure password-based authentication
@@ -108,8 +108,8 @@ eap {
 	#  User-Password, or the NT-Password attributes.
 	#  'System' authentication is impossible with LEAP.
 	#
-	leap {
-	}
+	# leap {
+	# }
 
 	#  Generic Token Card.
 	#
@@ -277,7 +277,10 @@ eap {
 		#  3) uncomment the line below.
 		#  5) Restart radiusd
 	#	check_crl = yes
-		ca_path = ${cadir}
+
+        #### NOTE: Make sure you run cacertdir rehash!!!
+
+		# ca_path = ${cadir}
 
 	       #
 	       #  If check_cert_issuer is set, the value will
@@ -309,7 +312,7 @@ eap {
 	       #  TLS-Client-Cert-CN attribute.  This check
 	       #  can be done via any mechanism you choose.
 	       #
-	#	check_cert_cn = %{User-Name}
+		# check_cert_cn = %{User-Name}
 	#
 		# Set this option to specify the allowed
 		# TLS cipher suites.  The format is listed
@@ -374,7 +377,7 @@ eap {
 		      #  The sessions will be deleted after this
 		      #  time.
 		      #
-		      lifetime = 24 # hours
+		      lifetime = 2 # hours
 
 		      #
 		      #  The maximum number of entries in the
@@ -544,7 +547,7 @@ eap {
 		# virtual server has access to these attributes, and can
 		# be used to accept or reject the request.
 		#
-	#	virtual_server = check-eap-tls
+	    virtual_server = check-eap-tls
 	}
 
 

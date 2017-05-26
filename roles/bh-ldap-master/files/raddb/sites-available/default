@@ -305,7 +305,7 @@ authorize {
 	#  If you have a Cisco SIP server authenticating against
 	#  FreeRADIUS, uncomment the following line, and the 'digest'
 	#  line in the 'authenticate' section.
-	digest
+	# digest
 
 	#
 	#  The WiMAX specification says that the Calling-Station-Id
@@ -369,7 +369,7 @@ authorize {
 	#  is meant to mirror the "users" file.
 	#
 	#  See "Authorization Queries" in sql.conf
-	-sql
+	# -sql
 
 	#
 	#  If you are using /etc/smbpasswd, and are also doing
@@ -468,7 +468,7 @@ authenticate {
 	#  If you have a Cisco SIP server authenticating against
 	#  FreeRADIUS, uncomment the following line, and the 'digest'
 	#  line in the 'authorize' section.
-	digest
+	# digest
 
 	#
 	#  Pluggable Authentication Modules.
@@ -726,7 +726,7 @@ post-auth {
 	#  issuing certificate which is being used.  The second
 	#  contains information about the client certificate (if
 	#  available).
-#
+
 #	update reply {
 #	       Reply-Message += "%{TLS-Cert-Serial}"
 #	       Reply-Message += "%{TLS-Cert-Expiration}"

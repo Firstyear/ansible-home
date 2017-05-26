@@ -16,6 +16,7 @@
     - mods-available/eap
     - sites-available/default
     - sites-available/inner-tunnel
+    - sites-available/check-eap-tls
 
 - name: Configure ldap auth
   sudo: yes
@@ -34,6 +35,7 @@
   with_items:
     - default
     - inner-tunnel
+    - check-eap-tls
 
 # Add radiusd keys
 

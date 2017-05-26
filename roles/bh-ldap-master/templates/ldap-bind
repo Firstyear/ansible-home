@@ -1,5 +1,5 @@
 
-{% elif 'bne1_servers' in group_names %}
+{% if 'bne1_servers' in group_names %}
     server = ldap01.blackhats.net.au
 {% elif 'syd1_servers' in group_names %}
     server = ldap-syd1.blackhats.net.au
@@ -7,7 +7,7 @@
     server = ldap.blackhats.net.au
 {% endif %}
 
-    port = 389
+    port = 636
 
 	identity = "cn=radius/tokiha.prd.blackhats.net.au,ou=Services,dc=blackhats,dc=net,dc=au"
 	password = {{ radiusd_ldap_password }}
