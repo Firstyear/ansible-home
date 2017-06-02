@@ -5,7 +5,7 @@
     "ref": "centos-atomic-host-test/7/x86_64/standard",
 
     "repos": ["CentOS-Base", "CentOS-updates", "CentOS-extras",
-          "virt7-docker-common-candidate", "atomic7-testing",
+              "atomic7-testing",
               "rhel-atomic-rebuild", "CentOS-CR"],
 
     "selinux": true,

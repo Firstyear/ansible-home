@@ -7,8 +7,8 @@ Wants=network-online.target
 Type=simple
 User=unifi
 WorkingDirectory=/opt/UniFi
-ExecStart=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.121-0.b13.el7_3.x86_64/jre/bin/java -Xmx1024M -jar /opt/UniFi/lib/ace.jar start
-ExecStop=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.121-0.b13.el7_3.x86_64/jre/bin/java -jar /opt/UniFi/lib/ace.jar stop
+ExecStart=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.131-2.b11.el7_3.x86_64/jre/bin/java -Xmx1024M -jar /opt/UniFi/lib/ace.jar start
+ExecStop=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.131-2.b11.el7_3.x86_64/jre/bin/java -jar /opt/UniFi/lib/ace.jar stop
 SuccessExitStatus=143
 
 [Install]
