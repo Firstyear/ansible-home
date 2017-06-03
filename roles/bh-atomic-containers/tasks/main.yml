@@ -13,6 +13,7 @@
     - centos_sshd
     - squid
     - samba
+    - nextcloud
 
 # Deploy the container dockerfiles.
 - name: deploy docker templates
@@ -32,6 +33,8 @@
     - samba/Dockerfile
     - samba/smb.conf
     - samba/sssd-log.conf
+    - nextcloud/Dockerfile
+    - nextcloud/ssl.conf
 
 - name: deploy bh auth templates for centosSSH
   become: yes
@@ -61,11 +64,12 @@
     tag: latest
     push: no
     nocache: yes
-    force: yes
+    force: no
   with_items:
     # - amanda_client
     - squid
     - samba
+    - nextcloud
 
 - name: Build docker 7 images
   become: yes
@@ -81,12 +85,17 @@
 
 - name: Create volumes
   become: yes
-  file: path=/var/lib/docker/volumes/{{ item }} state=directory owner=root group=root mode=0755
+  file: path=/var/lib/docker/volumes/{{ item }} state=directory owner=root group=root mode=0777
   with_items:
     - nabina/home
     - nabina/opt
     - samba/data
     - samba/private
+
+- name: Create nextcloud volumes
+  become: yes
+  file: path=/var/lib/docker/volumes/{{ item }} state=directory owner=48 group=48 mode=0770
+    - nextcloud/data
 
 - name: Create squid volumes
   become: yes
@@ -118,6 +127,14 @@
     container_image: samba
     container_opts: -v /var/lib/docker/volumes/samba/data:/data -v /var/lib/docker/volumes/samba/private:/var/lib/samba/private -p 445:445
 
+- name: Enable nextcloud container
+  become: yes
+  template: src=container.service dest=/etc/systemd/system/nextcloud.service owner=root group=root mode=0644
+  vars:
+    container_name: nextcloud
+    container_image: nextcloud
+    container_opts: -v /var/lib/docker/volumes/nextcloud/data:/var/lib/nextcloud/data -p 80:80 -p 443:443
+
 - name: Enable nabina container
   become: yes
   template: src=container-create.service dest=/etc/systemd/system/nabina.service owner=root group=root mode=0644
@@ -125,12 +142,15 @@
     container_name: nabina
     container_image: centos_sshd:7
     container_opts: --privileged=true -v /var/lib/docker/volumes/nabina/home:/home -v /var/lib/docker/volumes/nabina/opt:/opt --network=v6br --ip6={{ docker_v6_prefix }}:1::3
+  when: "'emerald' in inventory_hostname"
 
 - name: Ensure containers
   become: yes
   service: name={{ item }} enabled=yes state=started
   with_items:
     # - amanda_client
+    # - nabina
     - squid
-    - nabina
+    - nextcloud
+    - samba
 

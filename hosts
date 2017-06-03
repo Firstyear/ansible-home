@@ -9,6 +9,8 @@
 
 [atomic]
 emerald.dev.blackhats.net.au
+ruby.prd.blackhats.net.au
+sapphire.prd.blackhats.net.au
 
 [freebsd:vars]
 ansible_python_interpreter=/usr/local/bin/python2.7
