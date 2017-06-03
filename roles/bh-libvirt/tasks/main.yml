@@ -3,6 +3,20 @@
   become: yes
   action: copy src=atomic-buildscripts dest=/root/
 
+### HOW can we copy treecompose as +x?
+
+- name: deploy atomic repo
+  become: yes
+  action: copy src=atomic7-testing.repo dest=/etc/yum.repos.d/atomic7-testing.repo
+
+- name: install build tools
+  become: yes
+  action: package name={{ item }} state=present
+  with_items:
+    - ostree
+    - rpm-ostree
+    - httpd
+
 # - name: sync pxeboot mirror
 #   become: true
 #   action: shell RSYNC_PROXY=proxy-bne1.net.blackhats.net.au:3128 rsync -avz --exclude='*.iso' rsync://mirror.internode.on.net/centos/7/os/x86_64/images/pxeboot/ /var/www/html/pub/centos/7/os/x86_64/images/pxeboot/

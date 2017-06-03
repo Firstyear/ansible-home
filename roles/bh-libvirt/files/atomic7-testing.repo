@@ -1,0 +1,18 @@
+[atomic7-testing]
+name=atomic7-testing
+baseurl=http://cbs.centos.org/repos/atomic7-testing/x86_64/os/
+gpgcheck=0
+exclude=atomic ostree rpm-ostree
+# 
+# [atomic-centos-continuous]
+# baseurl=https://ci.centos.org/artifacts/sig-atomic/rdgo/centos-continuous/build
+# gpgcheck=0
+# priority=1
+
+[rhel-atomic-rebuild]
+name=rhel-atomic-rebuild
+baseurl=http://buildlogs.centos.org/centos/7/atomic/x86_64/Packages/
+gpgcheck=0
+exclude=systemd systemd-container systemd-container-libs systemd-libs
+
+
