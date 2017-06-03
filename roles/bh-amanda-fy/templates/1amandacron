@@ -16,6 +16,8 @@ MAILTO=root
 
 0 1 * * * amandabackup /usr/sbin/amdump DailySet1 {% for item in groups['DailySet1'] %}{{ item }} {% endfor %}
 
+0 6 * * * amandabackup /usr/sbin/amdump DailySet1 {% for item in groups['AtomicSet'] %}{{ item }} {% endfor %}
+
 0 11 * * * amandabackup /usr/sbin/amdump DailySet1 {% for item in groups['DailySet2'] %}{{ item }} {% endfor %}
 
 

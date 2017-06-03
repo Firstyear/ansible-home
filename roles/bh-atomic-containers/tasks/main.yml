@@ -47,6 +47,7 @@
     - { src: '../../templates/auth/pam.d/system-auth-ac', dest: 'system-auth-ac' }
     - { src: '../../templates/auth/ssh/sshd_config', dest: 'sshd_config' }
     - { src: '../../templates/auth/nsswitch.conf', dest: 'nsswitch.conf' }
+    - { src: '../../templates/auth/openldap/ldap.conf', dest: 'ldap.conf' }
 
 - name: deploy bh auth templates for samba
   become: yes
@@ -56,6 +57,13 @@
     - { src: '../../templates/auth/pki/tls/certs/bh_ldap.crt', dest: 'bh_ldap.crt' }
     - { src: '../../templates/auth/nsswitch.conf', dest: 'nsswitch.conf' }
 
+- name: deploy bh ldap templates for nextcloud
+  become: yes
+  template: src={{ item.src }} dest=/root/docker/nextcloud/{{ item.dest }} owner=root group=root mode=0640
+  with_items:
+    - { src: '../../templates/auth/pki/tls/certs/bh_ldap.crt', dest: 'bh_ldap.crt' }
+    - { src: '../../templates/auth/openldap/ldap.conf', dest: 'ldap.conf' }
+
 - name: Build docker latest images
   become: yes
   docker_image:
@@ -64,9 +72,8 @@
     tag: latest
     push: no
     nocache: yes
-    force: no
+    force: yes
   with_items:
-    # - amanda_client
     - squid
     - samba
     - nextcloud
@@ -82,6 +89,7 @@
     force: no
   with_items:
     - centos_sshd
+  when: "'emerald' in inventory_hostname"
 
 - name: Create volumes
   become: yes
@@ -95,7 +103,9 @@
 - name: Create nextcloud volumes
   become: yes
   file: path=/var/lib/docker/volumes/{{ item }} state=directory owner=48 group=48 mode=0770
+  with_items:
     - nextcloud/data
+    - nextcloud/config
 
 - name: Create squid volumes
   become: yes
@@ -133,7 +143,7 @@
   vars:
     container_name: nextcloud
     container_image: nextcloud
-    container_opts: -v /var/lib/docker/volumes/nextcloud/data:/var/lib/nextcloud/data -p 80:80 -p 443:443
+    container_opts: -v /var/lib/docker/volumes/nextcloud/data:/var/lib/nextcloud/data -v /var/lib/docker/volumes/nextcloud/config:/etc/nextcloud -p 80:80 -p 443:443
 
 - name: Enable nabina container
   become: yes

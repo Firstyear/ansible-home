@@ -40,10 +40,10 @@
 # {{ item }} /sysroot/srv comp-root-tar-ssl
 
 # These are the items we actually need to backup
-{{ item }} /sysroot/etc comp-root-tar-ssl
-{{ item }} /sysroot/var comp-root-tar-ssl
+{{ item }} /etc comp-root-tar-ssl
+{{ item }} /var comp-root-tar-ssl
 # This is the atomic host os
-# {{ item }} /sysroot/sysroot comp-root-tar-ssl
+{{ item }} /sysroot comp-root-tar-ssl
 
 {% endfor %}
 

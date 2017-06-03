@@ -18,6 +18,7 @@ RUN /usr/bin/yum upgrade -y && \
     procps-ng bind-utils yum-utils nc openssh-server && \
     /usr/bin/yum clean all && rpm --rebuilddb
 
+COPY ldap.conf /etc/openldap/ldap.conf
 COPY sssd-log.conf /etc/tmpfiles.d/sssd-log.conf
 COPY bh_admins-sudo /etc/sudoers.d/bh_admins-sudo
 COPY bh_ldap.crt /etc/pki/tls/certs/bh_ldap.crt

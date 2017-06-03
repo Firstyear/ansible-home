@@ -14,6 +14,10 @@ RUN yum upgrade -y && \
     yum clean all && \
     rpm --rebuilddb
 
+# This is to allow LDAP to work
+COPY bh_ldap.crt /etc/pki/tls/certs/bh_ldap.crt
+COPY ldap.conf /etc/openldap/ldap.conf
+
 COPY ssl.conf /etc/httpd/conf.d/ssl.conf
 # This makes the service available outside of localhost
 RUN ln -s /etc/httpd/conf.d/nextcloud-access.conf.avail /etc/httpd/conf.d/z-nextcloud-access.conf
@@ -21,6 +25,7 @@ RUN ln -s /etc/httpd/conf.d/nextcloud-access.conf.avail /etc/httpd/conf.d/z-next
 RUN systemctl enable httpd.service
 
 # volume /var/lib/nextcloud/data
+# volume for /etc/nextcloud too!!!
 
 # How do I inject TLS?
 

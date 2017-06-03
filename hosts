@@ -99,8 +99,8 @@ freebsd
 [ManualSet:children]
 laptops
 
-[AtomicSet]
-emerald-backup.dev.blackhats.net.au
+[AtomicSet:children]
+atomic
 
 [DailySet1DECOM]
 [ManualSetDECOM]

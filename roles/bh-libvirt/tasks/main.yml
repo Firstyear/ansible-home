@@ -5,6 +5,10 @@
 
 ### HOW can we copy treecompose as +x?
 
+- name: Mark treecompose +x
+  become: yes
+  action: file path=/root/atomic-buildscripts/treecompose-post.sh mode=0775
+
 - name: deploy atomic repo
   become: yes
   action: copy src=atomic7-testing.repo dest=/etc/yum.repos.d/atomic7-testing.repo

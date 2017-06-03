@@ -1,0 +1,8 @@
+# Managed by ansible
+{% for item in groups['amanda_servers'] %}
+{{ item }} amandabackup amdump
+{% endfor %}
+
+# 2001-44b8-016a-0011-5054-00ff-feba-0574.static.ipv6.internode.on.net amandabackup amdump
+2001-44b8-2155-2c11-5054-00ff-feba-0574.static.ipv6.internode.on.net amandabackup amdump
+

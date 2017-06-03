@@ -6,6 +6,32 @@
     - rebuild grub2
   when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
+# Setup the amanda stuff here
+
+- name: Configure amanda service socket
+  become: yes
+  service: name=amanda.socket enabled=yes state=started
+  tags:
+    - amanda
+
+- name: Configure Amanda allowed hosts
+  become: yes
+  template: src=amanda/amandahosts dest=/var/lib/amanda/.amandahosts owner=amandabackup group=disk mode=0600
+  tags:
+    - amanda
+
+- name: Configure Amanda public key
+  become: yes
+  template: src=amanda/backup-pubkey.pem dest=/var/lib/amanda/backup-pubkey.pem owner=amandabackup group=disk mode=0600
+  tags:
+    - amanda
+
+- name: Ensure excludes
+  become: yes
+  file: path=/var/lib/amanda/exclude state=touch owner=amandabackup group=disk mode=0600
+  tags:
+    - amanda
+
 - name: sysctl for atomic hosts
   template: src=sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
   become: yes
@@ -40,6 +66,7 @@
     - pam.d/password-auth-ac
     - pam.d/system-auth-ac
     - ssh/sshd_config
+    - openldap/ldap.conf
 # DO NOT include nsswitch here ....
 
 - name: Ensure services running
