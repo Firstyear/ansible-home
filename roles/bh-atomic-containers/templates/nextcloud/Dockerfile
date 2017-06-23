@@ -19,6 +19,7 @@ COPY bh_ldap.crt /etc/pki/tls/certs/bh_ldap.crt
 COPY ldap.conf /etc/openldap/ldap.conf
 
 COPY ssl.conf /etc/httpd/conf.d/ssl.conf
+COPY nextcloud.ini /etc/php.d/nextcloud.ini
 # This makes the service available outside of localhost
 RUN ln -s /etc/httpd/conf.d/nextcloud-access.conf.avail /etc/httpd/conf.d/z-nextcloud-access.conf
 

@@ -43,6 +43,10 @@
   sudo: yes
   action: file path=/etc/pki/radius/ state=directory owner=radiusd group=radiusd mode=0750
 
+- name: Configure systemd drop to autorestart
+  become: true
+  action: template src=radiusd.conf dest=/etc/systemd/system/radiusd.service.d/local.conf
+
 - name: enable all auth services
   sudo: yes
   action: service name=radiusd state=started enabled=yes

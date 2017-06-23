@@ -35,6 +35,7 @@
     - samba/sssd-log.conf
     - nextcloud/Dockerfile
     - nextcloud/ssl.conf
+    - nextcloud/nextcloud.ini
 
 - name: deploy bh auth templates for centosSSH
   become: yes
