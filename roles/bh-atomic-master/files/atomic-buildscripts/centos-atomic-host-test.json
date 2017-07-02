@@ -87,7 +87,10 @@
          "zsh",
          "sssd",
          "nmap",
-         "amanda-client"
+         "amanda-client",
+         "cronie",
+         "crontabs",
+         "cronie-anacron"
         ],
 
     "remove-from-packages": [["yum", "/usr/bin/.*"],
@@ -100,7 +103,8 @@
               "docker-storage-setup.service",
               "sssd.service",
               "sshd.service",
-              "amanda.socket"
+              "amanda.socket",
+              "crond.service"
              ],
 
     "default_target": "multi-user.target"

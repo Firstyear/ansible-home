@@ -7,10 +7,13 @@
 #  ansible -m raw -a "pkg install -y python27" <hostname>
 # set ansible_connection=paramiko temporarily before you have SSH keys
 
+[atomic_master_servers]
+mion.prd.blackhats.net.au patch_day=never
+
 [atomic]
-emerald.dev.blackhats.net.au
-ruby.prd.blackhats.net.au
-sapphire.prd.blackhats.net.au
+emerald.dev.blackhats.net.au patch_day=tue
+ruby.prd.blackhats.net.au patch_day=wed
+sapphire.prd.blackhats.net.au patch_day=thu
 
 [freebsd:vars]
 ansible_python_interpreter=/usr/local/bin/python2.7
@@ -27,15 +30,14 @@ yvett.prd.blackhats.net.au patch_day=mon
 [blog_servers]
 adara.prd.blackhats.net.au
 
-[deployment_servers]
-elise.prd.blackhats.net.au patch_day=tue
+#[deployment_servers]
+#elise.prd.blackhats.net.au patch_day=tue
 
-[unifi_servers]
-elise.prd.blackhats.net.au patch_day=tue
+#[unifi_servers]
+#elise.prd.blackhats.net.au patch_day=tue
 
-[development_servers]
-victoria.dev.blackhats.net.au patch_day=mon
-honey.dev.blackhats.net.au patch_day=tue
+# [development_servers]
+# victoria.dev.blackhats.net.au patch_day=mon
 
 [email_servers]
 ariel.prd.blackhats.net.au patch_day=sat
@@ -60,30 +62,30 @@ cassia.prd.blackhats.net.au patch_day=fri
 # jinjo.prd.blackhats.net.au patch_day=tue ## UNCOMMENT LATER!!!
 # bubo.dev.blackhats.net.au
 
-[libvirt_servers]
-mion.prd.blackhats.net.au
+# [libvirt_servers]
+# mion.prd.blackhats.net.au
 
 [nfs_servers]
 lorna.prd.blackhats.net.au patch_day=wed
 
-[openshift_master_servers]
-osmaster.prd.blackhats.net.au patch_day=thu
+# [openshift_master_servers]
+#osmaster.prd.blackhats.net.au patch_day=thu
 
-[openshift_node_servers]
+# [openshift_node_servers]
 #osnode01.prd.blackhats.net.au patch_day=fri
 #osnode02.prd.blackhats.net.au patch_day=sat
 
 [router_bne1]
 lulu.net.blackhats.net.au
 
-[rsyslog_servers]
-yvett.prd.blackhats.net.au
+# [rsyslog_servers]
+# yvett.prd.blackhats.net.au
 
 # Amanda backup specs
 
 [DailySet1:children]
 amanda_servers
-deployment_servers
+# deployment_servers
 email_servers
 email_relay_servers
 nfs_servers
@@ -91,9 +93,9 @@ ds_servers
 router_bne1
 
 [DailySet2:children]
-openshift_master_servers
-openshift_node_servers
-development_servers
+# openshift_master_servers
+# openshift_node_servers
+# development_servers
 freebsd
 
 [ManualSet:children]
@@ -101,24 +103,30 @@ laptops
 
 [AtomicSet:children]
 atomic
+atomic_master_servers
 
 [DailySet1DECOM]
+honey.dev.blackhats.net.au
+victoria.dev.blackhats.net.au
+elise.prd.blackhats.net.au
+
 [ManualSetDECOM]
 franky.prd.blackhats.net.au
+
 [AtomicSetDECOM]
 
 # Other groups
 
 [longst_virtual_servers:children]
 amanda_servers
-deployment_servers
-development_servers
+# deployment_servers
+# development_servers
 email_servers
 nfs_servers
-rsyslog_servers
+# rsyslog_servers
 ds_servers
-openshift_master_servers
-openshift_node_servers
+# openshift_master_servers
+# openshift_node_servers
 
 [syd1_servers]
 jinjo.prd.blackhats.net.au

@@ -1,0 +1,34 @@
+
+- name: deploy atomic buildscripts
+  become: yes
+  action: copy src=atomic-buildscripts dest=/root/
+
+### HOW can we copy treecompose as +x?
+
+- name: Mark treecompose +x
+  become: yes
+  action: file path=/root/atomic-buildscripts/treecompose-post.sh mode=0775
+
+- name: deploy atomic repo
+  become: yes
+  action: copy src=atomic7-testing.repo dest=/etc/yum.repos.d/atomic7-testing.repo
+
+- name: install build tools
+  become: yes
+  action: package name={{ item }} state=present
+  with_items:
+    - ostree
+    - rpm-ostree
+    - httpd
+
+- name: Schedule building main tree
+  become: true
+  cron:
+    name: build_main_tree
+    weekday: sun
+    minute: 0
+    hour: 22
+    job: "rpm-ostree compose tree --repo=/var/www/html/repo /root/atomic-buildscripts/centos-atomic-host-test.json"
+
+# Build the desktop tree too
+

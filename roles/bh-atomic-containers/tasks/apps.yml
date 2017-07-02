@@ -1,0 +1,115 @@
+# Create the docker folders
+- name: create docker folders
+  become: yes
+  file: path=/root/docker/{{ item }} state=directory owner=root group=root mode=0750
+  with_items:
+    - squid
+    - samba
+    - nextcloud
+
+# Deploy the container dockerfiles.
+- name: deploy docker templates
+  become: yes
+  template: src={{ item }} dest=/root/docker/{{ item }} owner=root group=root mode=0640
+  with_items:
+    - squid/Dockerfile
+    - squid/squid.conf
+    - squid/squid-log.conf
+    - samba/Dockerfile
+    - samba/smb.conf
+    - samba/sssd-log.conf
+    - nextcloud/Dockerfile
+    - nextcloud/ssl.conf
+    - nextcloud/nextcloud.ini
+
+- name: deploy bh auth templates for samba
+  become: yes
+  template: src={{ item.src }} dest=/root/docker/samba/{{ item.dest }} owner=root group=root mode=0640
+  with_items:
+    - { src: '../../templates/auth/sssd/sssd.conf', dest: 'sssd.conf' }
+    - { src: '../../templates/auth/pki/tls/certs/bh_ldap.crt', dest: 'bh_ldap.crt' }
+    - { src: '../../templates/auth/nsswitch.conf', dest: 'nsswitch.conf' }
+
+- name: deploy bh ldap templates for nextcloud
+  become: yes
+  template: src={{ item.src }} dest=/root/docker/nextcloud/{{ item.dest }} owner=root group=root mode=0640
+  with_items:
+    - { src: '../../templates/auth/pki/tls/certs/bh_ldap.crt', dest: 'bh_ldap.crt' }
+    - { src: '../../templates/auth/openldap/ldap.conf', dest: 'ldap.conf' }
+
+- name: Build docker latest images
+  become: yes
+  docker_image:
+    path: /root/docker/{{ item }}
+    name: "{{ item }}"
+    tag: latest
+    push: no
+    nocache: yes
+    force: yes
+  with_items:
+    - squid
+    - samba
+    - nextcloud
+
+- name: Create volumes
+  become: yes
+  file: path=/var/lib/docker/volumes/{{ item }} state=directory owner=root group=root mode=0777
+  with_items:
+    - samba/data
+    - samba/data/pub
+    - samba/data/priv
+    - samba/private
+
+- name: mount NFS to samba volumes
+  become: yes
+  action: lineinfile line="{{ item }}" dest="/etc/fstab"
+  with_items:
+    - "mion.prd.blackhats.net.au:/var/lib/exports/t3/priv /var/lib/docker/volumes/samba/data/priv nfs4 defaults 0 0"
+    - "mion.prd.blackhats.net.au:/var/lib/exports/t3/pub /var/lib/docker/volumes/samba/data/pub nfs4 defaults 0 0"
+
+- name: Create nextcloud volumes
+  become: yes
+  file: path=/var/lib/docker/volumes/{{ item }} state=directory owner=48 group=48 mode=0770
+  with_items:
+    - nextcloud/data
+    - nextcloud/config
+
+- name: Create squid volumes
+  become: yes
+  file: path=/var/lib/docker/volumes/{{ item }} state=directory owner=23 group=23 mode=0775
+  with_items:
+    - squid/cache/
+
+- name: Enable squid container
+  become: yes
+  template: src=container.service dest=/etc/systemd/system/squid.service owner=root group=root mode=0644
+  vars:
+    container_name: squid
+    container_image: squid
+    container_opts: -v /var/lib/docker/volumes/squid/cache:/var/spool/squid -p 3128:3128
+
+- name: Enable samba container
+  become: yes
+  template: src=container.service dest=/etc/systemd/system/samba.service owner=root group=root mode=0644
+  vars:
+    container_name: samba
+    container_image: samba
+    container_opts: -v /var/lib/docker/volumes/samba/data:/data -v /var/lib/docker/volumes/samba/private:/var/lib/samba/private -p 445:445
+
+- name: Enable nextcloud container
+  become: yes
+  template: src=container.service dest=/etc/systemd/system/nextcloud.service owner=root group=root mode=0644
+  vars:
+    container_name: nextcloud
+    container_image: nextcloud
+    container_opts: -v /var/lib/docker/volumes/nextcloud/data:/var/lib/nextcloud/data -v /var/lib/docker/volumes/nextcloud/config:/etc/nextcloud -p 80:80 -p 443:443
+
+- name: Ensure containers
+  become: yes
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - squid
+    - nextcloud
+    - samba
+
+

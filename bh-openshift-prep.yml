@@ -1,6 +1,0 @@
----
-- hosts: openshift_master_servers,openshift_node_servers
-  roles:
-    - bh-common-facts
-    - bh-openshift-prep
-

@@ -1,0 +1,53 @@
+# Create the docker folders
+- name: create docker folders
+  become: yes
+  file: path=/root/docker/{{ item }} state=directory owner=root group=root mode=0750
+  with_items:
+    - unifi
+
+# Deploy the container dockerfiles.
+- name: deploy docker templates
+  become: yes
+  template: src={{ item }} dest=/root/docker/{{ item }} owner=root group=root mode=0640
+  with_items:
+    - unifi/Dockerfile
+    - unifi/unifi.service
+
+- name: download unifi software
+  become: yes
+  get_url: url=http://dl.ubnt.com/unifi/5.4.16/UniFi.unix.zip dest=/root/docker/unifi/UniFi.unix.zip mode=0600
+
+- name: Build docker latest images
+  become: yes
+  docker_image:
+    path: /root/docker/{{ item }}
+    name: "{{ item }}"
+    tag: latest
+    push: no
+    nocache: yes
+    force: yes
+  with_items:
+    - unifi
+
+- name: Create volumes
+  become: yes
+  file: path=/var/lib/docker/volumes/{{ item }} state=directory owner=root group=root mode=0777
+  with_items:
+    - unifi/data
+
+- name: enable unifi container
+  become: yes
+  template: src=container.service dest=/etc/systemd/system/unifi.service owner=root group=root mode=0644
+  vars:
+    container_name: unifi
+    container_image: unifi
+    container_opts: -v /var/lib/docker/volumes/unifi/data:/opt/UniFi/data -p 8081:8081 -p 8080:8080 -p 8443:8443 -p 8880:8880 -p 8843:8843 -p 10001:10001/udp -p 3478:3478/udp
+  when: "'ruby' in inventory_hostname"
+
+- name: Ensure containers
+  become: yes
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - unifi
+
+

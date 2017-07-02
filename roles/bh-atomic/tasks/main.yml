@@ -87,8 +87,6 @@
   become: yes
   action: template src=systemd/localdocker@.service dest=/etc/systemd/system/localdocker@.service owner=root group=root mode=0644
 
-#### FIX CHRONY!!!!
-
 # Create the docker ipv6 network for some of our container services.
 # Normally we can use the default, but for shells and backups, we need this.
 
@@ -104,8 +102,13 @@
 #        gateway: 2001:44b8:2155:2c24::1
 #        iprange: 2001:44b8:2155:2c24:1::/80
 
-
-
-# rpm-ostree pkg-add remember!
-# rpm-ostree pkg-add vim zsh quagga
+- name: schedule atomic upgrade
+  become: yes
+  cron:
+    name: automatic_atomic_upgrade
+    minute: 38
+    hour: 7
+    weekday: "{{ patch_day }}"
+    job: "rpm-ostree upgrade -r"
+  when: "'atomic_master_servers' not in group_names"
 

@@ -1,0 +1,6 @@
+---
+- hosts: atomic_master_servers
+  roles:
+    - bh-atomic
+    - bh-atomic-master
+
