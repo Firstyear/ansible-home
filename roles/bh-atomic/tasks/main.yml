@@ -32,6 +32,10 @@
   tags:
     - amanda
 
+- name: Make amanda permissive so we can read all selinux types
+  become: yes
+  action: selinux_permissive name=amanda_t permissive=true
+
 - name: sysctl for atomic hosts
   template: src=sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
   become: yes

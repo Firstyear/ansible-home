@@ -14,12 +14,12 @@ MAILTO=root
 # |  |  |  |  |
 # *  *  *  *  * user-name  command to be executed
 
-0 2 * * * amandabackup /usr/sbin/amdump DailySet1 {% for item in groups['ManualSet'] %}{{ item }} {% endfor %}
+0 22 * * * amandabackup /usr/sbin/amdump DailySet1 {% for item in groups['ManualSet'] %}{{ item }} {% endfor %}
 
 0 2 * * * amandabackup /usr/sbin/amdump DailySet1 {% for item in groups['DailySet1'] %}{{ item }} {% endfor %}
 
-0 6 * * * amandabackup /usr/sbin/amdump DailySet1 {% for item in groups['AtomicSet'] %}{{ item }} {% endfor %}
+0 7 * * * amandabackup /usr/sbin/amdump DailySet1 {% for item in groups['AtomicSet'] %}{{ item }} {% endfor %}
 
-0 11 * * * amandabackup /usr/sbin/amdump DailySet1 {% for item in groups['DailySet2'] %}{{ item }} {% endfor %}
+0 12 * * * amandabackup /usr/sbin/amdump DailySet1 {% for item in groups['DailySet2'] %}{{ item }} {% endfor %}
 
 

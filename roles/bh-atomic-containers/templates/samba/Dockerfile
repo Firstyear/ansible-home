@@ -11,7 +11,7 @@ RUN localedef -i en_AU -c -f UTF-8 en_AU.UTF-8
 # Need nfs-utils to resolve nfs-nobody
 
 RUN yum upgrade -y && \
-    yum install -y samba sssd openldap-clients sssd-ldap nfs-utils && \
+    yum install -y samba sssd openldap-clients sssd-ldap nfs-utils tdb-tools && \
     yum clean all && \
     rpm --rebuilddb
 
@@ -29,9 +29,7 @@ RUN chown root:root /etc/sssd/sssd.conf && \
 RUN systemctl enable smb.service && \
     systemctl enable sssd
 
-RUN mkdir -p /data && \
-    rmdir /home && \
-    ln -sf /home /data/home
+RUN mkdir -p /data
 
 ENV container docker
 STOPSIGNAL SIGRTMIN+3

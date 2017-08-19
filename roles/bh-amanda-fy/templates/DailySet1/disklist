@@ -41,7 +41,10 @@
 
 # These are the items we actually need to backup
 {{ item }} /etc comp-root-tar-ssl
-{{ item }} /var comp-root-tar-ssl
+{{ item }} /var {
+    comp-root-tar-ssl
+    estimate calcsize
+}
 # This is the atomic host os
 {{ item }} /sysroot comp-root-tar-ssl
 

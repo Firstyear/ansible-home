@@ -33,9 +33,13 @@
     - [ '2001:44b8:2155:2c00::/56', '2a01:7e00::f03c:91ff:fe84:9e3e', '2400:8901::f03c:91ff:fe98:4593', '2a01:7e00::f03c:91ff:feae:5d82' ]
   when: "'linode_servers' in group_names"
 
-- name: enable all auth services
+- name: enable instance
   sudo: yes
   action: service name=dirsrv@blackhats state=started enabled=yes
+
+- name: enable dirsrv
+  sudo: yes
+  action: service name=dirsrv.target enabled=yes
 
 - include: radius.yml
   when: "'linode_servers' not in group_names"

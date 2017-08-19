@@ -88,9 +88,8 @@ amanda_servers
 # deployment_servers
 email_servers
 email_relay_servers
-nfs_servers
 ds_servers
-router_bne1
+# router_bne1 - broken by update, but should be okay.
 
 [DailySet2:children]
 # openshift_master_servers
@@ -103,12 +102,15 @@ laptops
 
 [AtomicSet:children]
 atomic
-atomic_master_servers
+# atomic_master_servers
 
 [DailySet1DECOM]
 honey.dev.blackhats.net.au
 victoria.dev.blackhats.net.au
 elise.prd.blackhats.net.au
+
+[DailySet1DECOM:children]
+nfs_servers
 
 [ManualSetDECOM]
 franky.prd.blackhats.net.au

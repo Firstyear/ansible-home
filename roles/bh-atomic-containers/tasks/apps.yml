@@ -7,6 +7,8 @@
     - samba
     - nextcloud
 
+## /var/lib/docker/volumes/samba/ SHOULD BE EXCLUDED IN AMANDA
+
 # Deploy the container dockerfiles.
 - name: deploy docker templates
   become: yes
@@ -58,6 +60,7 @@
     - samba/data
     - samba/data/pub
     - samba/data/priv
+    - samba/data/home
     - samba/private
 
 - name: mount NFS to samba volumes
@@ -66,6 +69,7 @@
   with_items:
     - "mion.prd.blackhats.net.au:/var/lib/exports/t3/priv /var/lib/docker/volumes/samba/data/priv nfs4 defaults 0 0"
     - "mion.prd.blackhats.net.au:/var/lib/exports/t3/pub /var/lib/docker/volumes/samba/data/pub nfs4 defaults 0 0"
+    - "mion.prd.blackhats.net.au:/var/lib/exports/t3/home /var/lib/docker/volumes/samba/data/home nfs4 defaults 0 0"
 
 - name: Create nextcloud volumes
   become: yes
@@ -94,7 +98,7 @@
   vars:
     container_name: samba
     container_image: samba
-    container_opts: -v /var/lib/docker/volumes/samba/data:/data -v /var/lib/docker/volumes/samba/private:/var/lib/samba/private -p 445:445
+    container_opts: -v /var/lib/docker/volumes/samba/data:/data -v /var/lib/docker/volumes/samba/data/home:/home -v /var/lib/docker/volumes/samba/private:/var/lib/samba/private -p 445:445
 
 - name: Enable nextcloud container
   become: yes
