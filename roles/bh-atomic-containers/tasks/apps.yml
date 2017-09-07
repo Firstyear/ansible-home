@@ -17,12 +17,17 @@
     - squid/Dockerfile
     - squid/squid.conf
     - squid/squid-log.conf
+    - squid/help.sh
+    - squid/install.sh
+    - squid/uninstall.sh
     - samba/Dockerfile
     - samba/smb.conf
     - samba/sssd-log.conf
     - nextcloud/Dockerfile
     - nextcloud/ssl.conf
     - nextcloud/nextcloud.ini
+  tags:
+    - buildimages
 
 - name: deploy bh auth templates for samba
   become: yes
@@ -31,6 +36,8 @@
     - { src: '../../templates/auth/sssd/sssd.conf', dest: 'sssd.conf' }
     - { src: '../../templates/auth/pki/tls/certs/bh_ldap.crt', dest: 'bh_ldap.crt' }
     - { src: '../../templates/auth/nsswitch.conf', dest: 'nsswitch.conf' }
+  tags:
+    - buildimages
 
 - name: deploy bh ldap templates for nextcloud
   become: yes
@@ -38,6 +45,8 @@
   with_items:
     - { src: '../../templates/auth/pki/tls/certs/bh_ldap.crt', dest: 'bh_ldap.crt' }
     - { src: '../../templates/auth/openldap/ldap.conf', dest: 'ldap.conf' }
+  tags:
+    - buildimages
 
 - name: Build docker latest images
   become: yes
@@ -52,6 +61,8 @@
     - squid
     - samba
     - nextcloud
+  tags:
+    - buildimages
 
 - name: Create volumes
   become: yes
@@ -78,19 +89,9 @@
     - nextcloud/data
     - nextcloud/config
 
-- name: Create squid volumes
-  become: yes
-  file: path=/var/lib/docker/volumes/{{ item }} state=directory owner=23 group=23 mode=0775
-  with_items:
-    - squid/cache/
-
-- name: Enable squid container
-  become: yes
-  template: src=container.service dest=/etc/systemd/system/squid.service owner=root group=root mode=0644
-  vars:
-    container_name: squid
-    container_image: squid
-    container_opts: -v /var/lib/docker/volumes/squid/cache:/var/spool/squid -p 3128:3128
+# - name: Enable squid atomic container
+#  become: yes
+#   atomic_container: name=squid image=squid:latest backend=docker state=latest mode=user
 
 - name: Enable samba container
   become: yes
@@ -110,7 +111,7 @@
 
 - name: Ensure containers
   become: yes
-  service: name={{ item }} enabled=yes state=started
+  service: name={{ item }} state=started
   with_items:
     - squid
     - nextcloud

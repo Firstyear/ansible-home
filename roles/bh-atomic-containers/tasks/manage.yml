@@ -41,7 +41,8 @@
   vars:
     container_name: unifi
     container_image: unifi
-    container_opts: -v /var/lib/docker/volumes/unifi/data:/opt/UniFi/data -p 8081:8081 -p 8080:8080 -p 8443:8443 -p 8880:8880 -p 8843:8843 -p 10001:10001/udp -p 3478:3478/udp
+    # container_opts: -v /var/lib/docker/volumes/unifi/data:/opt/UniFi/data -p 8081:8081 -p 8080:8080 -p 8443:8443 -p 8880:8880 -p 8843:8843 -p 10001:10001/udp -p 3478:3478/udp
+    container_opts: -v /var/lib/docker/volumes/unifi/data:/opt/UniFi/data --net=host
   when: "'ruby' in inventory_hostname"
 
 - name: Ensure containers
