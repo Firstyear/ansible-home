@@ -293,14 +293,19 @@
 # 
 #                                                                   TRANSPORT(5)
 
-william@blackhats.net.au    relay:mx05.blackhats.net.au
-firstyear@blackhats.net.au  relay:mx05.blackhats.net.au
-william-backup@blackhats.net.au relay:mx05.blackhats.net.au
-operahouse@blackhats.net.au relay:mx05.blackhats.net.au
-wibrown@blackhats.net.au    relay:mx05.blackhats.net.au
-charcol@blackhats.net.au    relay:mx05.blackhats.net.au
-firstyear.id.au             relay:mx05.blackhats.net.au
-.firstyear.id.au            relay:mx05.blackhats.net.au
+abuse@blackhats.net.au      relay:[in1-smtp.messagingengine.com]
+postmaster@blackhats.net.au relay:[in1-smtp.messagingengine.com]
+root@blackhats.net.au       relay:[in1-smtp.messagingengine.com]
+
+fmtest@blackhats.net.au     relay:[in1-smtp.messagingengine.com]
+william@blackhats.net.au    relay:[in1-smtp.messagingengine.com]
+firstyear@blackhats.net.au  relay:[in1-smtp.messagingengine.com]
+william-backup@blackhats.net.au relay:[in1-smtp.messagingengine.com]
+operahouse@blackhats.net.au relay:[in1-smtp.messagingengine.com]
+wibrown@blackhats.net.au    relay:[in1-smtp.messagingengine.com]
+charcol@blackhats.net.au    relay:[in1-smtp.messagingengine.com]
+william.blackhats.net.au    relay:[in1-smtp.messagingengine.com]
+charcol.blackhats.net.au    relay:[in1-smtp.messagingengine.com]
 dev.blackhats.net.au        relay:mx05.blackhats.net.au
 .dev.blackhats.net.au       relay:mx05.blackhats.net.au
 blackhats.net.au            relay:[ASPMX.L.GOOGLE.COM]
