@@ -4,8 +4,8 @@ After=suspend.target
 
 [Service]
 Type=oneshot
-# ExecStart=/usr/bin/sh -c "echo OFF > /sys/kernel/debug/vgaswitcheroo/switch"
-ExecStart=/usr/local/sbin/fixgpu
+ExecStart=/usr/bin/sh -c "echo OFF > /sys/kernel/debug/vgaswitcheroo/switch"
+# ExecStart=/usr/local/sbin/fixgpu
 
 [Install]
 WantedBy=suspend.target
