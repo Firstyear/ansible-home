@@ -4,6 +4,10 @@
   become: yes
   action: selinux_permissive name=svirt_lxc_net_t permissive=true
 
+- name: deploy ca.certs
+  become: yes
+  action: copy src=../../templates/docker/certs.d/registry.blackhats.net.au dest=/etc/docker/certs.d/
+
 # General purpose applications
 - include: apps.yml
   when: "'sapphire' in inventory_hostname"

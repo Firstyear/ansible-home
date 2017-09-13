@@ -1,0 +1,61 @@
+
+- name: deploy ca.certs
+  become: yes
+  action: copy src=../../templates/docker/certs.d/registry.blackhats.net.au dest=/etc/docker/certs.d/
+
+- name: Build squid container
+  become: yes
+  docker_image:
+    path: containers/squid/
+    name: registry.blackhats.net.au/squid
+    tag: latest
+    pull: yes
+    push: yes
+    nocache: yes
+  tags:
+    - squid
+
+- name: download unifi software
+  become: yes
+  get_url: url=http://dl.ubnt.com/unifi/5.4.16/UniFi.unix.zip dest=containers/unifi/ mode=0600
+  tags:
+    - unifi
+
+- name: Build unifi container
+  become: yes
+  docker_image:
+    path: containers/unifi/
+    name: registry.blackhats.net.au/unifi
+    tag: latest
+    pull: yes
+    push: yes
+    nocache: yes
+  tags:
+    - unifi
+
+- name: Inject auth templates for samba
+  become: yes
+  become: yes
+  template: src={{ item.src }} dest=containers/samba/{{ item.dest }} owner=root group=root mode=0640
+  with_items:
+    - { src: '../../templates/auth/sssd/sssd.conf', dest: 'sssd.conf' }
+    - { src: '../../templates/auth/pki/tls/certs/bh_ldap.crt', dest: 'bh_ldap.crt' }
+    - { src: '../../templates/auth/nsswitch.conf', dest: 'nsswitch.conf' }
+  tags:
+    - samba
+
+- name: Build samba container
+  become: yes
+  docker_image:
+    path: containers/samba/
+    name: registry.blackhats.net.au/samba
+    tag: latest
+    pull: yes
+    push: yes
+    nocache: yes
+    force: yes
+  tags:
+    - samba
+
+
+

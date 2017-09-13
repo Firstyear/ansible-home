@@ -7,6 +7,9 @@
 #  ansible -m raw -a "pkg install -y python27" <hostname>
 # set ansible_connection=paramiko temporarily before you have SSH keys
 
+[local]
+localhost ansible_connection=local
+
 [atomic_master_servers]
 mion.prd.blackhats.net.au patch_day=never
 

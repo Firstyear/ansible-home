@@ -1,9 +1,14 @@
 FROM centos:7
 MAINTAINER wibrown@redhat.com
 
-
-EXPOSE 8081 8080 8443 8880 8843 10001/udp 3478/udp
 # mount at /opt/unifi/data
+
+LABEL INSTALL "/usr/bin/docker run -t -i --rm \${OPT1} --privileged -v /:/host -e NAME=${NAME} -e IMAGE=${IMAGE} --name \${NAME} \${IMAGE} \${OPT2} /bin/sh /bin/install.sh \${OPT3}"
+LABEL UNINSTALL "/usr/bin/docker run -t -i --rm \${OPT1} --privileged -v /:/host -e NAME=${NAME} --name \${NAME} \${IMAGE} \${OPT2} /bin/sh /bin/uninstall.sh \${OPT3}"
+LABEL "Name"="unifi"
+
+COPY install.sh /bin/
+COPY uninstall.sh /bin/
 
 # Timezones
 RUN cd /etc && ln -sf ../usr/share/zoneinfo/Australia/Brisbane localtime

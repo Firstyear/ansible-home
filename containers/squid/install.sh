@@ -1,12 +1,12 @@
 #/bin/bash
 
 NAME=${NAME:=squid}
-IMAGE=${IMAGE:=squid}
+IMAGE=${IMAGE:=registry.blackhats.net.au/squid}
 LOGDIR=${LOGDIR:=/var/log/squid}
 
 # Make sure our paths exist
-mkdir -p ${LOGDIR}
-mkdir -p /var/lib/${NAME}
+mkdir -p /host/${LOGDIR}
+mkdir -p /host/var/lib/${NAME}
 
 chown -R 23:23 /var/lib/${NAME}
 
