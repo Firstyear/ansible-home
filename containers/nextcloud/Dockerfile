@@ -3,6 +3,13 @@ MAINTAINER wibrown@redhat.com
 
 EXPOSE 80 443
 
+LABEL INSTALL "/usr/bin/docker run -t -i --rm \${OPT1} --privileged -v /:/host -e NAME=${NAME} -e IMAGE=${IMAGE} --name \${NAME} \${IMAGE} \${OPT2} /bin/sh /bin/install.sh \${OPT3}"
+LABEL UNINSTALL "/usr/bin/docker run -t -i --rm \${OPT1} --privileged -v /:/host -e NAME=${NAME} --name \${NAME} \${IMAGE} \${OPT2} /bin/sh /bin/uninstall.sh \${OPT3}"
+LABEL "Name"="nextcloud"
+
+COPY install.sh /bin/
+COPY uninstall.sh /bin/
+
 # Timezones
 RUN cd /etc && ln -sf ../usr/share/zoneinfo/Australia/Brisbane localtime
 

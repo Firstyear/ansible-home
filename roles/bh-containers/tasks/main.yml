@@ -35,7 +35,6 @@
 
 - name: Inject auth templates for samba
   become: yes
-  become: yes
   template: src={{ item.src }} dest=containers/samba/{{ item.dest }} owner=root group=root mode=0640
   with_items:
     - { src: '../../templates/auth/sssd/sssd.conf', dest: 'sssd.conf' }
@@ -56,6 +55,30 @@
     force: yes
   tags:
     - samba
+
+
+- name: Inject auth templates for nextcloud
+  become: yes
+  template: src={{ item.src }} dest=containers/nextcloud/{{ item.dest }} owner=root group=root mode=0640
+  with_items:
+    - { src: '../../templates/auth/pki/tls/certs/bh_ldap.crt', dest: 'bh_ldap.crt' }
+    - { src: '../../templates/auth/openldap/ldap.conf', dest: 'ldap.conf' }
+  tags:
+    - nextcloud
+
+- name: Build nextcloud container
+  become: yes
+  docker_image:
+    path: containers/nextcloud/
+    name: registry.blackhats.net.au/nextcloud
+    tag: latest
+    pull: yes
+    push: yes
+    nocache: yes
+    force: yes
+  tags:
+    - nextcloud
+
 
 
 

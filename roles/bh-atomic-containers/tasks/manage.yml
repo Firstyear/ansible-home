@@ -8,7 +8,7 @@
 # Deploy the container dockerfiles.
 - name: deploy docker templates
   become: yes
-  template: src={{ item }} dest=/root/docker/{{ item }} owner=root group=root mode=0640
+  template: src=../../containers/{{ item }} dest=/root/docker/{{ item }} owner=root group=root mode=0640
   with_items:
     - atomic-registry/Dockerfile
     - atomic-registry/install.sh
