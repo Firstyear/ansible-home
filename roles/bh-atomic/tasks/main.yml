@@ -9,7 +9,9 @@
 # Setup the amanda stuff here
 
 # rpm-ostree install libselinux-python policycoreutils-python amanda-client
-# openldap-clients
+# openldap-clients yubico-piv-tool
+
+# Maybe opensc?
 
 # Remove rhgb from /etc/default/grub
 
