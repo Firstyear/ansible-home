@@ -1,0 +1,6 @@
+---
+- hosts: atomic_workstation
+  gather_facts: True
+  roles:
+    - bh-atomic
+

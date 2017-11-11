@@ -13,6 +13,9 @@ localhost ansible_connection=local
 [atomic_master_servers]
 mion.prd.blackhats.net.au patch_day=never
 
+[atomic_workstation]
+franky.prd.blackhats.net.au
+
 [atomic]
 emerald.dev.blackhats.net.au patch_day=tue
 ruby.prd.blackhats.net.au patch_day=wed
@@ -116,7 +119,6 @@ elise.prd.blackhats.net.au
 nfs_servers
 
 [ManualSetDECOM]
-franky.prd.blackhats.net.au
 
 [AtomicSetDECOM]
 

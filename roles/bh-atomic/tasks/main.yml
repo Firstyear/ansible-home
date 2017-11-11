@@ -8,6 +8,12 @@
 
 # Setup the amanda stuff here
 
+# rpm-ostree install libselinux-python policycoreutils-python amanda-client
+# openldap-clients
+
+# Remove rhgb from /etc/default/grub
+
+
 - name: Configure amanda service socket
   become: yes
   service: name=amanda.socket enabled=yes state=started
@@ -41,7 +47,13 @@
   become: yes
   with_items:
     - 01-uofa.conf
+
+- name: sysctl for atomic servers
+  template: src=sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
+  become: yes
+  with_items:
     - 02-atomic.conf
+  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
 - name: static network for atomic hosts
   template: src=scripts/{{ item }} dest=/root/{{ item }} owner=root group=root mode=0750
@@ -71,14 +83,8 @@
     - pam.d/system-auth-ac
     - ssh/sshd_config
     - openldap/ldap.conf
-# DO NOT include nsswitch here ....
 
-- name: Ensure services running
-  become: yes
-  service: name={{ item }} enabled=yes state=started
-  with_items:
-    - sssd
-    - sshd
+# DO NOT include nsswitch here ....
 
 - name: deploy docker configurations
   become: yes
@@ -86,10 +92,20 @@
   with_items:
     - docker
     - docker-storage-setup
+  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
 - name: deploy docker init script
   become: yes
   action: template src=systemd/localdocker@.service dest=/etc/systemd/system/localdocker@.service owner=root group=root mode=0644
+  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
+
+- name: Ensure services running
+  become: yes
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - sssd
+    - sshd
+    - docker
 
 # Create the docker ipv6 network for some of our container services.
 # Normally we can use the default, but for shells and backups, we need this.
@@ -114,5 +130,6 @@
     hour: 7
     weekday: "{{ patch_day }}"
     job: "rpm-ostree upgrade -r"
-  when: "'atomic_master_servers' not in group_names"
+  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
+  # when: "'atomic_master_servers' not in group_names"
 
