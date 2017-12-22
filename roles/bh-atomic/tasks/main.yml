@@ -10,6 +10,9 @@
 
 # rpm-ostree install libselinux-python policycoreutils-python amanda-client
 # openldap-clients yubico-piv-tool
+# opensc rpm-build zsh
+
+### evolution shotwell dconf-editor gnome-tweak-tool 
 
 # Maybe opensc?
 
@@ -75,6 +78,13 @@
     - sssd/sssd.conf
     - sudoers.d/bh_admins-sudo
 
+## #ADD TOUCH /var/lib/sss/pubconf/pam_preauth_available
+# /usr/libexec/sssd/p11_child --pre --nssdb=/etc/pki/nssdb 
+# to check certs.
+# Add cert to db?
+
+# modutil modutil -dbdir /etc/pki/nssdb -add "My PKCS#11 modules" -libfile libmypkcs11.so
+
 - name: Configure AUTH configurations
   become: yes
   template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
@@ -108,6 +118,7 @@
     - sssd
     - sshd
     - docker
+    - pcscd.socket
 
 # Create the docker ipv6 network for some of our container services.
 # Normally we can use the default, but for shells and backups, we need this.
