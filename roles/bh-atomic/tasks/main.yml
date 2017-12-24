@@ -11,12 +11,15 @@
 # rpm-ostree install libselinux-python policycoreutils-python amanda-client
 # openldap-clients yubico-piv-tool
 # opensc rpm-build zsh
+# git vim vim-nerdtree rpm-fusion (with local repo)
 
 ### evolution shotwell dconf-editor gnome-tweak-tool 
 
 # Maybe opensc?
 
 # Remove rhgb from /etc/default/grub
+
+# LayeredPackages: amanda-client b43-fw coolkey createrepo dconf-editor evolution git gnome-tweak-tool libselinux-python openldap-clients opensc policycoreutils-python rpm-build rpmfusion-free-release rpmfusion-nonfree-release shotwell vim vim-nerdtree yubico-piv-tool zsh
 
 
 - name: Configure amanda service socket
@@ -82,6 +85,7 @@
 # /usr/libexec/sssd/p11_child --pre --nssdb=/etc/pki/nssdb 
 # to check certs.
 # Add cert to db?
+# You need coolkey installed (I think ...)
 
 # modutil modutil -dbdir /etc/pki/nssdb -add "My PKCS#11 modules" -libfile libmypkcs11.so
 

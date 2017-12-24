@@ -46,14 +46,17 @@
     estimate calcsize
 }
 # This is the atomic host os
-{{ item }} /sysroot comp-root-tar-ssl
+# {{ item }} /sysroot comp-root-tar-ssl
 
 {% endfor %}
 
 ### ManualSet Hosts
 {% for item in groups['ManualSet'] %}
 {{ item }} /etc comp-root-tar-ssl
-{{ item }} /home comp-root-tar-ssl
+{{ item }} /home {
+    comp-root-tar-ssl
+    estimate calcsize
+}
 {{ item }} /root comp-root-tar-ssl
 {{ item }} /opt comp-root-tar-ssl
 {{ item }} /srv comp-root-tar-ssl
@@ -97,7 +100,7 @@
 {{ item }} /etc comp-root-tar-ssl
 {{ item }} /var comp-root-tar-ssl
 # This is the atomic host os
-{{ item }} /sysroot comp-root-tar-ssl
+# {{ item }} /sysroot comp-root-tar-ssl
 
 {% endfor %}
 
