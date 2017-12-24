@@ -31,6 +31,8 @@ COPY bh_ldap.crt /etc/pki/tls/certs/bh_ldap.crt
 COPY nsswitch.conf /etc/nsswitch.conf
 COPY sssd.conf /etc/sssd/sssd.conf
 RUN chown root:root /etc/sssd/sssd.conf && \
+    chown root:root /etc/nsswitch.conf && \
+    chown root:root /etc/pki/tls/certs/bh_ldap.crt && \
     chmod 600 /etc/sssd/sssd.conf
 
 RUN systemctl enable smb.service && \
