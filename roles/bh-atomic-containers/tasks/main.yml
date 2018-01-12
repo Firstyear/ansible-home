@@ -18,6 +18,6 @@
 
 # Untrusted dev shells
 # Generally this machine needs a route pointed at it for ipv6 bridging
-- include: shell.yml
-  when: "'emerald' in inventory_hostname"
+# - include: shell.yml
+#  when: "'emerald' in inventory_hostname"
 

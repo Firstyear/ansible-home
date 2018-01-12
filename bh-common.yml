@@ -1,9 +1,0 @@
----
-- hosts: all
-  roles:
-    #- virtual
-    - bh-common
-    - bh-common-auth
-    # - sss-aide
-  #vars_files:
-  #  - ~/secure/ansible_home_secrets.yml

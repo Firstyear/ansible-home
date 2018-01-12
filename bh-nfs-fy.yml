@@ -1,7 +1,0 @@
----
-- hosts: nfs_servers
-  # gather_facts: False
-  roles:
-    - bh-nfs-fy
-  vars_files:
-    - ~/secure/ansible_home_secrets.yml

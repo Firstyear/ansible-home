@@ -79,6 +79,27 @@
   tags:
     - nextcloud
 
+- name: Inject auth templates for vsftpd
+  become: yes
+  template: src={{ item.src }} dest=containers/vsftpd/{{ item.dest }} owner=root group=root mode=0640
+  with_items:
+    - { src: '../../templates/auth/sssd/sssd.conf', dest: 'sssd.conf' }
+    - { src: '../../templates/auth/pki/tls/certs/bh_ldap.crt', dest: 'bh_ldap.crt' }
+    - { src: '../../templates/auth/nsswitch.conf', dest: 'nsswitch.conf' }
+  tags:
+    - vsftpd
 
+- name: Build vsftpd container
+  become: yes
+  docker_image:
+    path: containers/samba/
+    name: registry.blackhats.net.au/samba
+    tag: latest
+    pull: yes
+    push: yes
+    nocache: yes
+    force: yes
+  tags:
+    - vsftpd
 
 

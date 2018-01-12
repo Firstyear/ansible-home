@@ -1,38 +1,38 @@
 
 - name: Install amanda software
-  sudo: yes
+  become: true
   yum: name={{ item }} state=present
   with_items:
    - amanda-client
    - amanda-server
 
 - name: Configure amanda firewall
-  sudo: yes
+  become: true
   firewalld: service=amanda-client zone=internal permanent=yes state=enabled immediate=yes
 
 - name: Configure amanda service socket
-  sudo: yes
+  become: true
   service: name=amanda.socket enabled=yes state=started
 
 - name: Configure Amanda allowed hosts
-  sudo: yes
+  become: true
   template: src=amandahosts dest=/var/lib/amanda/.amandahosts owner=amandabackup group=disk mode=0600
 
 - name: Create amanda mountpoints
-  sudo: yes
+  become: true
   action: file path=/var/lib/amanda/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
   with_items:
     - DailySet1
     - holding/DailySet1
 
 - name: Create config directories
-  sudo: yes
+  become: true
   action: file path=/etc/amanda/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
   with_items:
     - DailySet1
 
 - name: Configure amanda
-  sudo: yes
+  become: true
   template: src={{ item }} dest=/etc/amanda/{{ item }} owner=root group=root mode=0644
   with_items:
     - DailySet1/disklist
@@ -40,7 +40,7 @@
     - DailySet1/amanda-client.conf
 
 - name: Create vtape directories DailySet1
-  sudo: yes
+  become: true
   action: file path=/var/lib/amanda/sets/DailySet1/vtapes/{{ item }} owner=amandabackup group=disk mode=0750 state=directory
   with_sequence: start=1 end=60 format=slot%d
 
