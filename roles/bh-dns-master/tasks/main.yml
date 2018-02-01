@@ -1,27 +1,27 @@
 
 - name: Install bind
-  sudo: yes
+  become: yes
   action: yum name=bind state=present
 
 # Deploy the configs here
 - name: deploy configs
-  sudo: yes
+  become: yes
   action: template src={{ item }} dest=/etc/{{ item }} owner=root group=named mode=0640
   with_items:
     - named.conf
 
 # We need to make sure the shitty version of named isn't starting.
 - name: Disable dns pkcs11 services
-  sudo: yes
+  become: yes
   action: service name=named-pkcs11 state=stopped enabled=no
   ignore_errors: yes
 
 - name: Enable dns services
-  sudo: yes
+  become: yes
   action: service name=named state=started enabled=yes
 
 - name: config dns firewall
-  sudo: yes
+  become: yes
   action: firewalld service=dns zone=internal permanent=yes state=enabled immediate=yes
 
 # DNS master also acts as the CA master now.
@@ -33,7 +33,7 @@
     - certbot
 
 - name: deploy authhook
-  sudo: yes
+  become: yes
   action: template src={{ item }} dest=/root/{{ item }} owner=root group=named mode=0750
   with_items:
     - manual-hook.sh

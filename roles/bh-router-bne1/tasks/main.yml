@@ -104,7 +104,7 @@
   with_items:
     - vpn-syd1.sh
 
-- name: Configure firewall
+- name: Configure firewall (pf.conf)
   become: true
   template: src=pf.conf dest=/etc/pf.conf owner=root group=wheel mode=0600
 
