@@ -1,11 +1,11 @@
 FROM centos:7
 MAINTAINER wibrown@redhat.com
 
-EXPOSE 445
+EXPOSE 21 30000 30001 30002 30003 30004 30005 30006 30007 30008 30009
 
 LABEL INSTALL "/usr/bin/docker run -t -i --rm \${OPT1} --privileged -v /:/host -e NAME=${NAME} -e IMAGE=${IMAGE} --name \${NAME} \${IMAGE} \${OPT2} /bin/sh /bin/install.sh \${OPT3}"
 LABEL UNINSTALL "/usr/bin/docker run -t -i --rm \${OPT1} --privileged -v /:/host -e NAME=${NAME} --name \${NAME} \${IMAGE} \${OPT2} /bin/sh /bin/uninstall.sh \${OPT3}"
-LABEL "Name"="samba"
+LABEL "Name"="vsftpd"
 
 COPY install.sh /bin/
 COPY uninstall.sh /bin/
@@ -18,13 +18,9 @@ RUN localedef -i en_AU -c -f UTF-8 en_AU.UTF-8
 # Need nfs-utils to resolve nfs-nobody
 
 RUN yum upgrade -y && \
-    yum install -y samba sssd openldap-clients sssd-ldap nfs-utils tdb-tools && \
+    yum install -y vsftpd sssd openldap-clients sssd-ldap nfs-utils && \
     yum clean all && \
     rpm --rebuilddb
-
-COPY smb.conf /etc/samba/smb.conf
-
-# You can add the passwords via passdb.tdb
 
 COPY sssd-log.conf /etc/tmpfiles.d/sssd-log.conf
 COPY bh_ldap.crt /etc/pki/tls/certs/bh_ldap.crt
@@ -35,11 +31,12 @@ RUN chown root:root /etc/sssd/sssd.conf && \
     chown root:root /etc/pki/tls/certs/bh_ldap.crt && \
     chmod 600 /etc/sssd/sssd.conf
 
-RUN systemctl enable smb.service && \
-    systemctl enable sssd
+RUN systemctl enable vsftpd.service && \
+    systemctl enable sssd.service
 
 RUN mkdir -p /data
 
 ENV container docker
 STOPSIGNAL SIGRTMIN+3
 CMD [ "/sbin/init" ]
+

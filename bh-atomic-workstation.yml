@@ -1,5 +1,5 @@
 ---
-- hosts: atomic_workstation
+- hosts: local atomic_workstation
   gather_facts: True
   roles:
     - bh-atomic

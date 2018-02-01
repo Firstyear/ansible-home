@@ -6,6 +6,11 @@
     - rebuild grub2
   when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
+#- name: Install server atomic software
+#  become: yes
+#  command: rpm-ostree install amanda-client nmap vim zsh
+#  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
+
 # Setup the amanda stuff here
 
 # rpm-ostree install libselinux-python policycoreutils-python amanda-client
@@ -19,7 +24,7 @@
 
 # Remove rhgb from /etc/default/grub
 
-# LayeredPackages: amanda-client b43-fw coolkey createrepo dconf-editor evolution git gnome-tweak-tool libselinux-python openldap-clients opensc policycoreutils-python rpm-build rpmfusion-free-release rpmfusion-nonfree-release shotwell vim vim-nerdtree yubico-piv-tool zsh
+# LayeredPackages: amanda-client b43-fw coolkey createrepo dconf-editor evolution git gnome-tweak-tool libselinux-python openldap-clients opensc policycoreutils-python rpm-build rpmfusion-free-release rpmfusion-nonfree-release shotwell vim vim-nerdtree yubico-piv-tool zsh python3-docker
 
 
 - name: Configure amanda service socket
@@ -42,7 +47,18 @@
 
 - name: Ensure excludes
   become: yes
-  file: path=/var/lib/amanda/exclude state=touch owner=amandabackup group=disk mode=0600
+  blockinfile:
+    create: yes
+    state: present
+    path: /var/lib/amanda/exclude
+    owner: amandabackup
+    group: disk
+    mode: 0600
+    block: |
+      ./var/log
+      ./log
+      ./var/lib/amanda
+      ./lib/amanda
   tags:
     - amanda
 
@@ -81,13 +97,9 @@
     - sssd/sssd.conf
     - sudoers.d/bh_admins-sudo
 
-## #ADD TOUCH /var/lib/sss/pubconf/pam_preauth_available
-# /usr/libexec/sssd/p11_child --pre --nssdb=/etc/pki/nssdb 
-# to check certs.
-# Add cert to db?
-# You need coolkey installed (I think ...)
-
-# modutil modutil -dbdir /etc/pki/nssdb -add "My PKCS#11 modules" -libfile libmypkcs11.so
+- name: Touch preauth avail
+  become: yes
+  file: state=touch mode=0644 path=/var/lib/sss/pubconf/pam_preauth_available
 
 - name: Configure AUTH configurations
   become: yes
@@ -122,22 +134,20 @@
     - sssd
     - sshd
     - docker
-    - pcscd.socket
+    # This is only on laptop ....
+    # - pcscd.socket
 
-# Create the docker ipv6 network for some of our container services.
-# Normally we can use the default, but for shells and backups, we need this.
+# /usr/libexec/sssd/p11_child --pre --nssdb=/etc/pki/nssdb 
+# to check certs.
+# Add cert to db?
+# You need coolkey installed (I think ...)
 
-# Ansible docker doesn't support ipv6
-#- name: create v6 network
-#  become: yes
-#  docker_network:
-#    name: v6br
-#    state: present
-#    driver: bridge
-#    ipam_options:
-#        subnet: 2001:44b8:2155:2c24::/64
-#        gateway: 2001:44b8:2155:2c24::1
-#        iprange: 2001:44b8:2155:2c24:1::/80
+# certutil -A -d /etc/pki/nssdb -i /etc/pki/tls/certs/bh_ldap.crt -n BH_LDAP_CA -t "CT,,"
+
+# modutil modutil -dbdir /etc/pki/nssdb -add "My PKCS#11 modules" -libfile libmypkcs11.so
+# modutil -dbdir /etc/pki/nssdb -add "coolkey" -libfile /usr/lib64/libcoolkeypk11.so
+
+# semanage permissive -a sssd_t
 
 - name: schedule atomic upgrade
   become: yes
