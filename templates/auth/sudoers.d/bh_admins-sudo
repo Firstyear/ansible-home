@@ -1,3 +1,7 @@
 
+{% if ansible_system == 'FreeBSD' %}
+%bh_admins  ALL=(ALL) ALL
+{% else %}
 %bh_admins  ALL=(ALL) TYPE=unconfined_t ROLE=unconfined_r  ALL
+{% endif %}
 

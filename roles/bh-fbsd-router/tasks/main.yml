@@ -1,0 +1,90 @@
+
+# Deploy loader.conf to /boot/loader.conf
+- name: Configure serial console
+  become: yes
+  template: src=loader.conf dest=/boot/loader.conf owner=root group=wheel mode=0644
+
+# Install packages
+#  sudo zsh sssd python? openldap-clients?
+#  which load balancer? haproxy?
+#  bgpd?
+#  openvpn? openconnect?
+
+- name: Install packages
+  become: yes
+  pkgng: name={{ item }} state=present
+  with_items:
+    - dhcp6
+    - isc-dhcp43-server
+    - sssd
+    - sudo
+    - python36
+    - openldap-client
+    - zsh
+    - vim-lite
+    - haproxy
+    - openbgpd
+    - openvpn
+    # - openvpn-auth-ldap
+
+# Deploy auth configs
+
+- name: symlink zsh to correct location
+  become: yes
+  file: src=/usr/local/bin/zsh dest=/bin/zsh state=link
+
+- name: Configure secure configurations
+  become: yes
+  template: src=../../templates/auth/{{ item }} dest=/usr/local/etc/{{ item }} owner=root group=wheel mode=0600
+  with_items:
+    - sssd/sssd.conf
+    - sudoers.d/bh_admins-sudo
+
+- name: configurations AUTH (/usr/local/etc)
+  become: yes
+  template: src=../../templates/auth/{{ item }} dest=/usr/local/etc/{{ item }} owner=root group=wheel mode=0644
+  with_items:
+    - openldap/ldap.conf
+
+- name: Create tls cert dir
+  become: yes
+  file: path=/etc/pki/tls/certs state=directory mode=0755 owner=root group=wheel
+
+- name: Configure AUTH configurations (/etc)
+  become: yes
+  template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=wheel mode=0644
+  with_items:
+    - pki/tls/certs/bh_ldap.crt
+    - pam.d/system
+    - ssh/sshd_config
+
+- name: configurations (/usr/local/etc)
+  become: yes
+  template: src={{ item }} dest=/usr/local/etc/{{ item }} owner=root group=wheel mode=0644
+  with_items:
+    - dhcpd.conf
+
+# Configure pf.conf
+- name: Configure pf
+  become: yes
+  template: src=pf.conf dest=/etc/pf.conf owner=root group=wheel mode=0644
+
+# deploy network interface configs
+# set rc.conf
+
+# bgpd config
+# /usr/local/etc/bgpd.conf 0600
+
+# Do we do this all with "ensure line"?
+
+- name: Enable SSSD
+  become: yes
+  lineinfile: path=/etc/rc.conf line='sssd_enable="YES"'
+
+- name: Enable dhcpd
+  become: yes
+  lineinfile: path=/etc/rc.conf line='dhcpd_enable="YES"'
+
+# pf_enable="YES" ???
+
+

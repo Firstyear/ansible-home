@@ -1,0 +1,6 @@
+---
+- hosts: freebsd
+  gather_facts: True
+  roles:
+    - bh-fbsd-router
+

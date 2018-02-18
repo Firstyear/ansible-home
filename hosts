@@ -7,6 +7,7 @@ mion.prd.blackhats.net.au patch_day=never
 [atomic_workstation]
 franky.prd.blackhats.net.au
 spotinuc.prd.blackhats.net.au
+rei.prd.blackhats.net.au
 
 [atomic]
 ruby.prd.blackhats.net.au patch_day=wed
@@ -18,10 +19,10 @@ sapphire.prd.blackhats.net.au patch_day=thu
 # set ansible_connection=paramiko temporarily before you have SSH keys
 
 [freebsd:vars]
-ansible_python_interpreter=/usr/local/bin/python2.7
+ansible_python_interpreter=/usr/local/bin/python3.6
 
 [freebsd]
-# mandi.dev.blackhats.net.au
+sparkle.net.blackhats.net.au
 
 [laptops]
 rei.prd.blackhats.net.au

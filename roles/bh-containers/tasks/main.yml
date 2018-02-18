@@ -92,8 +92,8 @@
 - name: Build vsftpd container
   become: yes
   docker_image:
-    path: containers/samba/
-    name: registry.blackhats.net.au/samba
+    path: containers/vsftpd/
+    name: registry.blackhats.net.au/vsftpd
     tag: latest
     pull: yes
     push: yes
@@ -102,4 +102,26 @@
   tags:
     - vsftpd
 
+- name: Inject auth templates for radiusd
+  become: yes
+  template: src={{ item.src }} dest=containers/radiusd/{{ item.dest }} owner=root group=root mode=0640
+  with_items:
+    # - { src: '../../templates/auth/sssd/sssd.conf', dest: 'sssd.conf' }
+    - { src: '../../templates/auth/pki/tls/certs/bh_ldap.crt', dest: 'bh_ldap.crt' }
+    # - { src: '../../templates/auth/nsswitch.conf', dest: 'nsswitch.conf' }
+  tags:
+    - radiusd
+
+- name: Build radiusd container
+  become: yes
+  docker_image:
+    path: containers/radiusd/
+    name: registry.blackhats.net.au/radiusd
+    tag: latest
+    pull: yes
+    push: yes
+    nocache: yes
+    force: yes
+  tags:
+    - radiusd
 

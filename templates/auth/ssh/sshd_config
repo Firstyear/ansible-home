@@ -39,7 +39,9 @@ HostKey /etc/ssh/ssh_host_ecdsa_key
 # Logging
 # obsoletes QuietMode and FascistLogging
 #SyslogFacility AUTH
+{% if ansible_system != 'FreeBSD' %}
 SyslogFacility AUTHPRIV
+{% endif %}
 #LogLevel INFO
 
 # Authentication:
@@ -91,7 +93,7 @@ ChallengeResponseAuthentication no
 # GSSAPI options
 #GSSAPIAuthentication no
 #GSSAPICleanupCredentials yes
-GSSAPICleanupCredentials no
+# GSSAPICleanupCredentials no
 #GSSAPIStrictAcceptorCheck yes
 #GSSAPIKeyExchange no
 
@@ -112,7 +114,7 @@ GSSAPICleanupCredentials no
 #AllowTcpForwarding yes
 #GatewayPorts no
 #X11Forwarding no
-X11Forwarding yes
+#X11Forwarding yes
 #X11DisplayOffset 10
 #X11UseLocalhost yes
 #PrintMotd yes
@@ -136,13 +138,17 @@ ClientAliveCountMax 0
 #Banner none
 
 # Accept locale-related environment variables
-AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
-AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
-AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
-AcceptEnv XMODIFIERS
+#AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+#AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+#AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
+#AcceptEnv XMODIFIERS
 
 # override default of no subsystems
+{% if ansible_system == 'FreeBSD' %}
+Subsystem	sftp	/usr/libexec/sftp-server
+{% else %}
 Subsystem	sftp	/usr/libexec/openssh/sftp-server
+{% endif %}
 
 # Uncomment this if you want to use .local domain
 #Host *.local
@@ -156,7 +162,13 @@ Subsystem	sftp	/usr/libexec/openssh/sftp-server
 KerberosAuthentication no
 PubkeyAuthentication yes
 UsePAM yes
+
+{% if ansible_system == 'FreeBSD' %}
+AuthorizedKeysCommand /usr/local/bin/sss_ssh_authorizedkeys
+{% else %}
 AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
+{% endif %}
 AuthorizedKeysCommandUser nobody
+
 # GSSAPIAuthentication yes
 
