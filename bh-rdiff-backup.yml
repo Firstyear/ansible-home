@@ -1,0 +1,7 @@
+---
+- hosts: rdiff_backup
+  gather_facts: True
+  roles:
+    - bh-atomic
+    - bh-rdiff-backup
+

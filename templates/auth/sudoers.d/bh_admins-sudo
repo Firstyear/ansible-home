@@ -2,6 +2,10 @@
 {% if ansible_system == 'FreeBSD' %}
 %bh_admins  ALL=(ALL) ALL
 {% else %}
+{% if ansible_virtualization_role == 'host' %}
+%bh_admins  ALL=(ALL) TYPE=unconfined_t ROLE=unconfined_r  NOPASSWD: ALL
+{% else %}
 %bh_admins  ALL=(ALL) TYPE=unconfined_t ROLE=unconfined_r  ALL
+{% endif %}
 {% endif %}
 

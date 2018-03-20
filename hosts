@@ -12,6 +12,7 @@ rei.prd.blackhats.net.au
 [atomic]
 ruby.prd.blackhats.net.au patch_day=wed
 sapphire.prd.blackhats.net.au patch_day=thu
+eve.prd.blackhats.net.au patch_day=mon
 
 # Bootstrap with:
 #  ansible -m raw -a "pkg update -f"
@@ -27,18 +28,13 @@ sparkle.net.blackhats.net.au
 [laptops]
 rei.prd.blackhats.net.au
 
-[amanda_servers]
-yvett.prd.blackhats.net.au patch_day=mon
-
 [blog_servers]
 adara.prd.blackhats.net.au
-
-[email_servers]
-ariel.prd.blackhats.net.au patch_day=sat
 
 [email_relay_servers]
 adara.prd.blackhats.net.au patch_day=thu
 cassia.prd.blackhats.net.au patch_day=fri
+ariel.prd.blackhats.net.au patch_day=sat
 
 [dns_slave_servers]
 adara.prd.blackhats.net.au patch_day=thu
@@ -53,44 +49,19 @@ tokiha.prd.blackhats.net.au patch_day=sun
 ariel.prd.blackhats.net.au patch_day=sat
 adara.prd.blackhats.net.au patch_day=thu
 cassia.prd.blackhats.net.au patch_day=fri
-# jinjo.prd.blackhats.net.au patch_day=tue ## UNCOMMENT LATER!!!
-# bubo.dev.blackhats.net.au
+
+[rdiff_backup]
+eve.prd.blackhats.net.au patch_day=mon
 
 [router_bne1]
 lulu.net.blackhats.net.au
 
-# Amanda backup specs
-
 [DailySet1:children]
-amanda_servers
-email_servers
 email_relay_servers
 ds_servers
-# router_bne1 - broken by update, but should be okay.
-
-[ManualSet:children]
 laptops
-
-[AtomicSet:children]
 atomic
-
-[DailySet1DECOM]
-honey.dev.blackhats.net.au
-victoria.dev.blackhats.net.au
-elise.prd.blackhats.net.au
-lorna.prd.blackhats.net.au
-
-[ManualSetDECOM]
-
-[AtomicSetDECOM]
-emerald.dev.blackhats.net.au patch_day=tue
-
-# Other groups
-
-[longst_virtual_servers:children]
-amanda_servers
-email_servers
-ds_servers
+freebsd
 
 [syd1_servers]
 jinjo.prd.blackhats.net.au
@@ -98,17 +69,8 @@ jinjo.prd.blackhats.net.au
 [bne1_servers]
 lulu.net.blackhats.net.au
 
-[adl1_servers]
-mikoto.net.blackhats.net.au
-
-[linode_servers]
-ariel.prd.blackhats.net.au
-
 [linode_servers:children]
 email_relay_servers
-
-[hp_servers]
-bubo.dev.blackhats.net.au
 
 # Enable python 3 for fedora 27 and above.
 [py3:children]

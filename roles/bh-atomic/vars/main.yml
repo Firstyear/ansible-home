@@ -1,0 +1,5 @@
+acl_locations:
+    - /var/lib/samba/data
+    - /var/lib/nextcloud
+    - /var/lib/dirsrv
+    - /var/lib/unifi

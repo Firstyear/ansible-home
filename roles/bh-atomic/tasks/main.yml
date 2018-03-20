@@ -6,12 +6,12 @@
     - rebuild grub2
   when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
+### ADD rdiff-backup
+
 #- name: Install server atomic software
 #  become: yes
 #  command: rpm-ostree install amanda-client nmap vim zsh
 #  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
-
-# Setup the amanda stuff here
 
 # rpm-ostree install libselinux-python policycoreutils-python amanda-client
 # openldap-clients yubico-piv-tool
@@ -25,46 +25,6 @@
 # Remove rhgb from /etc/default/grub
 
 # LayeredPackages: amanda-client b43-fw coolkey createrepo dconf-editor evolution git gnome-tweak-tool libselinux-python openldap-clients opensc policycoreutils-python rpm-build rpmfusion-free-release rpmfusion-nonfree-release shotwell vim vim-nerdtree yubico-piv-tool zsh python3-docker
-
-
-- name: Configure amanda service socket
-  become: yes
-  service: name=amanda.socket enabled=yes state=started
-  tags:
-    - amanda
-
-- name: Configure Amanda allowed hosts
-  become: yes
-  template: src=amanda/amandahosts dest=/var/lib/amanda/.amandahosts owner=amandabackup group=disk mode=0600
-  tags:
-    - amanda
-
-- name: Configure Amanda public key
-  become: yes
-  template: src=amanda/backup-pubkey.pem dest=/var/lib/amanda/backup-pubkey.pem owner=amandabackup group=disk mode=0600
-  tags:
-    - amanda
-
-- name: Ensure excludes
-  become: yes
-  blockinfile:
-    create: yes
-    state: present
-    path: /var/lib/amanda/exclude
-    owner: amandabackup
-    group: disk
-    mode: 0600
-    block: |
-      ./var/log
-      ./log
-      ./var/lib/amanda
-      ./lib/amanda
-  tags:
-    - amanda
-
-- name: Make amanda permissive so we can read all selinux types
-  become: yes
-  action: selinux_permissive name=amanda_t permissive=true
 
 - name: sysctl for atomic hosts
   template: src=sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
@@ -84,10 +44,8 @@
   become: yes
   with_items:
     - network.sh
-    - docker-post.sh
   notify:
     - run network.sh
-    - run docker-post.sh
   when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
 - name: Configure secure LDAP configurations
@@ -127,6 +85,10 @@
   action: template src=systemd/localdocker@.service dest=/etc/systemd/system/localdocker@.service owner=root group=root mode=0644
   when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
+- name: Ensure services disabled
+  become: yes
+  service: name=nfs-client.target enabled=no
+
 - name: Ensure services running
   become: yes
   service: name={{ item }} enabled=yes state=started
@@ -136,6 +98,30 @@
     - docker
     # This is only on laptop ....
     # - pcscd.socket
+
+- name: Configure default masks
+  become: yes
+  ignore_errors: yes
+  acl: path={{ item }} etype=mask permissions=rwx state=present recursive=yes default=yes
+  with_items: '{{ acl_locations }}'
+
+- name: Configure masks
+  become: yes
+  ignore_errors: yes
+  acl: path={{ item }} etype=mask permissions=rwx state=present recursive=yes
+  with_items: '{{ acl_locations }}'
+
+- name: Configure default acl for backups to operate
+  become: yes
+  ignore_errors: yes
+  acl: path={{ item }} entity=backup etype=user permissions=rx state=present recursive=yes default=yes
+  with_items: '{{ acl_locations }}'
+
+- name: Configure acl for backups to operate
+  become: yes
+  ignore_errors: yes
+  acl: path={{ item }} entity=backup etype=user permissions=rx state=present recursive=yes
+  with_items: '{{ acl_locations }}'
 
 # /usr/libexec/sssd/p11_child --pre --nssdb=/etc/pki/nssdb 
 # to check certs.

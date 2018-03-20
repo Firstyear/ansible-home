@@ -1,0 +1,16 @@
+- name: Create backup home drive
+  become: yes
+  file: path=/home/backup state=directory owner=backup group=backup mode=0750
+
+- name: Ensure excludes
+  become: yes
+  template: src=include-list dest=/home/backup/include-list owner=backup group=backup mode=0640
+
+- name: Cron backupjob
+  become: yes
+  template: src=backup.sh dest=/home/backup/backup.sh owner=backup group=backup mode=0750
+
+- name: Configure backup cron
+  become: true
+  template: src=1backupcron dest=/etc/cron.d/1backupcron owner=root group=root mode=0644
+
