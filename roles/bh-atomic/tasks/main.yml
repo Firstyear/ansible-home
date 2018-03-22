@@ -96,6 +96,7 @@
     - sssd
     - sshd
     - docker
+    - crond
     # This is only on laptop ....
     # - pcscd.socket
 
@@ -138,6 +139,7 @@
 - name: schedule atomic upgrade
   become: yes
   cron:
+    user: root
     name: automatic_atomic_upgrade
     minute: 38
     hour: 7

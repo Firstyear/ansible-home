@@ -59,7 +59,7 @@ lulu.net.blackhats.net.au
 [DailySet1:children]
 email_relay_servers
 ds_servers
-laptops
+# laptops
 atomic
 freebsd
 
