@@ -125,3 +125,15 @@
   tags:
     - radiusd
 
+- name: Build lifx container
+  become: yes
+  docker_image:
+    path: containers/lifx/
+    name: registry.blackhats.net.au/lifx
+    tag: latest
+    pull: yes
+    push: yes
+    nocache: yes
+    force: yes
+  tags:
+    - lifx

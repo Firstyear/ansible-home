@@ -1,0 +1,27 @@
+FROM fedora:27
+MAINTAINER william@blackhats.net.au
+
+
+LABEL INSTALL "/usr/bin/docker run -t -i --rm \${OPT1} --privileged -v /:/host -e NAME=${NAME} -e IMAGE=${IMAGE} --name \${NAME} \${IMAGE} \${OPT2} /bin/sh /bin/install.sh \${OPT3}"
+LABEL UNINSTALL "/usr/bin/docker run -t -i --rm \${OPT1} --privileged -v /:/host -e NAME=${NAME} --name \${NAME} \${IMAGE} \${OPT2} /bin/sh /bin/uninstall.sh \${OPT3}"
+LABEL "Name"="nextcloud"
+
+COPY install.sh /bin/
+COPY uninstall.sh /bin/
+
+# Timezones
+RUN cd /etc && ln -sf ../usr/share/zoneinfo/Australia/Brisbane localtime
+
+RUN dnf upgrade -y && \
+    dnf install -y python3-devel gcc && \
+    pip3 install lifxlan && \
+    dnf clean all
+
+RUN useradd -m -r lifx
+
+COPY lifxctl.py /home/lifx/lifxctl.py
+
+USER lifx
+ENV container docker
+# STOPSIGNAL SIGRTMIN+3
+CMD [ "/usr/bin/python3", "/home/lifx/lifxctl.py" ]

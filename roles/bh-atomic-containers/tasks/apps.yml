@@ -8,13 +8,14 @@
     - samba/data/home
     - samba/private
 
-- name: mount NFS to samba volumes
-  become: yes
-  action: lineinfile line="{{ item }}" dest="/etc/fstab"
-  with_items:
-    - "mion.prd.blackhats.net.au:/var/lib/exports/t3/priv /var/lib/samba/data/priv nfs4 defaults 0 0"
-    - "mion.prd.blackhats.net.au:/var/lib/exports/t3/pub /var/lib/samba/data/pub nfs4 defaults 0 0"
-    - "mion.prd.blackhats.net.au:/var/lib/exports/t3/home /var/lib/samba/data/home nfs4 defaults 0 0"
+# - name: mount NFS to samba volumes
+#   become: yes
+#   action: lineinfile line="{{ item }}" dest="/etc/fstab"
+#   with_items:
+#     - "mion.prd.blackhats.net.au:/var/lib/exports/t3/priv /var/lib/samba/data/priv nfs4 defaults 0 0"
+#     - "mion.prd.blackhats.net.au:/var/lib/exports/t3/pub /var/lib/samba/data/pub nfs4 defaults 0 0"
+#     - "mion.prd.blackhats.net.au:/var/lib/exports/t3/home /var/lib/samba/data/home nfs4 defaults 0 0"
+# 
 
 - name: Create nextcloud volumes
   become: yes
