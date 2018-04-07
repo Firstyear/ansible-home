@@ -17,11 +17,11 @@ RUN dnf upgrade -y && \
     pip3 install lifxlan && \
     dnf clean all
 
-RUN useradd -m -r lifx
-
 COPY lifxctl.py /home/lifx/lifxctl.py
 
-USER lifx
+# You can't use this because LOL DOCKER ATOMIC needs ROOT to install haha.
+# RUN useradd -m -r lifx
+# USER lifx
 ENV container docker
 # STOPSIGNAL SIGRTMIN+3
 CMD [ "/usr/bin/python3", "/home/lifx/lifxctl.py" ]

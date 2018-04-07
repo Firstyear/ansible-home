@@ -14,7 +14,7 @@ Requires=docker.service
 
 [Service]
 ExecStartPre=-/usr/bin/docker rm ${NAME}
-ExecStart=/usr/bin/docker run --rm -v /var/lib/${NAME}:/opt/UniFi/data --net=host --name=${NAME} ${IMAGE}
+ExecStart=/usr/bin/docker run --rm -v /var/lib/${NAME}:/opt/UniFi/data --network=host --name=${NAME} ${IMAGE}
 ExecStop=/usr/bin/docker stop -t 60 ${NAME}
 
 [Install]
