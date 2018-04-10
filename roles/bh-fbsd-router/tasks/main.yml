@@ -12,6 +12,7 @@
 
 - name: Install packages
   become: yes
+  ignore_errors: yes
   pkgng: name={{ item }} state=present
   with_items:
     - dhcp6
@@ -63,11 +64,51 @@
   template: src={{ item }} dest=/usr/local/etc/{{ item }} owner=root group=wheel mode=0644
   with_items:
     - dhcpd.conf
+    - dhcp6c.conf
+
+- name: configurations (/etc)
+  become: yes
+  template: src={{ item }} dest=/etc/{{ item }} owner=root group=wheel mode=0644
+  with_items:
+    - rtadvd.conf
 
 # Configure pf.conf
 - name: Configure pf
   become: yes
   template: src=pf.conf dest=/etc/pf.conf owner=root group=wheel mode=0644
+
+- name: Enable pf
+  become: yes
+  lineinfile: path=/etc/rc.conf line='pf_enable="YES"'
+
+- name: Enable pflog
+  become: yes
+  lineinfile: path=/etc/rc.conf line='pflog_enable="YES"'
+
+- name: Enable sysctls for routing ipv4
+  become: yes
+  lineinfile: path=/etc/rc.conf line='gateway_enable="YES"'
+
+- name: Enable sysctls for routing ipv6
+  become: yes
+  lineinfile: path=/etc/rc.conf line='ipv6_gateway_enable="YES"'
+
+- name: Validate firewall
+  become: true
+  command: /sbin/pfctl -nf /etc/pf.conf
+
+- name: PPP enable
+  become: yes
+  blockinfile:
+    path: /etc/rc.conf
+    block: |
+      ppp_enable="YES"
+      ppp_program="/usr/sbin/ppp"
+      ppp_nat="YES"
+      ppp_user="root"
+      ppp_profile="internode"
+      ppp_internode_mode="ddial"
+      ppp_internode_nat="YES"
 
 # deploy network interface configs
 # set rc.conf
@@ -84,6 +125,18 @@
 - name: Enable dhcpd
   become: yes
   lineinfile: path=/etc/rc.conf line='dhcpd_enable="YES"'
+
+- name: Enable dhcp6c
+  become: yes
+  lineinfile: path=/etc/rc.conf line='dhcp6c_enable="YES"'
+
+- name: Enable dhcp6c interfaces
+  become: yes
+  lineinfile: path=/etc/rc.conf line='dhcp6c_interfaces="tun0"'
+
+- name: Enable rtadvd
+  become: yes
+  lineinfile: path=/etc/rc.conf line='rtadvd_enable="YES"'
 
 # pf_enable="YES" ???
 
