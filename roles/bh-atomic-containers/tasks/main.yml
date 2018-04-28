@@ -16,6 +16,9 @@
 - include: manage.yml
   when: "'ruby' in inventory_hostname"
 
+- include: dc.yml
+  when: "'ash' in inventory_hostname"
+
 # Untrusted dev shells
 # Generally this machine needs a route pointed at it for ipv6 bridging
 # - include: shell.yml

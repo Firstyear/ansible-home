@@ -137,3 +137,17 @@
     force: yes
   tags:
     - lifx
+
+- name: Build samba_rwdc container
+  become: yes
+  docker_image:
+    path: containers/samba_rwdc/
+    name: registry.blackhats.net.au/samba_rwdc
+    tag: latest
+    pull: yes
+    push: yes
+    nocache: yes
+    force: yes
+  tags:
+    - samba_rwdc
+

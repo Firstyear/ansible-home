@@ -1,11 +1,11 @@
 
 {% if ansible_system == 'FreeBSD' %}
-%bh_admins  ALL=(ALL) ALL
+%Server\ Operators  ALL=(ALL) ALL
 {% else %}
-{% if ansible_virtualization_role == 'host' %}
-%bh_admins  ALL=(ALL) TYPE=unconfined_t ROLE=unconfined_r  NOPASSWD: ALL
+{% if 'atomic_workstation' in group_names %}
+%Workstation\ Operators  ALL=(ALL) TYPE=unconfined_t ROLE=unconfined_r  NOPASSWD: ALL
 {% else %}
-%bh_admins  ALL=(ALL) TYPE=unconfined_t ROLE=unconfined_r  ALL
+%Server\ Operators  ALL=(ALL) TYPE=unconfined_t ROLE=unconfined_r  ALL
 {% endif %}
 {% endif %}
 

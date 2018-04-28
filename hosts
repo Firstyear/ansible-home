@@ -5,14 +5,14 @@ localhost ansible_connection=local
 mion.prd.blackhats.net.au patch_day=never
 
 [atomic_workstation]
-franky.prd.blackhats.net.au
 spotinuc.prd.blackhats.net.au
-rei.prd.blackhats.net.au
+felix.prd.blackhats.net.au
 
 [atomic]
 ruby.prd.blackhats.net.au patch_day=wed
 sapphire.prd.blackhats.net.au patch_day=thu
 eve.prd.blackhats.net.au patch_day=mon
+ash.prd.blackhats.net.au patch_day=sun
 
 # Bootstrap with:
 #  ansible -m raw -a "pkg update -f"
@@ -55,6 +55,9 @@ eve.prd.blackhats.net.au patch_day=mon
 
 [router_bne1]
 lulu.net.blackhats.net.au
+
+[samba_rwdc]
+ash.prd.blackhats.net.au patch_day=sun
 
 [DailySet1:children]
 email_relay_servers

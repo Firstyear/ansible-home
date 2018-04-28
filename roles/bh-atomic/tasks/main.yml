@@ -8,6 +8,8 @@
 
 ### ADD rdiff-backup
 
+## rpm-ostree initramfs --enable
+
 #- name: Install server atomic software
 #  become: yes
 #  command: rpm-ostree install amanda-client nmap vim zsh

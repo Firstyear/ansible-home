@@ -5,6 +5,7 @@ IMAGE=${IMAGE:=registry.blackhats.net.au/radiusd}
 
 # Make sure our paths exist
 mkdir -p /host/etc/${NAME}
+# ExecStart=/usr/bin/docker run --rm -v /etc/${NAME}:/etc/raddb -p 1812:1812 -p 1813:1813 --name=${NAME} ${IMAGE}
 
 cat > /host/etc/systemd/system/${NAME}.service << DEVEOF
 [Unit]
@@ -14,7 +15,7 @@ Requires=docker.service
 
 [Service]
 ExecStartPre=-/usr/bin/docker rm ${NAME}
-ExecStart=/usr/bin/docker run --rm -v /etc/${NAME}:/etc/raddb -p 1812:1812 -p 1813:1813 --name=${NAME} ${IMAGE}
+ExecStart=/usr/bin/docker run --rm -v /etc/${NAME}:/etc/raddb --network=host --name=${NAME} ${IMAGE}
 ExecStop=/usr/bin/docker stop -t 60 ${NAME}
 
 [Install]
