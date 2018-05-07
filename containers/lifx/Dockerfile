@@ -24,4 +24,5 @@ COPY lifxctl.py /home/lifx/lifxctl.py
 # USER lifx
 ENV container docker
 # STOPSIGNAL SIGRTMIN+3
+STOPSIGNAL SIGTERM
 CMD [ "/usr/bin/python3", "/home/lifx/lifxctl.py" ]

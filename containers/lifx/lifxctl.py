@@ -26,8 +26,8 @@ def show_all_name_and_details():
 def _determine_redshift_colour(current_time):
     DAY_START = 7
     DAY_END = 16
-    EVENING_END = 18
-    NIGHT_END = 20
+    EVENING_END = 17
+    NIGHT_END = 19
     # from 8 am to say .... 4 pm? just set the value
     if current_time.hour >= DAY_START and current_time.hour < DAY_END:
         return (0, 0, 65535, 4000)
