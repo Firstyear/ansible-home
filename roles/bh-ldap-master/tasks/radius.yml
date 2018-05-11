@@ -1,13 +1,13 @@
 
 - name: configure radius master firewall
-  sudo: yes
+  become: true
   firewalld: zone=internal permanent=true state=enabled service={{ item }} immediate=true
   with_items:
     - radius
 
 # Has to be file due to use of {{ in radius config
 - name: Configure radiusd
-  sudo: yes
+  become: true
   action: copy src=raddb/{{ item }} dest=/etc/raddb/{{ item }} owner=root group=radiusd mode=0640
   with_items:
     - radiusd.conf
@@ -19,18 +19,18 @@
     - sites-available/check-eap-tls
 
 - name: Configure ldap auth
-  sudo: yes
+  become: true
   action: template src=ldap-bind dest=/etc/raddb/mods-enabled/ldap-bind owner=root group=radiusd mode=0640
 
 - name: Symlink mods available
-  sudo: yes
+  become: true
   action: file src=/etc/raddb/mods-available/{{ item }} dest=/etc/raddb/mods-enabled/{{ item }} state=link
   with_items:
     - ldap
     - eap
 
 - name: Symlink sites available
-  sudo: yes
+  become: true
   action: file src=/etc/raddb/sites-available/{{ item }} dest=/etc/raddb/sites-enabled/{{ item }} state=link
   with_items:
     - default
@@ -40,7 +40,7 @@
 # Add radiusd keys
 
 - name: Correct radius tls directory
-  sudo: yes
+  become: true
   action: file path=/etc/pki/radius/ state=directory owner=radiusd group=radiusd mode=0750
 
 - name: Configure systemd drop to autorestart
@@ -48,6 +48,6 @@
   action: template src=radiusd.conf dest=/etc/systemd/system/radiusd.service.d/local.conf
 
 - name: enable all auth services
-  sudo: yes
+  become: true
   action: service name=radiusd state=started enabled=yes
 

@@ -57,6 +57,7 @@
   with_items:
     - pki/tls/certs/bh_ldap.crt
     - pam.d/system
+    - pam.d/sshd
     - ssh/sshd_config
 
 - name: configurations (/usr/local/etc)
@@ -110,6 +111,24 @@
       ppp_internode_mode="ddial"
       ppp_internode_nat="YES"
 
+### VPN end point configurations
+
+- name: create openvpn dir
+  become: yes
+  file: path=/usr/local/etc/openvpn owner=root group=wheel mode=0755 state=directory
+
+- name: template openvpn configs
+  become: yes
+  template: src=openvpn/{{ item }} dest=/usr/local/etc/openvpn/{{ item }} owner=root group=wheel mode=0644
+  with_items:
+    - openvpn_vps.conf
+
+- name: link rc.d scripts
+  become: yes
+  file: src=/usr/local/etc/rc.d/openvpn dest=/usr/local/etc/rc.d/openvpn_{{ item }} owner=root group=wheel mode=0644 state=link
+  with_items:
+    - vps
+
 # deploy network interface configs
 # set rc.conf
 
@@ -137,6 +156,10 @@
 - name: Enable rtadvd
   become: yes
   lineinfile: path=/etc/rc.conf line='rtadvd_enable="YES"'
+
+- name: Enable vps openvpn end point
+  become: yes
+  lineinfile: path=/etc/rc.conf line='openvpn_vps_enable="YES"'
 
 # pf_enable="YES" ???
 

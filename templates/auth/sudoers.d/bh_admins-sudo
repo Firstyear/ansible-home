@@ -1,11 +1,11 @@
 
 {% if ansible_system == 'FreeBSD' %}
-%Server\ Operators  ALL=(ALL) ALL
+%Network\ Operators  ALL=(ALL) ALL
 {% else %}
 {% if 'atomic_workstation' in group_names %}
 %Workstation\ Operators  ALL=(ALL) TYPE=unconfined_t ROLE=unconfined_r  NOPASSWD: ALL
 {% else %}
-%Server\ Operators  ALL=(ALL) TYPE=unconfined_t ROLE=unconfined_r  ALL
+%Network\ Operators  ALL=(ALL) TYPE=unconfined_t ROLE=unconfined_r  ALL
 {% endif %}
 {% endif %}
 

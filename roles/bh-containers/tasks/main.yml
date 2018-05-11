@@ -12,6 +12,7 @@
     pull: yes
     push: yes
     nocache: yes
+    # force: yes
   tags:
     - squid
 
@@ -30,6 +31,7 @@
     pull: yes
     push: yes
     nocache: yes
+    # force: yes
   tags:
     - unifi
 
@@ -42,6 +44,7 @@
     - { src: '../../templates/auth/nsswitch.conf', dest: 'nsswitch.conf' }
   tags:
     - samba
+    - auth_t
 
 - name: Build samba container
   become: yes
@@ -55,6 +58,7 @@
     force: yes
   tags:
     - samba
+    - auth_t
 
 
 - name: Inject auth templates for nextcloud
@@ -65,6 +69,7 @@
     - { src: '../../templates/auth/openldap/ldap.conf', dest: 'ldap.conf' }
   tags:
     - nextcloud
+    - auth_t
 
 - name: Build nextcloud container
   become: yes
@@ -78,29 +83,32 @@
     force: yes
   tags:
     - nextcloud
+    - auth_t
 
-- name: Inject auth templates for vsftpd
-  become: yes
-  template: src={{ item.src }} dest=containers/vsftpd/{{ item.dest }} owner=root group=root mode=0640
-  with_items:
-    - { src: '../../templates/auth/sssd/sssd.conf', dest: 'sssd.conf' }
-    - { src: '../../templates/auth/pki/tls/certs/bh_ldap.crt', dest: 'bh_ldap.crt' }
-    - { src: '../../templates/auth/nsswitch.conf', dest: 'nsswitch.conf' }
-  tags:
-    - vsftpd
+# - name: Inject auth templates for vsftpd
+#   become: yes
+#   template: src={{ item.src }} dest=containers/vsftpd/{{ item.dest }} owner=root group=root mode=0640
+#   with_items:
+#     - { src: '../../templates/auth/sssd/sssd.conf', dest: 'sssd.conf' }
+#     - { src: '../../templates/auth/pki/tls/certs/bh_ldap.crt', dest: 'bh_ldap.crt' }
+#     - { src: '../../templates/auth/nsswitch.conf', dest: 'nsswitch.conf' }
+#   tags:
+#     - vsftpd
+#     - auth_t
 
-- name: Build vsftpd container
-  become: yes
-  docker_image:
-    path: containers/vsftpd/
-    name: registry.blackhats.net.au/vsftpd
-    tag: latest
-    pull: yes
-    push: yes
-    nocache: yes
-    force: yes
-  tags:
-    - vsftpd
+# - name: Build vsftpd container
+#   become: yes
+#   docker_image:
+#     path: containers/vsftpd/
+#     name: registry.blackhats.net.au/vsftpd
+#     tag: latest
+#     pull: yes
+#     push: yes
+#     nocache: yes
+#     force: yes
+#   tags:
+#     - vsftpd
+#     - auth_t
 
 - name: Inject auth templates for radiusd
   become: yes
@@ -111,6 +119,7 @@
     # - { src: '../../templates/auth/nsswitch.conf', dest: 'nsswitch.conf' }
   tags:
     - radiusd
+    - auth_t
 
 - name: Build radiusd container
   become: yes
@@ -124,6 +133,7 @@
     force: yes
   tags:
     - radiusd
+    - auth_t
 
 - name: Build lifx container
   become: yes

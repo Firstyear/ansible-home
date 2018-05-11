@@ -1,8 +1,8 @@
 [local]
 localhost ansible_connection=local
 
-[atomic_master_servers]
-mion.prd.blackhats.net.au patch_day=never
+[nonatomic_servers]
+mion.prd.blackhats.net.au patch_day=never ansible_virtualization_role=physical
 
 [atomic_workstation]
 spotinuc.prd.blackhats.net.au
@@ -74,6 +74,8 @@ lulu.net.blackhats.net.au
 
 [linode_servers:children]
 email_relay_servers
+# Not really, just to prevent auto upgrade check.
+# nonatomic_servers
 
 # Enable python 3 for fedora 27 and above.
 [py3:children]

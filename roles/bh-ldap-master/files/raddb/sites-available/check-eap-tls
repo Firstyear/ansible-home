@@ -97,7 +97,7 @@ server check-eap-tls {
         # Now let's test membership of an LDAP group (the ldap bind user will
         # need permission to read this group membership):
 
-       if (!(Ldap-Group == "bh_admins")) {
+       if (!(Ldap-Group == "Sunbeam Radius Access")) {
            update config {
                Auth-Type := Reject
            }

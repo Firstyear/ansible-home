@@ -2,8 +2,7 @@
 - hosts: dns_slave_servers
   #gather_facts: False
   roles:
-    #- common-facts
-    #- common-bh
+    - bh-atomic
     - bh-dns-slave
   vars_files:
     - ~/secure/ansible_home_secrets.yml

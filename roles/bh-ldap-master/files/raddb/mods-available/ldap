@@ -27,7 +27,13 @@ ldap {
     #	port = 389
 
 	# Administrator account for searching and possibly modifying.
-    $INCLUDE /etc/raddb/mods-enabled/ldap-bind
+    server = ad.blackhats.net.au
+
+    port = 636
+
+
+    # For legacy config
+    # $INCLUDE /etc/raddb/mods-enabled/ldap-bind
 
 	#  Unless overridden in another section, the dn from which all
 	#  searches will start from.
@@ -62,7 +68,7 @@ ldap {
 	#
 	update {
 #		control:Password-With-Header	+= 'userPassword'
-		control:NT-Password		:= 'ntUserNtPassword'
+		# control:NT-Password		:= 'ntUserNtPassword'
 #		reply:Reply-Message		:= 'radiusReplyMessage'
 #		reply:Tunnel-Type		:= 'radiusTunnelType'
 #		reply:Tunnel-Medium-Type	:= 'radiusTunnelMediumType'
@@ -101,11 +107,11 @@ ldap {
 	#
 	user {
 		#   Where to start searching in the tree for users
-		base_dn = "ou=People,dc=blackhats,dc=net,dc=au"
+		base_dn = "dc=blackhats,dc=net,dc=au"
 
 		#  Filter for user objects, should be specific enough
 		#  to identify a single user object.
-		filter = "(uid=%{%{Stripped-User-Name}:-%{User-Name}})"
+		filter = "(sAMAccountName=%{%{Stripped-User-Name}:-%{User-Name}})"
 
 		# Search scope, may be 'base', 'one', sub' or 'children'
 #		scope = 'sub'
@@ -144,11 +150,11 @@ ldap {
 	#
 	group {
 		#   Where to start searching in the tree for groups
-		base_dn = "ou=Groups,dc=blackhats,dc=net,dc=au"
+		base_dn = "dc=blackhats,dc=net,dc=au"
 
 		#  Filter for group objects, should match all available
 		#  group objects a user might be a member of.
-		filter = "(objectClass=posixGroup)"
+		filter = "(objectClass=group)"
 
 		# Search scope, may be 'base', 'one', sub' or 'children'
 		scope = 'sub'
@@ -322,7 +328,7 @@ ldap {
 		#  will likely return "operations error", instead of a
 		#  useful result.
 		#
-		chase_referrals = yes
+		chase_referrals = no
 		rebind = yes
 
 		# seconds to wait for LDAP query to finish. default: 20

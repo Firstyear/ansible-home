@@ -89,10 +89,16 @@
 
 - name: Ensure services disabled
   become: yes
-  service: name=nfs-client.target enabled=no
+  ignore_errors: yes
+  service: name={{ item }} enabled=no
+  with_items:
+    - nfs-client.target
+    - certmonger
+    - ntpd
 
 - name: Ensure services running
   become: yes
+  ignore_errors: yes
   service: name={{ item }} enabled=yes state=started
   with_items:
     - sssd
