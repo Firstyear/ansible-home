@@ -98,6 +98,10 @@
   become: true
   command: /sbin/pfctl -nf /etc/pf.conf
 
+- name: Apply firewall
+  become: true
+  command: /sbin/pfctl -f /etc/pf.conf
+
 - name: PPP enable
   become: yes
   blockinfile:
@@ -122,12 +126,18 @@
   template: src=openvpn/{{ item }} dest=/usr/local/etc/openvpn/{{ item }} owner=root group=wheel mode=0644
   with_items:
     - openvpn_vps.conf
+    - openvpn_mic.conf
+    - openvpn_kee.conf
+    - ccd/fnog.concrete.lan
+    - ccd/bb22.lab.baudbit.net
 
 - name: link rc.d scripts
   become: yes
   file: src=/usr/local/etc/rc.d/openvpn dest=/usr/local/etc/rc.d/openvpn_{{ item }} owner=root group=wheel mode=0644 state=link
   with_items:
     - vps
+    - mic
+    - kee
 
 # deploy network interface configs
 # set rc.conf
