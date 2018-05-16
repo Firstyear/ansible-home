@@ -129,7 +129,7 @@
     tag: latest
     pull: yes
     push: yes
-    nocache: yes
+    nocache: no
     force: yes
   tags:
     - radiusd
