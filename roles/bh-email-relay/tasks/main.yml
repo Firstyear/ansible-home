@@ -1,13 +1,13 @@
 
 - name: Install mail software
-  sudo: yes
+  become: true
   action: yum name={{ item }} state=present
   with_items:
     - postfix
     - postgrey
 
 - name: Deploy postfix hash configurations
-  sudo: yes
+  become: true
   template: src=etc/postfix/{{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0644
   with_items:
     - transport
@@ -18,7 +18,7 @@
     - restart postfix
 
 - name: Deploy postfix configurations
-  sudo: yes
+  become: true
   template: src=etc/postfix/{{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0644
   with_items:
     - main.cf
@@ -28,19 +28,19 @@
 ## When some things like transport are deployed, rehash them
 
 - name: Enable mail services
-  sudo: yes
+  become: true
   service: name={{ item }} state=started enabled=yes
   with_items:
     - postfix
     - postgrey
 
 - name: config email firewalld
-  sudo: yes
+  become: true
   firewalld: service=smtp zone=internal permanent=yes state=enabled immediate=yes
   when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
 
 - name: config email ports firewalld
-  sudo: yes
+  become: true
   firewalld: port=465/tcp zone=internal permanent=yes state=enabled immediate=yes
   when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
 

@@ -1,6 +1,6 @@
 
 - name: postmap
-  sudo: yes
+  become: true
   shell: postmap /etc/postfix/{{ item }}
   with_items:
     - transport
@@ -8,7 +8,7 @@
     - relay_recipients
 
 - name: restart postfix
-  sudo: yes
+  become: true
   service: name={{ item }} state=restarted
   with_items:
     - postgrey
