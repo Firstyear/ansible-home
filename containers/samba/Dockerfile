@@ -18,7 +18,7 @@ RUN localedef -i en_AU -c -f UTF-8 en_AU.UTF-8
 # Need nfs-utils to resolve nfs-nobody
 
 RUN yum upgrade -y && \
-    yum install -y samba sssd openldap-clients sssd-ldap nfs-utils tdb-tools && \
+    yum install -y samba sssd openldap-clients sssd-ldap nfs-utils tdb-tools krb5-workstation && \
     yum clean all && \
     rpm --rebuilddb
 

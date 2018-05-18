@@ -1,14 +1,18 @@
 - name: Create backup home drive
   become: yes
-  file: path=/home/backup state=directory owner=backup group=backup mode=0750
+  file: path=/home/backup state=directory owner=backup mode=0750
 
 - name: Ensure excludes
   become: yes
-  template: src=include-list dest=/home/backup/include-list owner=backup group=backup mode=0640
+  template: src=include-list dest=/home/backup/include-list owner=backup mode=0640
 
-- name: Cron backupjob
+- name: Deploy rdiff-scripts
   become: yes
-  template: src=backup.sh dest=/home/backup/backup.sh owner=backup group=backup mode=0750
+  template: src={{ item }} dest=/home/backup/{{ item }} owner=backup mode=0750
+  with_items:
+    - backup.sh
+    - status.sh
+    - clean.sh
 
 - name: Configure backup cron
   become: true
