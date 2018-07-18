@@ -1,0 +1,4 @@
+
+internode:
+ !bg service dhcp6c restart
+

@@ -1,11 +1,4 @@
 
-- name: Deploy grub serial console changes
-  become: yes
-  action: template src=libvirt/etc/default/grub dest=/etc/default/grub owner=root group=root mode=644
-  notify:
-    - rebuild grub2
-  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
-
 ### ADD rdiff-backup
 
 ## rpm-ostree initramfs --enable
@@ -34,22 +27,6 @@
   with_items:
     - 01-uofa.conf
 
-- name: sysctl for atomic servers
-  template: src=sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
-  become: yes
-  with_items:
-    - 02-atomic.conf
-  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
-
-- name: static network for atomic hosts
-  template: src=scripts/{{ item }} dest=/root/{{ item }} owner=root group=root mode=0750
-  become: yes
-  with_items:
-    - network.sh
-  notify:
-    - run network.sh
-  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
-
 - name: Configure secure LDAP configurations
   become: yes
   template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
@@ -61,31 +38,52 @@
   become: yes
   file: state=touch mode=0644 path=/var/lib/sss/pubconf/pam_preauth_available
 
-- name: Configure AUTH configurations
+- name: Ensure tls/certs directory
+  become: yes
+  file: state=directory mode=0755 path=/etc/pki/tls/certs owner=root group=root
+
+- name: Configure hostname
+  become: yes
+  template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - hostname
+  when: "inventory_hostname != 'localhost'"
+
+- name: Configure Fedora AUTH configurations
   become: yes
   template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     - pki/tls/certs/bh_ldap.crt
-    - hostname
     - pam.d/password-auth-ac
     - pam.d/system-auth-ac
     - ssh/sshd_config
     - openldap/ldap.conf
+  when: "ansible_os_family != 'Suse'"
+
+- name: Configure SUSE AUTH configurations
+  become: yes
+  template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    # Need to mkdir this?
+    - pki/tls/certs/bh_ldap.crt
+    - pam.d/common-account-pc
+    - pam.d/common-auth-pc
+    - pam.d/common-password-pc
+    - pam.d/common-session-pc
+    - ssh/sshd_config
+    - openldap/ldap.conf
+    - nsswitch.conf
+    - nscd.conf
+  when: "ansible_os_family == 'Suse'"
+
+- name: Fix SUSE sudoers
+  become: yes
+  template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0400
+  with_items:
+    - sudoers
+  when: "ansible_os_family == 'Suse'"
 
 # DO NOT include nsswitch here ....
-
-- name: deploy docker configurations
-  become: yes
-  action: template src=docker/{{ item }} dest=/etc/sysconfig/{{ item }} owner=root group=root mode=0644
-  with_items:
-    - docker
-    - docker-storage-setup
-  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
-
-- name: deploy docker init script
-  become: yes
-  action: template src=systemd/localdocker@.service dest=/etc/systemd/system/localdocker@.service owner=root group=root mode=0644
-  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
 - name: Ensure services disabled
   become: yes
@@ -95,6 +93,7 @@
     - nfs-client.target
     - certmonger
     - ntpd
+  when: "ansible_os_family != 'Suse'"
 
 - name: Ensure services running
   become: yes
@@ -104,9 +103,6 @@
     - sssd
     - sshd
     - docker
-    - crond
-    # This is only on laptop ....
-    # - pcscd.socket
 
 - name: Configure default masks
   become: yes
@@ -144,15 +140,20 @@
 
 # semanage permissive -a sssd_t
 
-- name: schedule atomic upgrade
-  become: yes
-  cron:
-    user: root
-    name: automatic_atomic_upgrade
-    minute: 38
-    hour: 7
-    weekday: "{{ patch_day }}"
-    job: "rpm-ostree upgrade -r"
-  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
-  # when: "'atomic_master_servers' not in group_names"
+- name: Server configurations
+  include: server.yml
+  when: "'workstation' not in group_names"
+
+- name: Suse Workstation
+  include: suse-workstation.yml
+  when: "ansible_os_family == 'Suse' and 'workstation' in group_names"
+
+- name: Build Containers
+  include: container-build.yml
+  when: "'workstation' in group_names"
+
+- name: Server Contain Configuration
+  include: container/main.yml
+  when: "'workstation' not in group_names"
+
 

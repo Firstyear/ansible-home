@@ -1,0 +1,60 @@
+
+- name: Deploy grub serial console changes
+  become: yes
+  action: template src=libvirt/etc/default/grub dest=/etc/default/grub owner=root group=root mode=644
+  notify:
+    - rebuild grub2
+  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
+
+- name: sysctl for atomic servers
+  template: src=sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
+  become: yes
+  with_items:
+    - 02-atomic.conf
+  when: "'linode_servers' not in group_names"
+
+- name: static network for atomic hosts
+  template: src=scripts/{{ item }} dest=/root/{{ item }} owner=root group=root mode=0750
+  become: yes
+  with_items:
+    - network.sh
+  notify:
+    - run network.sh
+  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
+
+- name: deploy docker configurations
+  become: yes
+  action: template src=docker/{{ item }} dest=/etc/sysconfig/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - docker
+    - docker-storage-setup
+  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
+
+- name: deploy docker init script
+  become: yes
+  action: template src=systemd/localdocker@.service dest=/etc/systemd/system/localdocker@.service owner=root group=root mode=0644
+  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
+
+
+- name: Ensure cron running
+  become: yes
+  ignore_errors: yes
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - crond
+  when: "ansible_os_family != 'Suse'"
+
+
+
+- name: schedule atomic upgrade
+  become: yes
+  cron:
+    user: root
+    name: automatic_atomic_upgrade
+    minute: 38
+    hour: 7
+    weekday: "{{ patch_day }}"
+    job: "rpm-ostree upgrade -r"
+  when: "ansible_os_family != 'Suse' and ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
+
+

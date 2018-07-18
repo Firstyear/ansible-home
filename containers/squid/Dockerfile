@@ -1,4 +1,4 @@
-FROM centos:7
+FROM opensuse/tumbleweed:latest
 MAINTAINER william@blackhats.net.au
 
 EXPOSE 3128
@@ -9,21 +9,23 @@ LABEL UNINSTALL "/usr/bin/docker run -t -i --rm \${OPT1} --privileged -v /:/host
 LABEL "Name"="squid"
 LABEL RUN '/usr/bin/docker run -t -i --rm \${OPT1} -v /var/log/squid:/var/log -v /var/lib/\${NAME}:/var/spool/squid -p 3128:3128 --name \${NAME} \${IMAGE} \${OPT2}'
 
+RUN echo HTTP_PROXY="http://proxy-bne1.net.blackhats.net.au:3128" > /etc/sysconfig/proxy
+
 COPY install.sh /bin/
 COPY uninstall.sh /bin/
 COPY help.sh /bin/
 LABEL HELP docker run --rm \${IMAGE} /bin/bash /bin/help.sh
 
+#RUN yum upgrade -y && \
+#    yum install -y squid && \
+#    yum clean all && \
+#    rpm --rebuilddb
+
+RUN zypper install -y squid timezone && \
+    zypper clean
 
 # Timezones
 RUN cd /etc && ln -sf ../usr/share/zoneinfo/Australia/Brisbane localtime
-
-RUN localedef -i en_AU -c -f UTF-8 en_AU.UTF-8
-
-RUN yum upgrade -y && \
-    yum install -y squid && \
-    yum clean all && \
-    rpm --rebuilddb
 
 COPY squid.conf /etc/squid/squid.conf
 

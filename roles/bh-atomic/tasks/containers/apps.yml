@@ -1,0 +1,26 @@
+- name: Create volumes
+  become: yes
+  file: path=/var/lib/{{ item }} state=directory owner=root group=root mode=0777
+  with_items:
+    - samba/data
+    - samba/data/pub
+    - samba/data/priv
+    - samba/data/home
+    - samba/private
+
+# - name: mount NFS to samba volumes
+#   become: yes
+#   action: lineinfile line="{{ item }}" dest="/etc/fstab"
+#   with_items:
+#     - "mion.prd.blackhats.net.au:/var/lib/exports/t3/priv /var/lib/samba/data/priv nfs4 defaults 0 0"
+#     - "mion.prd.blackhats.net.au:/var/lib/exports/t3/pub /var/lib/samba/data/pub nfs4 defaults 0 0"
+#     - "mion.prd.blackhats.net.au:/var/lib/exports/t3/home /var/lib/samba/data/home nfs4 defaults 0 0"
+# 
+
+- name: Create nextcloud volumes
+  become: yes
+  file: path=/var/lib/{{ item }} state=directory owner=48 group=48 mode=0770
+  with_items:
+    - nextcloud/data
+    - nextcloud/config
+

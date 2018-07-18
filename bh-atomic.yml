@@ -1,7 +1,6 @@
 ---
-- hosts: atomic nonatomic_servers
+- hosts: local atomic nonatomic_servers
   gather_facts: True
   roles:
     - bh-atomic
     - bh-atomic-containers
-

@@ -2,7 +2,7 @@
 echo ---- START {{ item }} ----
 mkdir -p /home/backup/{{ item }}
 rdiff-backup --ssh-no-compression --print-statistics --include-globbing-filelist include-list "backup@{{ item }}::/" /home/backup/{{ item }}/ ;true
-rdiff-backup --remove-older-than 4W /home/backup/{{ item }}/ ;true
+rdiff-backup --force --remove-older-than 1W /home/backup/{{ item }}/ ;true
 echo ---- END {{ item }} ----
 
 {% endfor %}

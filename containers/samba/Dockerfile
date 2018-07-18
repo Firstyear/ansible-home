@@ -3,9 +3,13 @@ MAINTAINER william@blackhats.net.au
 
 EXPOSE 445
 
+#### Remember to domain join with net ads join -S dc_name -U administrator
+
 LABEL INSTALL "/usr/bin/docker run -t -i --rm \${OPT1} --privileged -v /:/host -e NAME=${NAME} -e IMAGE=${IMAGE} --name \${NAME} \${IMAGE} \${OPT2} /bin/sh /bin/install.sh \${OPT3}"
 LABEL UNINSTALL "/usr/bin/docker run -t -i --rm \${OPT1} --privileged -v /:/host -e NAME=${NAME} --name \${NAME} \${IMAGE} \${OPT2} /bin/sh /bin/uninstall.sh \${OPT3}"
 LABEL "Name"="samba"
+
+RUN echo HTTP_PROXY="http://proxy-bne1.net.blackhats.net.au:3128" > /etc/sysconfig/proxy
 
 COPY install.sh /bin/
 COPY uninstall.sh /bin/

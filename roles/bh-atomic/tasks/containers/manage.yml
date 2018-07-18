@@ -1,0 +1,28 @@
+# Create the docker folders
+- name: create docker folders
+  become: yes
+  file: path=/root/docker/{{ item }} state=directory owner=root group=root mode=0750
+  with_items:
+    - atomic-registry
+
+# Deploy the container dockerfiles.
+- name: deploy docker templates
+  become: yes
+  template: src=../../containers/{{ item }} dest=/root/docker/{{ item }} owner=root group=root mode=0640
+  with_items:
+    - atomic-registry/Dockerfile
+    - atomic-registry/install.sh
+    - atomic-registry/uninstall.sh
+
+- name: Build docker latest images
+  become: yes
+  docker_image:
+    path: /root/docker/{{ item }}
+    name: "{{ item }}"
+    tag: latest
+    push: no
+    nocache: yes
+    force: yes
+  with_items:
+    - atomic-registry
+

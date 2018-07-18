@@ -1,0 +1,26 @@
+##### DANGER DANGER DANGER
+# Selinux doesnt allow containers to access the default volumes location, so set policy to permissive!!!!
+- name: set containers to permissive
+  become: yes
+  action: selinux_permissive name=svirt_lxc_net_t permissive=true
+
+- name: deploy ca.certs
+  become: yes
+  action: copy src=../../templates/docker/certs.d/registry.blackhats.net.au dest=/etc/docker/certs.d/
+
+# General purpose applications
+- include: apps.yml
+  when: "'sapphire' in inventory_hostname"
+
+# Network management applications
+- include: manage.yml
+  when: "'ruby' in inventory_hostname"
+
+- include: dc.yml
+  when: "'ash' in inventory_hostname"
+
+# Untrusted dev shells
+# Generally this machine needs a route pointed at it for ipv6 bridging
+# - include: shell.yml
+#  when: "'emerald' in inventory_hostname"
+

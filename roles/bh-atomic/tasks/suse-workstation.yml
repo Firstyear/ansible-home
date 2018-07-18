@@ -1,0 +1,35 @@
+# zypper ar obs://graphics obs-graphics
+# ansible vim-plugin-NERDtree flatpak docker git darktable nmap sysstat gphoto sssd sssd-ad sssd-ldap  sssd-tools
+# flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+- name: install default pkgs
+  become: yes
+  action: zypper name={{ item }} state=present
+  with_items:
+    - ansible
+    - vim-plugin-NERDtree
+    - flatpak
+    - docker
+    - git
+    - darktable
+    - nmap
+    - sysstat
+    - gphoto
+    - sssd
+    - sssd-ad
+    - sssd-ldap
+    - sssd-tools
+    - zsh
+    - pcsc-lite
+    - opensc
+    - coolkey
+    - mozilla-nss-tools
+    - pwgen
+    - exfat-utils
+    - fuse-exfat
+
+- name: Enable pcscd
+  become: yes
+  action: service name=pcscd.service enabled=yes
+
+

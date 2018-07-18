@@ -72,6 +72,7 @@
   template: src={{ item }} dest=/etc/{{ item }} owner=root group=wheel mode=0644
   with_items:
     - rtadvd.conf
+    - ppp/ppp.linkup
 
 # Configure pf.conf
 - name: Configure pf
@@ -130,6 +131,13 @@
     - openvpn_kee.conf
     - ccd/fnog.concrete.lan
     - ccd/bb22.lab.baudbit.net
+
+- name: template openvpn scripts
+  become: yes
+  template: src=openvpn/{{ item }} dest=/usr/local/etc/openvpn/{{ item }} owner=root group=wheel mode=0750
+  with_items:
+    - up_kee.sh
+    - up_mic.sh
 
 - name: link rc.d scripts
   become: yes
