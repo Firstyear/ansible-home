@@ -11,4 +11,8 @@
   become: yes
   shell: /root/docker-post.sh
 
+- name: restart named
+  become: true
+  action: service name=named state=restarted
+
 

@@ -147,7 +147,11 @@ ClientAliveCountMax 0
 {% if ansible_system == 'FreeBSD' %}
 Subsystem	sftp	/usr/libexec/sftp-server
 {% else %}
+{% if ansible_os_family == 'Suse' %}
+Subsystem	sftp	/usr/lib/ssh/sftp-server
+{% else %}
 Subsystem	sftp	/usr/libexec/openssh/sftp-server
+{% endif %}
 {% endif %}
 
 # Uncomment this if you want to use .local domain

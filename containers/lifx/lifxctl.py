@@ -93,7 +93,7 @@ def redshift(current_time):
     colour = _determine_toilet_redshift_colour(current_time)
     print("lifx: redshift toilet to: %s at %s" % (str(colour), current_time))
     try:
-        TOILET.set_color(colour, 10000, True)
+        TOILET.set_color(colour, 2500, True)
     except:
         pass
 
@@ -143,7 +143,7 @@ if __name__ == '__main__':
                 time.sleep(3)
             else:
                 redshift(current_time)
-                time.sleep(20)
+                time.sleep(15)
         except:
             # Just keep stayin alive, stayin alive.
             pass

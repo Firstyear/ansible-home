@@ -1,0 +1,28 @@
+<sources>
+    <programs>
+        <default pathversion="1"></default>
+    </programs>
+    <video>
+        <default pathversion="1"></default>
+        <source>
+            <name>pub</name>
+            <path pathversion="1">smb://files.blackhats.net.au/pub/</path>
+            <allowsharing>true</allowsharing>
+        </source>
+        <source>
+            <name>Downloads</name>
+            <path pathversion="1">/home/admin/Downloads/</path>
+            <allowsharing>true</allowsharing>
+        </source>
+    </video>
+    <music>
+        <default pathversion="1"></default>
+    </music>
+    <pictures>
+        <default pathversion="1"></default>
+    </pictures>
+    <files>
+        <default pathversion="1"></default>
+    </files>
+</sources>
+

@@ -21,11 +21,30 @@
 
 # LayeredPackages: amanda-client b43-fw coolkey createrepo dconf-editor evolution git gnome-tweak-tool libselinux-python openldap-clients opensc policycoreutils-python rpm-build rpmfusion-free-release rpmfusion-nonfree-release shotwell vim vim-nerdtree yubico-piv-tool zsh python3-docker
 
+- name: Fix SUSE admin groups
+  become: yes
+  user: name=admin groups=wheel append=yes
+
 - name: sysctl for atomic hosts
-  template: src=sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
+  template: src=base/sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
   become: yes
   with_items:
     - 01-uofa.conf
+
+- name: Configure SUSE auth packages
+  become: yes
+  ignore_errors: yes
+  action: zypper name={{ item }} state=present
+  with_items:
+    - sssd
+    - sssd-ad
+    - sssd-ldap
+    - sssd-tools
+    - zsh
+    - pcsc-lite
+    - opensc
+    - coolkey
+  when: "ansible_os_family == 'Suse'"
 
 - name: Configure secure LDAP configurations
   become: yes
@@ -49,6 +68,31 @@
     - hostname
   when: "inventory_hostname != 'localhost'"
 
+- name: Ensure services disabled
+  become: yes
+  ignore_errors: yes
+  service: name={{ item }} enabled=no
+  with_items:
+    - nfs-client.target
+    - certmonger
+    - ntpd
+    - nscd
+
+- name: Deploy docker daemon configuration
+  become: yes
+  ignore_errors: yes
+  template: src=base/docker/daemon.json dest=/etc//docker/daemon.json owner=root group=root mode=0644
+
+- name: Ensure services enabled
+  become: yes
+  ignore_errors: yes
+  service: name={{ item }} enabled=yes
+  with_items:
+    - sssd
+    - sshd
+    - docker
+    - chronyd
+
 - name: Configure Fedora AUTH configurations
   become: yes
   template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
@@ -59,6 +103,13 @@
     - ssh/sshd_config
     - openldap/ldap.conf
   when: "ansible_os_family != 'Suse'"
+
+- name: Fix SUSE sudoers
+  become: yes
+  template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0400
+  with_items:
+    - sudoers
+  when: "ansible_os_family == 'Suse'"
 
 - name: Configure SUSE AUTH configurations
   become: yes
@@ -75,34 +126,6 @@
     - nsswitch.conf
     - nscd.conf
   when: "ansible_os_family == 'Suse'"
-
-- name: Fix SUSE sudoers
-  become: yes
-  template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0400
-  with_items:
-    - sudoers
-  when: "ansible_os_family == 'Suse'"
-
-# DO NOT include nsswitch here ....
-
-- name: Ensure services disabled
-  become: yes
-  ignore_errors: yes
-  service: name={{ item }} enabled=no
-  with_items:
-    - nfs-client.target
-    - certmonger
-    - ntpd
-  when: "ansible_os_family != 'Suse'"
-
-- name: Ensure services running
-  become: yes
-  ignore_errors: yes
-  service: name={{ item }} enabled=yes state=started
-  with_items:
-    - sssd
-    - sshd
-    - docker
 
 - name: Configure default masks
   become: yes
@@ -142,7 +165,7 @@
 
 - name: Server configurations
   include: server.yml
-  when: "'workstation' not in group_names"
+  when: "'workstation' not in group_names and 'htpc' not in group_names"
 
 - name: Suse Workstation
   include: suse-workstation.yml
@@ -150,10 +173,17 @@
 
 - name: Build Containers
   include: container-build.yml
-  when: "'workstation' in group_names"
+  when: "'workstation' in group_names and 'localhost' in inventory_hostname"
 
 - name: Server Contain Configuration
-  include: container/main.yml
-  when: "'workstation' not in group_names"
+  include: containers/main.yml
+  when: "'workstation' not in group_names and 'htpc' not in group_names"
 
+- name: DNS Slave Deployment
+  include: dns-slave.yml
+  when: "'dns_slave_servers' in group_names"
+
+- name: Spotinuc
+  include: spotinuc.yml
+  when: "'htpc' in group_names"
 

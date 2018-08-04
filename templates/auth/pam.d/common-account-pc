@@ -10,10 +10,14 @@
 # the central access policy for use on the system.  The default is to
 # only deny service to users whose accounts are expired.
 #
-account	    required	pam_unix.so	try_first_pass 
-account     sufficient    pam_succeed_if.so uid < 1000 quiet
-account     [default=bad success=ok user_unknown=ignore] pam_sss.so
-account     required      pam_permit.so
+# account     required pam_unix.so	try_first_pass 
+# account     sufficient    pam_succeed_if.so uid < 1000 quiet
+# account     [default=bad success=ok user_unknown=ignore] pam_sss.so
+# pam_deny?
+
+account    requisite   pam_unix.so
+account    sufficient  pam_localuser.so
+account    required    pam_sss.so use_first_pass
 
 
 

@@ -4,9 +4,8 @@ localhost ansible_connection=local
 [nonatomic_servers]
 mion.prd.blackhats.net.au patch_day=never ansible_virtualization_role=physical
 
-[atomic_workstation]
+[htpc]
 spotinuc.prd.blackhats.net.au
-felix.prd.blackhats.net.au
 
 [workstation]
 felix.prd.blackhats.net.au
@@ -83,7 +82,7 @@ email_relay_servers
 
 # Enable python 3 for fedora 27 and above.
 [py3:children]
-atomic_workstation
+atomic
 
 [py3:vars]
 ansible_python_interpreter=/usr/bin/python3

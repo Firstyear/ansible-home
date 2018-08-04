@@ -1,20 +1,20 @@
 
 - name: Deploy grub serial console changes
   become: yes
-  action: template src=libvirt/etc/default/grub dest=/etc/default/grub owner=root group=root mode=644
+  action: template src=base/libvirt/etc/default/grub dest=/etc/default/grub owner=root group=root mode=644
   notify:
     - rebuild grub2
   when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
 - name: sysctl for atomic servers
-  template: src=sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
+  template: src=base/sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
   become: yes
   with_items:
     - 02-atomic.conf
   when: "'linode_servers' not in group_names"
 
 - name: static network for atomic hosts
-  template: src=scripts/{{ item }} dest=/root/{{ item }} owner=root group=root mode=0750
+  template: src=base/scripts/{{ item }} dest=/root/{{ item }} owner=root group=root mode=0750
   become: yes
   with_items:
     - network.sh
@@ -24,16 +24,16 @@
 
 - name: deploy docker configurations
   become: yes
-  action: template src=docker/{{ item }} dest=/etc/sysconfig/{{ item }} owner=root group=root mode=0644
+  action: template src=base/docker/{{ item }} dest=/etc/sysconfig/{{ item }} owner=root group=root mode=0644
   with_items:
     - docker
     - docker-storage-setup
   when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
-- name: deploy docker init script
-  become: yes
-  action: template src=systemd/localdocker@.service dest=/etc/systemd/system/localdocker@.service owner=root group=root mode=0644
-  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
+# - name: deploy docker init script
+#   become: yes
+#   action: template src=base/systemd/localdocker@.service dest=/etc/systemd/system/localdocker@.service owner=root group=root mode=0644
+#   when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
 
 - name: Ensure cron running

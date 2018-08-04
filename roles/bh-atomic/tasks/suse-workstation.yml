@@ -15,18 +15,12 @@
     - nmap
     - sysstat
     - gphoto
-    - sssd
-    - sssd-ad
-    - sssd-ldap
-    - sssd-tools
-    - zsh
-    - pcsc-lite
-    - opensc
-    - coolkey
     - mozilla-nss-tools
     - pwgen
     - exfat-utils
     - fuse-exfat
+    - irssi
+    - sqlite3
 
 - name: Enable pcscd
   become: yes
