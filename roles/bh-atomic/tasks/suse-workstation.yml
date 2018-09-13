@@ -2,6 +2,30 @@
 # ansible vim-plugin-NERDtree flatpak docker git darktable nmap sysstat gphoto sssd sssd-ad sssd-ldap  sssd-tools
 # flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
+- name: Add graphics repo
+  become: yes
+  action: zypper_repository name=obs-graphics repo='obs://graphics' state=present autorefresh=yes
+
+- name: Add flathub repo
+  become: yes
+  flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+
+- name: Install flatpaks
+  become: yes
+  flatpak:
+    name: "{{ item }}"
+    state: present
+    remote: flathub
+  with_items:
+    - com.spotify.Client
+    - org.gnucash.GnuCash
+    - org.nextcloud.Nextcloud
+    - org.signal.Signal
+    - org.videolan.VLC
+
 - name: install default pkgs
   become: yes
   action: zypper name={{ item }} state=present
@@ -21,6 +45,7 @@
     - fuse-exfat
     - irssi
     - sqlite3
+    - yubico-piv-tool
 
 - name: Enable pcscd
   become: yes

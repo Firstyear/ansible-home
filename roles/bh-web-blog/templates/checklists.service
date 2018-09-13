@@ -1,0 +1,21 @@
+
+[Unit]
+Description=Checklists
+After=network-online.target
+Before=httpd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/checklists/target/release/checklists
+User=apache
+
+# Hardening options:
+PrivateDevices=true
+ProtectSystem=true
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+
+

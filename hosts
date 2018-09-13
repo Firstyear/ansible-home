@@ -82,7 +82,7 @@ email_relay_servers
 
 # Enable python 3 for fedora 27 and above.
 [py3:children]
-atomic
+# atomic
 
 [py3:vars]
 ansible_python_interpreter=/usr/bin/python3

@@ -22,7 +22,40 @@
     tag: latest
     push: no
     nocache: yes
-    force: yes
+    force: no
   with_items:
     - atomic-registry
+
+- name: Make radius pki
+  become: yes
+  file: path=/var/lib/radiusd/pki state=directory owner=root group=root mode=0755
+
+# Ensure dh params
+- name: dhparam
+  become: true
+  openssl_dhparam:
+    path: /var/lib/radiusd/pki/dh
+    size: 4096
+
+# - name: Check the key
+- name: Generate KEY
+  become: true
+  openssl_privatekey:
+    path: /var/lib/radiusd/pki/server.pem.key
+    size: 2048
+
+# - check the csr?
+# - name: Generate CSR
+#   become: true
+#   openssl_csr:
+#     path: /var/lib/radiusd/pki/radiusd.csr
+#     privatekey_path: /var/lib/radiusd/pki/server.pem.key
+#     organization_name: Blackhats
+#     country_name: AU
+#     subject_alt_name: DNS:radius.blackhats.net.au,DNS:radius01.blackhats.net.a
+#     common_name: "{{ inventory_hostname }}"
+# 
+# Move the csr to the CA?
+# If exists, move back crt to host.
+# check the cert?
 

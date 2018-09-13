@@ -1,4 +1,4 @@
 
 - name: restart httpd
-  sudo: yes
+  become: true
   service: name=httpd state=restarted

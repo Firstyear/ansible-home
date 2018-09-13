@@ -12,6 +12,7 @@
 # openldap-clients yubico-piv-tool
 # opensc rpm-build zsh
 # git vim vim-nerdtree rpm-fusion (with local repo)
+# pyopenssl
 
 ### evolution shotwell dconf-editor gnome-tweak-tool 
 
@@ -44,6 +45,7 @@
     - pcsc-lite
     - opensc
     - coolkey
+    - python3-pyOpenSSL
   when: "ansible_os_family == 'Suse'"
 
 - name: Configure secure LDAP configurations
@@ -150,6 +152,14 @@
   ignore_errors: yes
   acl: path={{ item }} entity=backup etype=user permissions=rx state=present recursive=yes
   with_items: '{{ acl_locations }}'
+
+# - name: Add the 'discard' option to any existing options for all devices
+#   crypttab:
+#     name: '{{ item.device }}'
+#     state: opts_present
+#     opts: discard
+#   with_items: '{{ ansible_mounts }}'
+#   when: "'/dev/mapper/cr-' in {{ item.device }}"
 
 # /usr/libexec/sssd/p11_child --pre --nssdb=/etc/pki/nssdb 
 # to check certs.
