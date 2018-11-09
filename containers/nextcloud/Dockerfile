@@ -19,8 +19,7 @@ RUN localedef -i en_AU -c -f UTF-8 en_AU.UTF-8
 
 # Sudo is used for occ admin cli tasks
 
-RUN yum upgrade -y && \
-    yum install -y epel-release && \
+RUN yum install -y epel-release && \
     yum install -y nextcloud nextcloud-sqlite nextcloud-httpd mod_ssl sudo redis php-pecl-redis && \
     yum clean all && \
     rpm --rebuilddb

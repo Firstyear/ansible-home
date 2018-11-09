@@ -3,6 +3,27 @@
   become: yes
   action: copy src=../../templates/docker/certs.d/registry.blackhats.net.au dest=/etc/docker/certs.d/
 
+- name: Update centos images
+  become: yes
+  docker_image:
+    name: centos:7
+    nocache: yes
+  tags:
+    - nextcloud
+    - radiusd
+    - samba
+    - unifi
+    - vsftpd
+
+- name: Update suse base images
+  become: yes
+  docker_image:
+    name: opensuse/tumbleweed:latest
+    nocache: yes
+  tags:
+    - lifx
+    - squid
+
 - name: Build squid container
   become: yes
   docker_image:

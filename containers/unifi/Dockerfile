@@ -19,8 +19,7 @@ RUN localedef -i en_AU -c -f UTF-8 en_AU.UTF-8
 
 RUN useradd unifi
 
-RUN yum upgrade -y && \
-    yum install -y epel-release && \
+RUN yum install -y epel-release && \
     yum install -y lsb wget java mongodb-server unzip && \
     yum clean all && \
     rpm --rebuilddb

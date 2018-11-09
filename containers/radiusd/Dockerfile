@@ -17,8 +17,7 @@ RUN cd /etc && ln -sf ../usr/share/zoneinfo/Australia/Brisbane localtime
 
 RUN localedef -i en_AU -c -f UTF-8 en_AU.UTF-8
 
-RUN yum upgrade -y && \
-    yum install -y freeradius freeradius-utils freeradius-ldap openldap-clients && \
+RUN yum install -y freeradius freeradius-utils freeradius-ldap openldap-clients && \
     yum clean all && \
     rpm --rebuilddb
 
