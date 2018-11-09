@@ -22,6 +22,8 @@
 
 # LayeredPackages: amanda-client b43-fw coolkey createrepo dconf-editor evolution git gnome-tweak-tool libselinux-python openldap-clients opensc policycoreutils-python rpm-build rpmfusion-free-release rpmfusion-nonfree-release shotwell vim vim-nerdtree yubico-piv-tool zsh python3-docker
 
+# certbot
+
 - name: Fix SUSE admin groups
   become: yes
   user: name=admin groups=wheel append=yes
@@ -46,6 +48,7 @@
     - opensc
     - coolkey
     - python3-pyOpenSSL
+    - certbot
   when: "ansible_os_family == 'Suse'"
 
 - name: Configure secure LDAP configurations
@@ -69,6 +72,10 @@
   with_items:
     - hostname
   when: "inventory_hostname != 'localhost'"
+
+- name: Push SSCA script to all hosts
+  become: yes
+  template: src=../../scripts/ssca.py dest=/root/ssca.py owner=root group=root mode=0755
 
 - name: Ensure services disabled
   become: yes

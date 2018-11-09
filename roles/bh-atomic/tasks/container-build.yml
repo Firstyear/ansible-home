@@ -12,15 +12,17 @@
     pull: yes
     push: yes
     nocache: yes
-    force: yes
+    force: no
   tags:
     - squid
 
-- name: download unifi software
-  become: yes
-  get_url: url=http://dl.ubnt.com/unifi/5.4.16/UniFi.unix.zip dest=containers/unifi/ mode=0600
-  tags:
-    - unifi
+# Really should check for if the file exists ....
+
+# - name: download unifi software
+#   become: yes
+#   get_url: url=http://dl.ubnt.com/unifi/5.4.16/UniFi.unix.zip dest=containers/unifi/ mode=0600
+#   tags:
+#     - unifi
 
 - name: Build unifi container
   become: yes

@@ -1,10 +1,11 @@
 
-- name: Deploy grub serial console changes
-  become: yes
-  action: template src=base/libvirt/etc/default/grub dest=/etc/default/grub owner=root group=root mode=644
-  notify:
-    - rebuild grub2
-  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
+# This may not be applicable with SUSE anymore ...
+# - name: Deploy grub serial console changes
+#   become: yes
+#   action: template src=base/libvirt/etc/default/grub dest=/etc/default/grub owner=root group=root mode=644
+#   notify:
+#     - rebuild grub2
+#   when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
 - name: sysctl for atomic servers
   template: src=base/sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644

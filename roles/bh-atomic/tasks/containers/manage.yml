@@ -38,11 +38,11 @@
     size: 4096
 
 # - name: Check the key
-- name: Generate KEY
-  become: true
-  openssl_privatekey:
-    path: /var/lib/radiusd/pki/server.pem.key
-    size: 2048
+# - name: Generate KEY
+#   become: true
+#   openssl_privatekey:
+#     path: /var/lib/radiusd/pki/server.pem.key
+#     size: 2048
 
 # - check the csr?
 # - name: Generate CSR

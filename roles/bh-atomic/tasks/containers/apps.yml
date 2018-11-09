@@ -24,3 +24,11 @@
     - nextcloud/data
     - nextcloud/config
 
+- name: cron the lets encrypt renewal
+  become: true
+  action: cron name="Renew le cert blog" minute="16" hour="7" job="/usr/bin/certbot renew" user="root"
+
+- name: cron copying the cert content
+  become: true
+  action: cron name="Move cert content to the nextcloud instance" minute="30" hour="7" user="root" job="sh -c \"cat /etc/letsencrypt/live/nextcloud.blackhats.net.au/fullchain.pem > /var/lib/nextcloud/config/ca.crt; cat /etc/letsencrypt/live/nextcloud.blackhats.net.au/privkey.pem > /var/lib/nextcloud/config/localhost.key; cat /etc/letsencrypt/live/nextcloud.blackhats.net.au/cert.pem > /var/lib/nextcloud/config/localhost.crt;\""
+
