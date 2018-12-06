@@ -87,10 +87,10 @@
     - ntpd
     - nscd
 
-- name: Deploy docker daemon configuration
-  become: yes
-  ignore_errors: yes
-  template: src=base/docker/daemon.json dest=/etc//docker/daemon.json owner=root group=root mode=0644
+# - name: Deploy docker daemon configuration
+#   become: yes
+#   ignore_errors: yes
+#   template: src=base/docker/daemon.json dest=/etc//docker/daemon.json owner=root group=root mode=0644
 
 - name: Ensure services enabled
   become: yes

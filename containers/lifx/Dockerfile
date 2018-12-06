@@ -24,9 +24,10 @@ RUN mkdir -p /home/lifx/
 WORKDIR /home/lifx
 
 RUN zypper install -y timezone git cargo rust rust-std gcc && \
-    git clone https://github.com/Firstyear/lifx_ctl.git && \
+    git clone --depth 1 https://github.com/Firstyear/lifx_ctl.git && \
     cd lifx_ctl && \
-    cargo build --release
+    RUSTC_BOOTSTRAP=1 cargo build --release && \
+    zypper rm -u -y git cargo rust rust-std gcc
 
 RUN cd /etc && \
     ln -sf ../usr/share/zoneinfo/Australia/Brisbane localtime

@@ -33,7 +33,7 @@
     pull: yes
     push: yes
     nocache: yes
-    force: no
+    force: yes
   tags:
     - squid
 
