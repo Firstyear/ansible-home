@@ -1,9 +1,0 @@
----
-- hosts: ds_servers
-  #gather_facts: False
-  roles:
-    - bh-atomic
-    - bh-ldap-master
-  vars_files:
-    - ~/secure/ansible_home_secrets.yml
-

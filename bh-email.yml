@@ -1,8 +1,0 @@
----
-- hosts: email_servers
-  #gather_facts: False
-  roles:
-    #- common-bh
-    - bh-email
-#  vars_files:
-#    - ~/secure/ansible_home_secrets.yml

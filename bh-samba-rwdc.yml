@@ -1,7 +1,0 @@
----
-- hosts: samba_rwdc
-  gather_facts: True
-  roles:
-    - bh-atomic
-    - bh-samba-rwdc
-
