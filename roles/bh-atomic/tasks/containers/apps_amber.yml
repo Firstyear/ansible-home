@@ -37,4 +37,50 @@
 
 
 
+- name: Create docker volume for nextcloud_db
+  become: true
+  docker_volume:
+    name: nextcloud_db
+
+- name: Create docker volume for nextcloud
+  become: true
+  docker_volume:
+    name: nextcloud
+
+# docker network create test-net
+- name: Create private DB network
+  become: true
+  docker_network:
+    name: nextcloud_net
+
+# docker run -v pgdata:/var/lib/postgresql/data  --name pgtest --network test-net postgres:11
+- name: Create a pgsql instance for nextcloud
+  become: true
+  docker_container:
+    name: nextcloud_db
+    image: postgres:11
+    volumes:
+      - "nextcloud_db:/var/lib/postgresql/data"
+    networks:
+      - name: nextcloud_net
+    restart_policy: always
+    # Apparently this pulls the latest image always?
+    pull: yes
+
+# docker run --network test-net -p 8080:80 -v nextcloud:/var/www/html nextcloud:latest
+- name: Create nextcloud
+  become: true
+  docker_container:
+    name: nextcloud
+    image: nextcloud:latest
+    volumes:
+      - "nextcloud:/var/www/html"
+    networks:
+      - name: nextcloud_net
+    restart_policy: always
+    ports:
+      - "8080:80"
+    # Apparently this pulls the latest image always?
+    pull: yes
+
 
