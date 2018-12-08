@@ -1,0 +1,40 @@
+
+# Create the docker volume for squid
+- name: Create docker volume for squid cache
+  become: true
+  docker_volume:
+    name: squid_cache
+
+- name: Create docker volume for squid logs
+  become: true
+  docker_volume:
+    name: squid_logs
+
+# Make the image up to daterer
+#  notify a restart of docker
+# - name: Pull squid image
+#   become: true
+#   docker_image:
+#     name: registry.blackhats.net.au/squid:latest
+#     pull: yes
+#     force: yes
+#     state: present
+
+# Make sure the container exists with restart-always
+- name: Create squid container
+  become: true
+  docker_container:
+    name: squid
+    image: registry.blackhats.net.au/squid:latest
+    volumes:
+      - "squid_logs:/var/log"
+      - "squid_cache:/var/spool/squid"
+    ports:
+      - "3128:3128"
+    restart_policy: always
+    # Apparently this pulls the latest image always?
+    pull: yes
+
+
+
+

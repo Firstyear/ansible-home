@@ -16,6 +16,10 @@ ruby.prd.blackhats.net.au patch_day=wed
 sapphire.prd.blackhats.net.au patch_day=thu
 eve.prd.blackhats.net.au patch_day=mon
 ash.prd.blackhats.net.au patch_day=sun
+amber.prd.blackhats.net.au patch_day=sat
+
+[atomic:vars]
+ansible_python_interpreter=/usr/bin/python3
 
 # Bootstrap with:
 #  ansible -m raw -a "pkg update -f"

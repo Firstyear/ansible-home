@@ -4,15 +4,25 @@
   become: yes
   ignore_errors: yes
   action: selinux_permissive name=svirt_lxc_net_t permissive=true
+  when: "ansible_os_family != 'Suse'"
 
 - name: deploy ca.certs
   become: yes
   ignore_errors: yes
   action: copy src=../../templates/docker/certs.d/registry.blackhats.net.au dest=/etc/docker/certs.d/
 
+- name: Deploy the setup cert script
+  template: src=base/scripts/{{ item }} dest=/etc/docker/certs.d/registry.blackhats.net.au/{{ item }} owner=root group=root mode=0750
+  become: yes
+  with_items:
+    - docker-csr.sh
+
 # General purpose applications
 - include: apps.yml
   when: "'sapphire' in inventory_hostname"
+
+- include: apps_amber.yml
+  when: "'amber' in inventory_hostname"
 
 # Network management applications
 - include: manage.yml

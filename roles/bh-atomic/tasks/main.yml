@@ -28,6 +28,11 @@
   become: yes
   user: name=admin groups=wheel append=yes
 
+- name: Detect if we are transactional SUSE install
+  become: yes
+  stat: path=/usr/sbin/transactional-update
+  register: trans_suse
+
 - name: sysctl for atomic hosts
   template: src=base/sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
   become: yes
@@ -49,7 +54,10 @@
     - coolkey
     - python3-pyOpenSSL
     - certbot
-  when: "ansible_os_family == 'Suse'"
+    - ipcalc
+    - python3-docker
+    - mozilla-nss-tools
+  when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == False"
 
 - name: Configure secure LDAP configurations
   become: yes
@@ -101,6 +109,19 @@
     - sshd
     - docker
     - chronyd
+
+# How to handle this for suse transactional os?
+# systemctl enable --now transactional-update.timer
+# systemctl enable --now rebootmgr.service
+
+- name: Ensure transactional services enabled
+  become: yes
+  ignore_errors: yes
+  service: name={{ item }} enabled=yes
+  with_items:
+    - rebootmgr.service
+    - transactional-update.timer
+  when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == True"
 
 - name: Configure Fedora AUTH configurations
   become: yes

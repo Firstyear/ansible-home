@@ -7,6 +7,10 @@
   become: yes
   shell: /root/network.sh
 
+- name: run network-suse.sh
+  become: yes
+  shell: /root/network-suse.sh
+
 - name: run docker-post.sh
   become: yes
   shell: /root/docker-post.sh
