@@ -70,6 +70,21 @@
     # Apparently this pulls the latest image always?
     pull: yes
 
+- name: Create nextcloud-haproxy
+  become: true
+  docker_container:
+    name: nextcloud-haproxy
+    image: nextcloud-haproxy:latest
+    volumes:
+      - "/etc/letsencrypt:/etc/letsencrypt"
+    networks:
+      - name: nextcloud_net
+    restart_policy: always
+    ports:
+      - "443:443"
+    # Apparently this pulls the latest image always?
+    pull: yes
+
 # docker run --network test-net -p 8080:80 -v nextcloud:/var/www/html nextcloud:latest
 - name: Create nextcloud
   become: true
@@ -81,8 +96,6 @@
     networks:
       - name: nextcloud_net
     restart_policy: always
-    ports:
-      - "8080:80"
     # Apparently this pulls the latest image always?
     pull: yes
 
