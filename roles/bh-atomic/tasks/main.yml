@@ -1,28 +1,10 @@
 
-### ADD rdiff-backup
-
-## rpm-ostree initramfs --enable
-
-#- name: Install server atomic software
-#  become: yes
-#  command: rpm-ostree install amanda-client nmap vim zsh
-#  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
-
-# rpm-ostree install libselinux-python policycoreutils-python amanda-client
-# openldap-clients yubico-piv-tool
-# opensc rpm-build zsh
-# git vim vim-nerdtree rpm-fusion (with local repo)
-# pyopenssl
-
-### evolution shotwell dconf-editor gnome-tweak-tool 
-
-# Maybe opensc?
-
-# Remove rhgb from /etc/default/grub
-
-# LayeredPackages: amanda-client b43-fw coolkey createrepo dconf-editor evolution git gnome-tweak-tool libselinux-python openldap-clients opensc policycoreutils-python rpm-build rpmfusion-free-release rpmfusion-nonfree-release shotwell vim vim-nerdtree yubico-piv-tool zsh python3-docker
-
-# certbot
+# certbot --test-cert certonly -m william@blackhats.net.au --manual --preferred-challenges=dns --manual-public-ip-logging-ok --agree-tos -d test-cert.net.blackhats.net.au
+# After the DNS challenge is done, then all good to go
+#
+# ./bin/samba-tool dns add ash.prd.blackhats.net.au blackhats.net.au _acme-challenge.test-cert.net TXT
+# This may be needed also
+# rndc retransfer blackhats.net.au
 
 - name: Fix SUSE admin groups
   become: yes
