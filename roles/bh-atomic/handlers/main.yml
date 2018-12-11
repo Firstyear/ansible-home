@@ -19,4 +19,8 @@
   become: true
   action: service name=named state=restarted
 
+- name: daemon-reload
+  become: true
+  command: systemctl daemon-reload
+
 

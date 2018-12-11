@@ -67,6 +67,16 @@
   become: yes
   template: src=../../scripts/ssca.py dest=/root/ssca.py owner=root group=root mode=0755
 
+- name: Push systemd unit files
+  become: yes
+  template: src=base/systemd/{{ item }} dest=/etc/systemd/system/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - certbot.service
+    - certbot.timer
+  notify: daemon-reload
+
+- meta: flush_handlers
+
 - name: Ensure services disabled
   become: yes
   ignore_errors: yes
@@ -91,6 +101,7 @@
     - sshd
     - docker
     - chronyd
+    - certbot.timer
 
 # How to handle this for suse transactional os?
 # systemctl enable --now transactional-update.timer

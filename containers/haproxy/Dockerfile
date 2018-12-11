@@ -5,13 +5,14 @@ EXPOSE 443
 
 # /usr/bin/docker run --restart always -v /etc/letsencrypt:/etc/letsencrypt -p 443:443 --name nextcloud-haproxy registry.blackhats.net.au/nextcloud-haproxy
 
-RUN zypper install -y haproxy timezone && \
+RUN zypper install -y haproxy python3 timezone && \
     zypper clean
 
 # Timezones
 RUN cd /etc && ln -sf ../usr/share/zoneinfo/Australia/Brisbane localtime
 
-COPY haproxy.cfg /etc/haproxy/haproxy.cfg
+COPY init.py /root/init.py
+COPY haproxy.cfg /etc/haproxy/haproxy-template.cfg
 
-CMD [ "/usr/sbin/haproxy", "-f", "/etc/haproxy/haproxy.cfg", "-db" ]
+CMD [ "/root/init.py" ]
 

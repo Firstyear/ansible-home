@@ -42,6 +42,7 @@
 # - name: download unifi software
 #   become: yes
 #   get_url: url=http://dl.ubnt.com/unifi/5.4.16/UniFi.unix.zip dest=containers/unifi/ mode=0600
+#   get_url: url=http://dl.ubnt.com/unifi/5.9.29/UniFi.unix.zip dest=containers/unifi/ mode=0600
 #   tags:
 #     - unifi
 
@@ -183,4 +184,19 @@
     force: yes
   tags:
     - samba_rwdc
+
+- name: Build haproxy container
+  become: yes
+  docker_image:
+    path: containers/haproxy/
+    name: registry.blackhats.net.au/haproxy
+    tag: latest
+    pull: yes
+    push: yes
+    nocache: yes
+    force: yes
+  tags:
+    - haproxy
+
+
 

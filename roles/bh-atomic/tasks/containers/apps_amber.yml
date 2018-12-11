@@ -36,9 +36,9 @@
     pull: yes
 
 
-- name: Setup the lets encrypt renewal
-  become: true
-  # ???
+# - name: Setup the lets encrypt renewal
+#   become: true
+#   # ???
 
 - name: Create docker volume for nextcloud_db
   become: true
@@ -70,21 +70,6 @@
     # Apparently this pulls the latest image always?
     pull: yes
 
-- name: Create nextcloud-haproxy
-  become: true
-  docker_container:
-    name: nextcloud-haproxy
-    image: nextcloud-haproxy:latest
-    volumes:
-      - "/etc/letsencrypt:/etc/letsencrypt"
-    networks:
-      - name: nextcloud_net
-    restart_policy: always
-    ports:
-      - "443:443"
-    # Apparently this pulls the latest image always?
-    pull: yes
-
 # docker run --network test-net -p 8080:80 -v nextcloud:/var/www/html nextcloud:latest
 - name: Create nextcloud
   become: true
@@ -99,4 +84,21 @@
     # Apparently this pulls the latest image always?
     pull: yes
 
+- name: Create nextcloud-haproxy
+  become: true
+  docker_container:
+    name: haproxy
+    image: registry.blackhats.net.au/haproxy:latest
+    volumes:
+      - "/etc/certbot:/etc/certbot"
+    networks:
+      - name: nextcloud_net
+    restart_policy: always
+    env:
+      HAPROXY_TARGET: nextcloud
+      HAPROXY_HOSTNAME: nextcloud.blackhats.net.au
+    ports:
+      - "443:443"
+    # Apparently this pulls the latest image always?
+    pull: yes
 
