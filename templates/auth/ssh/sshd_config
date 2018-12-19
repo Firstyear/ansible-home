@@ -47,7 +47,11 @@ SyslogFacility AUTHPRIV
 # Authentication:
 
 #LoginGraceTime 2m
+{% if 'linode_servers' not in group_names and 'workstation' not in group_names %}
+PermitRootLogin yes
+{% else %}
 PermitRootLogin no
+{% endif %}
 #StrictModes yes
 #MaxAuthTries 6
 #MaxSessions 10

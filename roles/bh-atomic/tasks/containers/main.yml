@@ -24,6 +24,9 @@
 - include: apps_amber.yml
   when: "'amber' in inventory_hostname"
 
+- include: manage_lazuli.yml
+  when: "'lazuli' in inventory_hostname"
+
 # Network management applications
 - include: manage.yml
   when: "'ruby' in inventory_hostname"

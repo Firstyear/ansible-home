@@ -14,6 +14,11 @@
     - 02-atomic.conf
   when: "'linode_servers' not in group_names"
 
+- name: Configure root ssh for backups
+  template: src=base/authorized_keys dest=/root/.ssh/authorized_keys owner=root group=root mode=0600
+  become: yes
+  when: "'linode_servers' not in group_names"
+
 - name: static network for atomic hosts
   template: src=base/scripts/{{ item }} dest=/root/{{ item }} owner=root group=root mode=0750
   become: yes

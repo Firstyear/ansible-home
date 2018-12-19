@@ -21,7 +21,7 @@
   with_items:
     - 01-uofa.conf
 
-- name: Configure SUSE auth packages
+- name: Configure SUSE packages
   become: yes
   ignore_errors: yes
   action: zypper name={{ item }} state=present
@@ -30,15 +30,17 @@
     - sssd-ad
     - sssd-ldap
     - sssd-tools
+    - docker
     - zsh
-    - pcsc-lite
-    - opensc
-    - coolkey
+    # - pcsc-lite
+    # - opensc
+    # - coolkey
     - python3-pyOpenSSL
     - certbot
     - ipcalc
     - python3-docker
     - mozilla-nss-tools
+    - rdiff-backup
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == False"
 
 - name: Configure secure LDAP configurations
@@ -127,19 +129,11 @@
     - openldap/ldap.conf
   when: "ansible_os_family != 'Suse'"
 
-- name: Fix SUSE sudoers
-  become: yes
-  template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0400
-  with_items:
-    - sudoers
-  when: "ansible_os_family == 'Suse'"
-
 - name: Configure SUSE AUTH configurations
   become: yes
   template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     # Need to mkdir this?
-    - pki/tls/certs/bh_ldap.crt
     - pam.d/common-account-pc
     - pam.d/common-auth-pc
     - pam.d/common-password-pc
@@ -148,31 +142,15 @@
     - openldap/ldap.conf
     - nsswitch.conf
     - nscd.conf
+    - pki/tls/certs/bh_ldap.crt
   when: "ansible_os_family == 'Suse'"
 
-- name: Configure default masks
+- name: Fix SUSE sudoers
   become: yes
-  ignore_errors: yes
-  acl: path={{ item }} etype=mask permissions=rwx state=present recursive=yes default=yes
-  with_items: '{{ acl_locations }}'
-
-- name: Configure masks
-  become: yes
-  ignore_errors: yes
-  acl: path={{ item }} etype=mask permissions=rwx state=present recursive=yes
-  with_items: '{{ acl_locations }}'
-
-- name: Configure default acl for backups to operate
-  become: yes
-  ignore_errors: yes
-  acl: path={{ item }} entity=backup etype=user permissions=rx state=present recursive=yes default=yes
-  with_items: '{{ acl_locations }}'
-
-- name: Configure acl for backups to operate
-  become: yes
-  ignore_errors: yes
-  acl: path={{ item }} entity=backup etype=user permissions=rx state=present recursive=yes
-  with_items: '{{ acl_locations }}'
+  template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0400
+  with_items:
+    - sudoers
+  when: "ansible_os_family == 'Suse'"
 
 # - name: Add the 'discard' option to any existing options for all devices
 #   crypttab:

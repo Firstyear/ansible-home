@@ -1,1 +1,0 @@
-echo "Help is here"

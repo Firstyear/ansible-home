@@ -1,3 +1,4 @@
+- /.snapshots
 - /bin
 - /boot
 - /dev
@@ -8,6 +9,7 @@
 - /etc/sudoers.d
 - /etc/securetty
 - /etc/shadow
+- /data
 - /home
 - /lib
 - /lib64
@@ -27,10 +29,10 @@
 - /var/log
 - /var/cache
 - /var/lib/nfs
-- /var/lib/docker
+- /var/lib/docker/btrfs
 - /var/empty/sssd
 - /var/home/backup
-- /var/cache/rpm-ostree/
+- /var/cache/rpm-ostree
 - /var/lib/samba/data/pub
 - /var/lib/samba/data/priv
 - /var/spool

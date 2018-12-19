@@ -1,0 +1,10 @@
+[Unit]
+Description=Run backups
+
+[Timer]
+# OnBootSec=15min
+# OnUnitActiveSec=1d
+OnCalendar=*-*-* 4:00:00
+
+[Install]
+WantedBy=multi-user.target

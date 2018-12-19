@@ -14,7 +14,19 @@
     - status.sh
     - clean.sh
 
-- name: Configure backup cron
-  become: true
-  template: src=1backupcron dest=/etc/cron.d/1backupcron owner=root group=root mode=0644
+- name: Push systemd unit files
+  become: yes
+  template: src=systemd/{{ item }} dest=/etc/systemd/system/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - backup.service
+    - backup.timer
+  notify: daemon-reload
+
+- meta: flush_handlers
+
+- name: Ensure services enabled
+  become: yes
+  ignore_errors: yes
+  service: name=backup.timer enabled=no
+
 

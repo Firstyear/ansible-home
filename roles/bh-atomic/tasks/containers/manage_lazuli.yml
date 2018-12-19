@@ -1,0 +1,89 @@
+
+- name: Create registry volume
+  become: true
+  docker_volume:
+    name: registry
+
+- name: Create registry
+  become: true
+  docker_container:
+    name: registry
+    image: registry:2
+    volumes:
+      - "registry:/var/lib/registry"
+    ports:
+      - "443:443"
+    env:
+      REGISTRY_HTTP_ADDR: 0.0.0.0:443
+      REGISTRY_HTTP_TLS_CERTIFICATE: /var/lib/registry/certs/docker.crt
+      REGISTRY_HTTP_TLS_KEY: /var/lib/registry/certs/docker.key
+      REGISTRY_HTTP_TLS_CLIENTCAS: " - /var/lib/registry/certs/ca.crt"
+    restart_policy: always
+    pull: yes
+
+
+- name: Create lifx controller
+  become: true
+  docker_container:
+    name: lifx
+    image: registry.blackhats.net.au/lifx:latest
+    restart_policy: always
+    pull: yes
+
+
+- name: Create unifi data volume
+  become: true
+  docker_volume:
+    name: unifi_data
+
+- name: Create unifi log volume
+  become: true
+  docker_volume:
+    name: unifi_log
+
+# - name: Create unifi controller
+#   become: true
+#   docker_container:
+#     name: unifi
+#     image: jacobalberty/unifi:5.9
+#     # can ssh to aps with ubnt:ubnt and ruN;
+#     # mca-cli
+#     # set-inform http://<host_ip>:8080/inform
+#     # set-inform http://172.24.10.19:8080/inform
+#     # set-inform http://unifi.net.blackhats.net.au:8080/inform
+#     ports:
+#       - 8080:8080
+#       - 8443:8443
+#       - 3478:3478/udp
+#       - 10001:10001/udp
+#     volumes:
+#       - "unifi_data:/unifi/data"
+#       - "unifi_log:/unifi/log"
+#     env:
+#       TZ: "Australia/Brisbane"
+#     restart_policy: always
+#     pull: yes
+# 
+
+- name: Create radiusd pki volume
+  become: true
+  docker_volume:
+    name: radiusd_pki
+
+- name: Create unifi controller
+  become: true
+  docker_container:
+    name: radiusd
+    image: registry.blackhats.net.au/radiusd:latest
+    ports:
+      - 1812:1812
+      - 1812:1812/udp
+      - 1813:1813
+      - 1813:1813/udp
+    volumes:
+      - "radiusd_pki:/etc/pki/radius"
+    restart_policy: always
+    pull: yes
+
+
+

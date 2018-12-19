@@ -1,0 +1,8 @@
+[Unit]
+Description=Backup hosts
+
+[Service]
+Type=oneshot
+ExecStart=/home/backup/backup.sh
+TimeoutSec=infinity
+
