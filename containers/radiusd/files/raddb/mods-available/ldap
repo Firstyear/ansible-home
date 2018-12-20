@@ -73,6 +73,7 @@ ldap {
 #		reply:Tunnel-Type		:= 'radiusTunnelType'
 #		reply:Tunnel-Medium-Type	:= 'radiusTunnelMediumType'
 #		reply:Tunnel-Private-Group-ID	:= 'radiusTunnelPrivategroupId'
+# 		reply:Tunnel-Private-Group-ID	:= 'msRADIUSCallbackNumber'
 	}
 
 	#

@@ -3,6 +3,8 @@
   become: true
   docker_volume:
     name: registry
+  tags:
+    - docker
 
 - name: Create registry
   become: true
@@ -20,6 +22,8 @@
       REGISTRY_HTTP_TLS_CLIENTCAS: " - /var/lib/registry/certs/ca.crt"
     restart_policy: always
     pull: yes
+  tags:
+    - docker
 
 
 - name: Create lifx controller
@@ -29,17 +33,23 @@
     image: registry.blackhats.net.au/lifx:latest
     restart_policy: always
     pull: yes
+  tags:
+    - docker
 
 
 - name: Create unifi data volume
   become: true
   docker_volume:
     name: unifi_data
+  tags:
+    - docker
 
 - name: Create unifi log volume
   become: true
   docker_volume:
     name: unifi_log
+  tags:
+    - docker
 
 # - name: Create unifi controller
 #   become: true
@@ -69,6 +79,8 @@
   become: true
   docker_volume:
     name: radiusd_pki
+  tags:
+    - docker
 
 - name: Create unifi controller
   become: true
@@ -84,6 +96,8 @@
       - "radiusd_pki:/etc/pki/radius"
     restart_policy: always
     pull: yes
+  tags:
+    - docker
 
 
 

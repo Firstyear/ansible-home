@@ -10,12 +10,13 @@
 #  bgpd?
 #  openvpn? openconnect?
 
-- name: Install packages
-  become: yes
-  ignore_errors: yes
-  pkgng:
-    state: present
-    name: ['dhcp6', 'isc-dhcp43-server', 'sssd', 'sudo', 'python36', 'openldap-client', 'zsh', 'vim-lite', 'haproxy', 'openbgpd', 'openvpn']
+# - name: Install packages
+#   become: yes
+#   ignore_errors: yes
+#   pkgng:
+#     state: present
+#     name: ['dhcp6', 'isc-dhcp43-server', 'sssd', 'sudo', 'python36', 'openldap-client', 'zsh', 'vim-lite', 'haproxy', 'openbgpd', 'openvpn']
+
 # Deploy auth configs
 
 - name: symlink zsh to correct location
