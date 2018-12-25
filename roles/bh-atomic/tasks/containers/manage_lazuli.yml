@@ -51,6 +51,8 @@
   tags:
     - docker
 
+## docker create --restart always --name unifi --network host -v unifi_data:/unifi/data -v unifi_log:/unifi/log -v /etc/timezone:/etc/timezone:ro -v /etc/localtime:/etc/localtime:ro -e TZ=Australia/Brisbane jacobalberty/unifi:5.9
+
 # - name: Create unifi controller
 #   become: true
 #   docker_container:
@@ -69,8 +71,9 @@
 #     volumes:
 #       - "unifi_data:/unifi/data"
 #       - "unifi_log:/unifi/log"
-#     env:
-#       TZ: "Australia/Brisbane"
+#       - "/etc/localtime:/etc/localtime:ro"
+#     # env:
+#     #   TZ: "Australia/Brisbane"
 #     restart_policy: always
 #     pull: yes
 # 
