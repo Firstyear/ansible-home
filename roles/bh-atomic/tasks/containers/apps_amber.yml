@@ -102,3 +102,32 @@
     # Apparently this pulls the latest image always?
     pull: yes
 
+
+
+# SAMBA
+# So it's not docker, but this is the config and avahi setup.
+
+- name: Ensure timemachine user
+  become: yes
+  user: name=timemachine group=users uid=1001
+  tags:
+    - samba
+
+- name: Deploy samba config
+  become: yes
+  template: src=samba/smb.conf dest=/etc/samba/smb.conf owner=root group=root mode=0600
+  tags:
+    - samba
+
+# - name: Deploy timemachine quota
+#   become: yes
+#   template: src=samba/com.apple.TimeMachine.quote.plist dest=/var/data/backup/timemachine/.com.apple.TimeMachine.quote.plist owner=timemachine group=timemachine mode=0600
+
+- name: Ensure samba active
+  become: yes
+  service: name=smb enabled=yes
+  tags:
+    - samba
+
+
+

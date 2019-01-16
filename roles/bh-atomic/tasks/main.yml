@@ -41,6 +41,7 @@
     - python3-docker
     - mozilla-nss-tools
     - rdiff-backup
+    - avahi
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == False"
 
 - name: Configure secure LDAP configurations

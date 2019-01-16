@@ -10,7 +10,6 @@
 - /etc/securetty
 - /etc/shadow
 - /data
-- /home
 - /lib
 - /lib64
 - /media
@@ -26,6 +25,7 @@
 - /sysroot
 - /tmp
 - /usr
+- /var/data
 - /var/log
 - /var/cache
 - /var/lib/nfs
