@@ -104,6 +104,26 @@
 
 
 
+- name: Create docker volume for samba ad-dc
+  become: true
+  docker_volume:
+    name: samba_rwdc
+
+# Make sure the container exists with restart-always
+- name: Create samba_rwdc container
+  become: true
+  docker_container:
+    name: samba_rwdc
+    image: registry.blackhats.net.au/samba_rwdc:latest
+    volumes:
+      - "samba_rwdc:/var/lib/samba"
+    ports:
+      - "389:389"
+      - "636:636"
+    restart_policy: always
+    pull: yes
+
+
 # SAMBA
 # So it's not docker, but this is the config and avahi setup.
 

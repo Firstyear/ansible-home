@@ -69,7 +69,7 @@
     minute: 38
     hour: 7
     weekday: "{{ patch_day }}"
-    job: "rpm-ostree upgrade -r"
+    job: "yum upgrade -y && reboot"
   when: "ansible_os_family != 'Suse' and ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
 

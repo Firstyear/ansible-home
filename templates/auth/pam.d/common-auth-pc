@@ -16,7 +16,7 @@ auth        [default=1 ignore=ignore success=ok] pam_localuser.so
 auth        sufficient    pam_unix.so nullok try_first_pass
 auth        requisite     pam_succeed_if.so uid >= 1000 quiet_success
 auth        sufficient    pam_sss.so prompt_always ignore_unknown_user
-auth        optional      pam_gnome_keyring.so
+# auth        optional      pam_gnome_keyring.so
 auth        required      pam_deny.so
 
 

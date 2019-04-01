@@ -51,9 +51,9 @@
     - sssd/sssd.conf
     - sudoers.d/bh_admins-sudo
 
-- name: Touch preauth avail
-  become: yes
-  file: state=touch mode=0644 path=/var/lib/sss/pubconf/pam_preauth_available
+# - name: Touch preauth avail
+#   become: yes
+#   file: state=touch mode=0644 path=/var/lib/sss/pubconf/pam_preauth_available
 
 - name: Ensure tls/certs directory
   become: yes

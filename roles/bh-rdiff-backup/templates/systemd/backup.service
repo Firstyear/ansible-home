@@ -3,6 +3,6 @@ Description=Backup hosts
 
 [Service]
 Type=oneshot
-ExecStart=/home/backup/backup.sh
+ExecStart=/usr/bin/sh -c /home/backup/backup.sh
 TimeoutSec=infinity
 

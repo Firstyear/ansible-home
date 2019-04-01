@@ -16,5 +16,5 @@ session required    pam_mkhomedir.so skel=/etc/skel/ umask=0022
 session required    pam_unix.so try_first_pass
 session optional    pam_sss.so
 session optional    pam_umask.so
-session optional    pam_gnome_keyring.so    auto_start only_if=gdm,gdm-password,lxdm,lightdm,mdm 
+# session optional    pam_gnome_keyring.so    auto_start only_if=gdm,gdm-password,lxdm,lightdm,mdm 
 session optional    pam_env.so

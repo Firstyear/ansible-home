@@ -16,6 +16,7 @@ ash.prd.blackhats.net.au patch_day=sun
 amber.prd.blackhats.net.au patch_day=sat
 lazuli.prd.blackhats.net.au patch_day=mon
 topaz.prd.blackhats.net.au patch_day=tue
+victorique.prd.blackhats.net.au patch_day=wed ansible_python_interpreter=/usr/bin/python
 
 [atomic:vars]
 ansible_python_interpreter=/usr/bin/python3
