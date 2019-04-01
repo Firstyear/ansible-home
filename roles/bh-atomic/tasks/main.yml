@@ -1,10 +1,6 @@
 
 # certbot --test-cert certonly -m william@blackhats.net.au --manual --preferred-challenges=dns --manual-public-ip-logging-ok --agree-tos -d test-cert.net.blackhats.net.au
 # After the DNS challenge is done, then all good to go
-#
-# ./bin/samba-tool dns add ash.prd.blackhats.net.au blackhats.net.au _acme-challenge.test-cert.net TXT
-# This may be needed also
-# rndc retransfer blackhats.net.au
 
 - name: Fix SUSE admin groups
   become: yes
@@ -24,24 +20,9 @@
 - name: Configure SUSE packages
   become: yes
   ignore_errors: yes
-  action: zypper name={{ item }} state=present
-  with_items:
-    - sssd
-    - sssd-ad
-    - sssd-ldap
-    - sssd-tools
-    - docker
-    - zsh
-    # - pcsc-lite
-    # - opensc
-    # - coolkey
-    - python3-pyOpenSSL
-    - certbot
-    - ipcalc
-    - python3-docker
-    - mozilla-nss-tools
-    - rdiff-backup
-    - avahi
+  zypper:
+    name: ['sssd', 'sssd-ad', 'sssd-ldap', 'sssd-tools', 'docker', 'zsh', 'python3-pyOpenSSL', 'certbot', 'ipcalc', 'python3-docker', 'mozilla-nss-tools', 'rdiff-backup', 'avahi']
+    state: present
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == False"
 
 - name: Configure secure LDAP configurations
@@ -153,14 +134,6 @@
     - sudoers
   when: "ansible_os_family == 'Suse'"
 
-# - name: Add the 'discard' option to any existing options for all devices
-#   crypttab:
-#     name: '{{ item.device }}'
-#     state: opts_present
-#     opts: discard
-#   with_items: '{{ ansible_mounts }}'
-#   when: "'/dev/mapper/cr-' in {{ item.device }}"
-
 # /usr/libexec/sssd/p11_child --pre --nssdb=/etc/pki/nssdb 
 # to check certs.
 # Add cert to db?
@@ -181,17 +154,17 @@
   include: suse-workstation.yml
   when: "ansible_os_family == 'Suse' and 'workstation' in group_names"
 
-- name: Build Containers
-  include: container-build.yml
-  when: "'workstation' in group_names and 'localhost' in inventory_hostname"
+# - name: Build Containers
+#   include: container-build.yml
+#   when: "'workstation' in group_names and 'localhost' in inventory_hostname"
 
 - name: Server Contain Configuration
   include: containers/main.yml
   when: "'workstation' not in group_names and 'htpc' not in group_names"
 
-- name: DNS Slave Deployment
-  include: dns-slave.yml
-  when: "'dns_slave_servers' in group_names"
+# - name: DNS Slave Deployment
+#   include: dns-slave.yml
+#   when: "'dns_slave_servers' in group_names"
 
 - name: Spotinuc
   include: spotinuc.yml

@@ -42,6 +42,7 @@ adara.prd.blackhats.net.au
 adara.prd.blackhats.net.au patch_day=thu
 cassia.prd.blackhats.net.au patch_day=fri
 ariel.prd.blackhats.net.au patch_day=sat
+robin.prd.blackhats.net.au patch_day=sun
 
 [dns_slave_servers]
 adara.prd.blackhats.net.au patch_day=thu
