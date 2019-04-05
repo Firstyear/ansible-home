@@ -92,16 +92,17 @@ server check-eap-tls {
         # groupname_attribute = cn
         # groupmembership_filter = "(&(objectClass=group)(member=%{control:Ldap-UserDn}))"
 
-       ldap
+       # ldap
+        python
 
         # Now let's test membership of an LDAP group (the ldap bind user will
         # need permission to read this group membership):
 
-       if (!(Ldap-Group == "Sunbeam Radius Access")) {
-           update config {
-               Auth-Type := Reject
-           }
-       }
+       # if (!(Ldap-Group == "Sunbeam Radius Access")) {
+       #     update config {
+       #         Auth-Type := Reject
+       #     }
+       # }
 
         # or, to be more specific, you could use the group's full DN:
         # if (!(Ldap-Group == "CN=Permitted-Laptops,OU=Groups,DC=example,DC=org")) {

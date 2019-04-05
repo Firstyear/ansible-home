@@ -139,7 +139,9 @@ authorize {
 
 	#
 	#  The ldap module reads passwords from the LDAP database.
-	-ldap
+	# -ldap
+
+    python
 
 	#
 	#  Enforce daily limits on time spent logged in.

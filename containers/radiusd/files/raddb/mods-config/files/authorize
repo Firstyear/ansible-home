@@ -65,15 +65,15 @@
 #		Reply-Message = "Your account has been disabled."
 #
 
-guest   Cleartext-Password := "reallylongenablepassword"
-    Tunnel-Type = 13,
-    Tunnel-Medium-Type = 6,
-    Tunnel-Private-Group-ID := 13
+# guest   Cleartext-Password := "reallylongenablepassword"
+#     Tunnel-Type = 13,
+#     Tunnel-Medium-Type = 6,
+#     Tunnel-Private-Group-ID := 13
 
-DEFAULT     Ldap-Group == "Network Operators"
-    Tunnel-Type = 13,
-    Tunnel-Medium-Type = 6,
-    Tunnel-Private-Group-ID := 12
+# DEFAULT     Ldap-Group == "Network Operators"
+#     Tunnel-Type = 13,
+#     Tunnel-Medium-Type = 6,
+#     Tunnel-Private-Group-ID := 12
 
 # Probably consider a wifi access group here
 DEFAULT     User-Name == '*'
