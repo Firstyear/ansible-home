@@ -19,34 +19,29 @@ RUN cd /etc && ln -sf ../usr/share/zoneinfo/Australia/Brisbane localtime
 # Deploy the radiusd configs. We have to copy each file to overwrite all the
 # provided/shipped configs.
 COPY files/raddb/mods-available/eap /etc/raddb/mods-available/eap
-# COPY files/raddb/mods-available/ldap /etc/raddb/mods-available/ldap
 COPY files/raddb/mods-available/python /etc/raddb/mods-available/python
-COPY files/raddb/mods-config/files/authorize /etc/raddb/mods-config/files/authorize
-COPY files/raddb/sites-available/check-eap-tls /etc/raddb/sites-available/check-eap-tls
+
+# The possible "tunnels" that will be taken, usually mschapv2
 COPY files/raddb/sites-available/default /etc/raddb/sites-available/default
 COPY files/raddb/sites-available/inner-tunnel /etc/raddb/sites-available/inner-tunnel
+
+# Defines our NAS
 COPY files/raddb/clients.conf /etc/raddb/clients.conf
+# Defines site local var
 COPY files/raddb/radiusd.conf /etc/raddb/radiusd.conf
 
 COPY test.py /etc/raddb/test.py
 
 # Symlink in available sites and mods.
-# RUN ln -s ../mods-available/ldap /etc/raddb/mods-enabled/ldap && \
 RUN ln -s ../mods-available/python /etc/raddb/mods-enabled/python && \
-    ln -s ../sites-available/check-eap-tls /etc/raddb/sites-enabled/check-eap-tls && \
     chown -R root:radiusd /etc/raddb
 
-# RUN mkdir -p /etc/systemd/system/radiusd.service.d
-# COPY radiusd.conf /etc/systemd/system/radiusd.service.d/local.conf
 RUN mkdir -p /etc/pki/tls/certs/
 COPY bh_ldap.crt /etc/pki/tls/certs/bh_ldap.crt
 # Fix the raddb perms
 RUN chown root:root /etc/pki/tls/certs/bh_ldap.crt && \
     chmod 644 /etc/pki/tls/certs/bh_ldap.crt
-    # && \
-    # chown root:root /etc/systemd/system/radiusd.service.d/local.conf
 
-# RUN systemctl enable radiusd.service
 
 USER radiusd
 CMD [ "/usr/sbin/radiusd", "-f", "-l", "stdout" ]

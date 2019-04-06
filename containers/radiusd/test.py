@@ -6,9 +6,11 @@ import binascii
 GUEST_PASS = hashlib.new('md4', "reallylongenablepassword".encode('utf-16le')).digest()
 ADMIN_PASS = hashlib.new('md4', "reallylongadminpassword".encode('utf-16le')).digest()
 
+DEFAULT_VLAN = '13'
+
 
 USERS = {
-    'guest': (GUEST_PASS, '13'),
+    'guest': (GUEST_PASS, DEFAULT_VLAN),
     'admin': (ADMIN_PASS, '12'),
 }
 
