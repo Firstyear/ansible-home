@@ -3,10 +3,9 @@
 
 - name: Configure SUSE spotinuc packages
   become: yes
-  action: zypper name={{ item }} state=present
-  with_items:
-    - flatpak
-    - vlc
+  zypper:
+    name: ['flatpak', 'vlc']
+    state: present
 
 - name: Deploy gdm autologin
   become: yes

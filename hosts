@@ -12,7 +12,6 @@ felix.prd.blackhats.net.au
 localhost
 
 [atomic]
-ash.prd.blackhats.net.au patch_day=sun
 amber.prd.blackhats.net.au patch_day=sat
 lazuli.prd.blackhats.net.au patch_day=mon
 topaz.prd.blackhats.net.au patch_day=tue
@@ -52,11 +51,7 @@ ariel.prd.blackhats.net.au patch_day=sat
 [rdiff_backup]
 topaz.prd.blackhats.net.au patch_day=tue
 
-[samba_rwdc]
-ash.prd.blackhats.net.au patch_day=sun
-
 [DailySet1]
-# ash.prd.blackhats.net.au patch_day=sun
 amber.prd.blackhats.net.au patch_day=sat
 lazuli.prd.blackhats.net.au patch_day=mon
 

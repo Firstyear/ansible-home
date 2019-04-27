@@ -1,10 +1,3 @@
-##### DANGER DANGER DANGER
-# Selinux doesnt allow containers to access the default volumes location, so set policy to permissive!!!!
-- name: set containers to permissive
-  become: yes
-  ignore_errors: yes
-  action: selinux_permissive name=svirt_lxc_net_t permissive=true
-  when: "ansible_os_family != 'Suse'"
 
 - name: deploy ca.certs
   become: yes
@@ -17,20 +10,9 @@
   with_items:
     - docker-csr.sh
 
-# General purpose applications
-- include: apps.yml
-  when: "'sapphire' in inventory_hostname"
-
 - include: apps_amber.yml
   when: "'amber' in inventory_hostname"
 
 - include: manage_lazuli.yml
   when: "'lazuli' in inventory_hostname"
-
-# Network management applications
-# - include: manage.yml
-#   when: "'ruby' in inventory_hostname"
-
-# - include: dc.yml
-#   when: "'ash' in inventory_hostname"
 

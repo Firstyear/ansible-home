@@ -53,30 +53,28 @@
 
 ## docker create --restart always --name unifi --network host -v unifi_data:/unifi/data -v unifi_log:/unifi/log -v /etc/timezone:/etc/timezone:ro -v /etc/localtime:/etc/localtime:ro -e TZ=Australia/Brisbane jacobalberty/unifi:5.9
 
-# - name: Create unifi controller
-#   become: true
-#   docker_container:
-#     name: unifi
-#     image: jacobalberty/unifi:5.9
-#     # can ssh to aps with ubnt:ubnt and ruN;
-#     # mca-cli
-#     # set-inform http://<host_ip>:8080/inform
-#     # set-inform http://172.24.10.19:8080/inform
-#     # set-inform http://unifi.net.blackhats.net.au:8080/inform
-#     ports:
-#       - 8080:8080
-#       - 8443:8443
-#       - 3478:3478/udp
-#       - 10001:10001/udp
-#     volumes:
-#       - "unifi_data:/unifi/data"
-#       - "unifi_log:/unifi/log"
-#       - "/etc/localtime:/etc/localtime:ro"
-#     # env:
-#     #   TZ: "Australia/Brisbane"
-#     restart_policy: always
-#     pull: yes
-# 
+- name: Create unifi controller
+  become: true
+  docker_container:
+    name: unifi
+    image: jacobalberty/unifi:stable
+    # can ssh to aps with ubnt:ubnt and ruN;
+    # mca-cli
+    # set-inform http://<host_ip>:8080/inform
+    # set-inform http://172.24.10.19:8080/inform
+    # set-inform http://unifi.net.blackhats.net.au:8080/inform
+    network_mode: host
+    volumes:
+      - "unifi_data:/unifi/data"
+      - "unifi_log:/unifi/log"
+      - "/etc/localtime:/etc/localtime:ro"
+    # env:
+    #   TZ: "Australia/Brisbane"
+    restart_policy: always
+    pull: yes
+  tags:
+    - docker
+
 
 - name: Create radiusd pki volume
   become: true
@@ -85,7 +83,7 @@
   tags:
     - docker
 
-- name: Create unifi controller
+- name: Create radiusd controller
   become: true
   docker_container:
     name: radiusd
