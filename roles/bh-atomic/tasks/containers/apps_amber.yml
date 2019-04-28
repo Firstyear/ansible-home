@@ -71,6 +71,9 @@
     pull: yes
 
 # docker run --network test-net -p 8080:80 -v nextcloud:/var/www/html nextcloud:latest
+#
+# docker exec -i -t -u www-data nextcloud php occ upgrade
+# docker exec -i -t -u www-data nextcloud php occ maintenance:mode --on
 - name: Create nextcloud
   become: true
   docker_container:
@@ -98,9 +101,13 @@
       HAPROXY_TARGET: nextcloud
       HAPROXY_HOSTNAME: nextcloud.blackhats.net.au
     ports:
+      - "80:80"
       - "443:443"
+      - "8080:8080"
     # Apparently this pulls the latest image always?
     pull: yes
+  tags:
+    - haproxy
 
 
 

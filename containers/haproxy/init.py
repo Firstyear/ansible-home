@@ -10,10 +10,10 @@ def do_main():
     hostname = os.environ.get('HAPROXY_HOSTNAME', 'localhost')
 
     # Concat the two certs properly
-    with open('/etc/certbot/live/nextcloud.blackhats.net.au/bundle.pem', 'w') as k:
-        with open('/etc/certbot/live/nextcloud.blackhats.net.au/fullchain.pem', 'r') as f:
+    with open('/etc/certbot/live/%s/bundle.pem' % hostname, 'w') as k:
+        with open('/etc/certbot/live/%s/fullchain.pem' % hostname, 'r') as f:
             k.write(f.read())
-        with open('/etc/certbot/live/nextcloud.blackhats.net.au/privkey.pem', 'r') as f:
+        with open('/etc/certbot/live/%s/privkey.pem' % hostname, 'r') as f:
             k.write(f.read())
 
     lines = None

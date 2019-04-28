@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
   <key>GlobalQuota</key>
-    <integer>1200000000000</integer>
+    <integer>1000000000000</integer>
   </dict>
 </plist>
