@@ -1,10 +1,9 @@
 
 - name: Install mail software
   become: true
-  action: yum name={{ item }} state=present
-  with_items:
-    - postfix
-    - postgrey
+  yum:
+    name: ['postfix', 'postgrey']
+    state: present
 
 - name: Deploy postfix hash configurations
   become: true

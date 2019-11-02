@@ -4,11 +4,17 @@
   become: true
   docker_volume:
     name: squid_cache
+  tags:
+    - docker
+    - squid
 
 - name: Create docker volume for squid logs
   become: true
   docker_volume:
     name: squid_logs
+  tags:
+    - docker
+    - squid
 
 # Make the image up to daterer
 #  notify a restart of docker
@@ -34,6 +40,9 @@
     restart_policy: always
     # Apparently this pulls the latest image always?
     pull: yes
+  tags:
+    - docker
+    - squid
 
 
 # - name: Setup the lets encrypt renewal
@@ -44,17 +53,26 @@
   become: true
   docker_volume:
     name: nextcloud_db
+  tags:
+    - docker
+    - nextcloud
 
 - name: Create docker volume for nextcloud
   become: true
   docker_volume:
     name: nextcloud
+  tags:
+    - docker
+    - nextcloud
 
 # docker network create test-net
 - name: Create private DB network
   become: true
   docker_network:
     name: nextcloud_net
+  tags:
+    - docker
+    - nextcloud
 
 # docker run -v pgdata:/var/lib/postgresql/data  --name pgtest --network test-net postgres:11
 - name: Create a pgsql instance for nextcloud
@@ -64,11 +82,15 @@
     image: postgres:11
     volumes:
       - "nextcloud_db:/var/lib/postgresql/data"
+    purge_networks: yes
     networks:
       - name: nextcloud_net
     restart_policy: always
     # Apparently this pulls the latest image always?
     pull: yes
+  tags:
+    - docker
+    - nextcloud
 
 # docker run --network test-net -p 8080:80 -v nextcloud:/var/www/html nextcloud:latest
 #
@@ -81,11 +103,31 @@
     image: nextcloud:latest
     volumes:
       - "nextcloud:/var/www/html"
+    purge_networks: yes
     networks:
       - name: nextcloud_net
     restart_policy: always
     # Apparently this pulls the latest image always?
     pull: yes
+  tags:
+    - docker
+    - nextcloud
+
+- name: Create docker volume for haproxy_certs_le
+  become: true
+  docker_volume:
+    name: haproxy_certs_le
+  tags:
+    - docker
+    - haproxy
+
+- name: Create docker volume for haproxy_certs_cb
+  become: true
+  docker_volume:
+    name: haproxy_certs_cb
+  tags:
+    - docker
+    - haproxy
 
 - name: Create nextcloud-haproxy
   become: true
@@ -93,13 +135,16 @@
     name: haproxy
     image: registry.blackhats.net.au/haproxy:latest
     volumes:
-      - "/etc/certbot:/etc/certbot"
+      - "haproxy_certs_le:/etc/letsencrypt"
+      - "haproxy_certs_cb:/etc/certbot"
+    purge_networks: yes
     networks:
       - name: nextcloud_net
     restart_policy: always
     env:
       HAPROXY_TARGET: nextcloud
       HAPROXY_HOSTNAME: nextcloud.blackhats.net.au
+      HAPROXY_LINODE_KEY: "{{ haproxy_linode_key }}"
     ports:
       - "80:80"
       - "443:443"
@@ -107,7 +152,9 @@
     # Apparently this pulls the latest image always?
     pull: yes
   tags:
+    - docker
     - haproxy
+    - nextcloud
 
 
 
@@ -115,6 +162,9 @@
   become: true
   docker_volume:
     name: samba_rwdc
+  tags:
+    - docker
+    - samba
 
 # Make sure the container exists with restart-always
 - name: Create samba_rwdc container
@@ -129,6 +179,9 @@
       - "636:636"
     restart_policy: always
     pull: yes
+  tags:
+    - docker
+    - samba
 
 
 # SAMBA
@@ -138,12 +191,14 @@
   become: yes
   user: name=timemachine group=users uid=1001
   tags:
+    - docker
     - samba
 
 - name: Deploy samba config
   become: yes
   template: src=samba/smb.conf dest=/etc/samba/smb.conf owner=root group=root mode=0600
   tags:
+    - docker
     - samba
 
 # - name: Deploy timemachine quota
@@ -154,7 +209,116 @@
   become: yes
   service: name=smb enabled=yes
   tags:
+    - docker
     - samba
 
+
+# 389 DS Ldap
+
+- name: Create 389ds volume
+  become: true
+  docker_volume:
+    name: 389ds_data
+  tags:
+    - docker
+    - 389ds
+
+- name: Create 389ds container
+  become: true
+  docker_container:
+    name: 389ds
+    image: 389ds/dirsrv:latest
+    volumes:
+      - "389ds_data:/data"
+    ports:
+      - "3389:3389"
+      - "3636:3636"
+    restart_policy: always
+    pull: yes
+  tags:
+    - docker
+    - 389ds
+
+# KANIDM setup
+- name: Create docker volume for kanidmd
+  become: true
+  docker_volume:
+    name: kanidmd
+  tags:
+    - docker
+    - kanidm
+
+- name: Create private kanidm network
+  become: true
+  docker_network:
+    name: kanidm_net
+  tags:
+    - docker
+    - kanidm
+
+- name: Create kanidmd
+  become: true
+  docker_container:
+    name: kanidmd
+    image: firstyear/kanidmd:latest
+    command: /home/kanidm/target/release/kanidmd server -D /data/kanidm.db --bindaddr 0.0.0.0:80 --domain idm.blackhats.net.au
+    volumes:
+      - "kanidmd:/data"
+    purge_networks: yes
+    exposed_ports:
+      - "80"
+    networks:
+      - name: kanidm_net
+    restart_policy: always
+    # Apparently this pulls the latest image always?
+    pull: yes
+  tags:
+    - docker
+    - kanidm
+
+- name: Create docker volume for haproxy_certs_le
+  become: true
+  docker_volume:
+    name: kanidm_haproxy_certs_le
+  tags:
+    - docker
+    - haproxy
+    - kanidm
+
+- name: Create docker volume for haproxy_certs_cb
+  become: true
+  docker_volume:
+    name: kanidm_haproxy_certs_cb
+  tags:
+    - docker
+    - haproxy
+    - kanidm
+
+- name: Create kanidm-haproxy
+  become: true
+  docker_container:
+    name: kanidm-haproxy
+    image: registry.blackhats.net.au/haproxy:latest
+    volumes:
+      - "kanidm_haproxy_certs_le:/etc/letsencrypt"
+      - "kanidm_haproxy_certs_cb:/etc/certbot"
+    purge_networks: yes
+    networks:
+      - name: kanidm_net
+    restart_policy: always
+    env:
+      HAPROXY_TARGET: kanidmd
+      HAPROXY_HOSTNAME: idm.blackhats.net.au
+      HAPROXY_LINODE_KEY: "{{ haproxy_linode_key }}"
+    ports:
+      - "8000:80"
+      - "8443:443"
+      - "8081:8080"
+    # Apparently this pulls the latest image always?
+    pull: yes
+  tags:
+    - docker
+    - haproxy
+    - kanidm
 
 

@@ -58,6 +58,7 @@
     - certbot.service
     - certbot.timer
   notify: daemon-reload
+  when: "ansible_os_family != 'Suse'"
 
 - meta: flush_handlers
 

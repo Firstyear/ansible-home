@@ -35,6 +35,7 @@
     pull: yes
   tags:
     - docker
+    - lifx
 
 
 - name: Create unifi data volume
@@ -43,6 +44,7 @@
     name: unifi_data
   tags:
     - docker
+    - unifi
 
 - name: Create unifi log volume
   become: true
@@ -50,6 +52,7 @@
     name: unifi_log
   tags:
     - docker
+    - unifi
 
 ## docker create --restart always --name unifi --network host -v unifi_data:/unifi/data -v unifi_log:/unifi/log -v /etc/timezone:/etc/timezone:ro -v /etc/localtime:/etc/localtime:ro -e TZ=Australia/Brisbane jacobalberty/unifi:5.9
 
@@ -74,31 +77,61 @@
     pull: yes
   tags:
     - docker
+    - unifi
 
 
-- name: Create radiusd pki volume
+# - name: Create radiusd pki volume
+#   become: true
+#   docker_volume:
+#     name: radiusd_pki
+#   tags:
+#     - docker
+#     - radius
+# 
+# - name: Create radiusd controller
+#   become: true
+#   docker_container:
+#     name: radiusd
+#     image: registry.blackhats.net.au/radiusd:latest
+#     ports:
+#       - 1812:1812
+#       - 1812:1812/udp
+#       - 1813:1813
+#       - 1813:1813/udp
+#     volumes:
+#       - "radiusd_pki:/etc/pki/radius"
+#     restart_policy: always
+#     pull: yes
+#   tags:
+#     - docker
+#     - radius
+
+- name: Create kanidm radiusd volume
   become: true
   docker_volume:
-    name: radiusd_pki
+    name: kanidm_radiusd
   tags:
     - docker
+    - radius
+    - kanidm
 
-- name: Create radiusd controller
+- name: Create kanidm radiusd controller
   become: true
   docker_container:
-    name: radiusd
-    image: registry.blackhats.net.au/radiusd:latest
+    name: kanidm_radiusd
+    image: firstyear/kanidm_radius:latest
     ports:
       - 1812:1812
       - 1812:1812/udp
       - 1813:1813
       - 1813:1813/udp
     volumes:
-      - "radiusd_pki:/etc/pki/radius"
+      - "kanidm_radiusd:/data"
     restart_policy: always
     pull: yes
   tags:
     - docker
-
+    - kanidm
+    - radius
 
 

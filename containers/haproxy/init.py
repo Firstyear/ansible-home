@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import sys
 import subprocess
 
 def do_main():
@@ -8,12 +9,57 @@ def do_main():
 
     target_host = os.environ.get('HAPROXY_TARGET', 'www')
     hostname = os.environ.get('HAPROXY_HOSTNAME', 'localhost')
+    linode_key = os.environ.get('HAPROXY_LINODE_KEY', None)
+
+    if linode_key is not None:
+        # Given the linode_key, attempt a certbot setup/renew
+        with open("/tmp/linode.ini", 'w') as f:
+            f.write(f"""
+dns_linode_key = {linode_key}
+dns_linode_version =
+""")
+        subprocess.call([
+            "certbot",
+            "certonly",
+            "--dns-linode",
+            "--dns-linode-credentials", "/tmp/linode.ini",
+            "--dns-linode-propagation-seconds", "1000",
+            "-d", hostname,
+            "-m", "william@blackhats.net.au",
+            "--agree-tos", "-n"
+        ])
+        # Done, now lets stich them together.
+
+    cpath = None
+
+    if os.path.exists(f'/etc/letsencrypt/live/{hostname}/privkey.pem'):
+        cpath = 'letsencrypt'
+    elif os.path.exists(f'/etc/certbot/live/{hostname}/privkey.pem'):
+        cpath = 'certbot'
+    else:
+        print("Could not find valid privkey!")
+
+        try:
+            print("== letsencrypt")
+            print(os.listdir('/etc/letsencrypt/live'))
+        except:
+            pass
+
+        try:
+            print("== certbot")
+            print(os.listdir('/etc/certbot/live'))
+        except:
+            pass
+
+        sys.exit(1)
+
+    print(f"Using certpath -> {cpath}")
 
     # Concat the two certs properly
-    with open('/etc/certbot/live/%s/bundle.pem' % hostname, 'w') as k:
-        with open('/etc/certbot/live/%s/fullchain.pem' % hostname, 'r') as f:
+    with open(f'/etc/{cpath}/live/{hostname}/bundle.pem', 'w') as k:
+        with open(f'/etc/{cpath}/live/{hostname}/fullchain.pem', 'r') as f:
             k.write(f.read())
-        with open('/etc/certbot/live/%s/privkey.pem' % hostname, 'r') as f:
+        with open(f'/etc/{cpath}/live/{hostname}/privkey.pem', 'r') as f:
             k.write(f.read())
 
     lines = None
@@ -24,7 +70,8 @@ def do_main():
         for l in lines:
             l1 = l.replace('TARGET_HOST', target_host)
             l2 = l1.replace('HOSTNAME', hostname)
-            f.write(l2)
+            l3 = l2.replace('CERTPATH', cpath)
+            f.write(l3)
 
     subprocess.call([
         'cat',

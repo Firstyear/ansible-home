@@ -3,3 +3,5 @@
   gather_facts: True
   roles:
     - bh-atomic
+  vars_files:
+    - ~/secure/ansible_home_secrets.yml

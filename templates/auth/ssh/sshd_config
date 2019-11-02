@@ -128,8 +128,8 @@ ChallengeResponseAuthentication no
 UsePrivilegeSeparation sandbox		# Default for new installations.
 #PermitUserEnvironment no
 #Compression delayed
-ClientAliveInterval 300
-ClientAliveCountMax 0
+ClientAliveInterval 60
+ClientAliveCountMax 1440
 #ShowPatchLevel no
 #UseDNS yes
 #PidFile /var/run/sshd.pid
