@@ -2,7 +2,7 @@
 - name: Install mail software
   become: true
   yum:
-    name: ['postfix', 'postgrey']
+    name: ['postfix', 'postgrey', 'httpd', 'certbot', 'python2-certbot-apache']
     state: present
 
 - name: Deploy postfix hash configurations
@@ -32,6 +32,17 @@
   with_items:
     - postfix
     - postgrey
+    - httpd
+    - certbot-renew.timer
+
+# Comment out /etc/httpd/conf.d/welcome.conf
+
+# On cassia:
+#    certbot certonly --apache -d mx02.blackhats.net.au -m william@blackhats.net.au --agree-tos
+
+# On adara:
+#    certbot certonly --apache -d mx03.blackhats.net.au -m william@blackhats.net.au --agree-tos
+
 
 - name: config email firewalld
   become: true

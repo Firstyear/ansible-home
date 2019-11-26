@@ -701,9 +701,14 @@ smtpd_relay_restrictions = reject_invalid_hostname, reject_non_fqdn_sender, reje
 smtpd_sender_restrictions = reject_non_fqdn_sender, reject_unknown_sender_domain, permit
 smtpd_recipient_restrictions = reject_invalid_hostname, reject_non_fqdn_sender, reject_unknown_sender_domain, reject_unauth_pipelining, reject_non_fqdn_recipient, reject_unknown_recipient_domain, reject_unauth_destination, check_policy_service unix:/var/spool/postfix/postgrey/socket, permit_auth_destination, reject
 
-smtpd_tls_cert_file = /etc/pki/tls/certs/mail.firstyear.id.au.crt
-smtpd_tls_key_file = /etc/pki/tls/private/mail.firstyear.id.au.key
-smtpd_tls_CAfile = /etc/ipa/ca.crt
+{% if ansible_fqdn == 'cassia.prd.blackhats.net.au' %}
+smtpd_tls_cert_file = /etc/letsencrypt/live/mx02.blackhats.net.au/fullchain.pem
+smtpd_tls_key_file = /etc/letsencrypt/live/mx02.blackhats.net.au/privkey.pem
+{% else %}
+smtpd_tls_cert_file = /etc/letsencrypt/live/mx03.blackhats.net.au/fullchain.pem
+smtpd_tls_key_file = /etc/letsencrypt/live/mx03.blackhats.net.au/privkey.pem
+{% endif %}
+
 smtpd_tls_loglevel = 1
 smtpd_tls_security_level = may
 smtp_tls_security_level = may

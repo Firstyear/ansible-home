@@ -13,6 +13,7 @@
     - rust
     - cargo
     - git
+    - libnetfilter_conntrack
 
 # You can get the cert with:
 # certbot certonly --staging -n  --agree-tos --webroot -m william@blackhats.net.au -w /var/www/william/ -d fy.blackhats.net.au

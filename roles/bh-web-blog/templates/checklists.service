@@ -6,7 +6,9 @@ Before=httpd.service
 
 [Service]
 Type=simple
-ExecStart=/usr/local/checklists/target/release/checklists
+Environment=RUST_BACKTRACE=1
+WorkingDirectory=/usr/local/checklists
+ExecStart=/usr/local/checklists/target/release/checklist_server
 User=apache
 
 # Hardening options:
