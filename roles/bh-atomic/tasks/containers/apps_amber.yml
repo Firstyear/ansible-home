@@ -164,7 +164,7 @@
     name: samba_rwdc
   tags:
     - docker
-    - samba
+    - sambadc
 
 # Make sure the container exists with restart-always
 - name: Create samba_rwdc container
@@ -181,7 +181,7 @@
     pull: yes
   tags:
     - docker
-    - samba
+    - sambadc
 
 
 # SAMBA
@@ -261,7 +261,7 @@
   docker_container:
     name: kanidmd
     image: firstyear/kanidmd:latest
-    command: /home/kanidm/target/release/kanidmd server -D /data/kanidm.db --bindaddr 0.0.0.0:80 --domain idm.blackhats.net.au
+    command: /sbin/kanidmd server -D /data/kanidm.db --bindaddr 0.0.0.0:80
     volumes:
       - "kanidmd:/data"
     purge_networks: yes
@@ -270,6 +270,8 @@
     networks:
       - name: kanidm_net
     restart_policy: always
+    env:
+      RUST_BACKTRACE: full
     # Apparently this pulls the latest image always?
     pull: yes
   tags:

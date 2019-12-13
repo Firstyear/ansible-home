@@ -25,6 +25,21 @@
     state: present
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == False"
 
+# Also:
+# zypper ar obs://home:firstyear:kanidm home:firstyear:kanidm
+# zypper ref
+# transactional-update pkg install kanidm-clients
+
+
+- name: Configure Kanidm configuration
+  become: yes
+  template: src=base/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - kanidm/config
+    - kanidm/sshd_config
+  tags:
+    - kanidm_client
+
 - name: Configure secure LDAP configurations
   become: yes
   template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
@@ -121,7 +136,7 @@
     - pam.d/common-auth-pc
     - pam.d/common-password-pc
     - pam.d/common-session-pc
-    - ssh/sshd_config
+    # - ssh/sshd_config
     - openldap/ldap.conf
     - nsswitch.conf
     - nscd.conf
