@@ -47,10 +47,6 @@
     - sssd/sssd.conf
     - sudoers.d/bh_admins-sudo
 
-# - name: Touch preauth avail
-#   become: yes
-#   file: state=touch mode=0644 path=/var/lib/sss/pubconf/pam_preauth_available
-
 - name: Ensure tls/certs directory
   become: yes
   file: state=directory mode=0755 path=/etc/pki/tls/certs owner=root group=root
@@ -86,11 +82,7 @@
     - certmonger
     - ntpd
     - nscd
-
-# - name: Deploy docker daemon configuration
-#   become: yes
-#   ignore_errors: yes
-#   template: src=base/docker/daemon.json dest=/etc//docker/daemon.json owner=root group=root mode=0644
+    - firewalld
 
 - name: Ensure services enabled
   become: yes
@@ -102,10 +94,6 @@
     - docker
     - chronyd
     - certbot.timer
-
-# How to handle this for suse transactional os?
-# systemctl enable --now transactional-update.timer
-# systemctl enable --now rebootmgr.service
 
 - name: Ensure transactional services enabled
   become: yes
@@ -150,39 +138,19 @@
     - sudoers
   when: "ansible_os_family == 'Suse'"
 
-# /usr/libexec/sssd/p11_child --pre --nssdb=/etc/pki/nssdb 
-# to check certs.
-# Add cert to db?
-# You need coolkey installed (I think ...)
-
-# certutil -A -d /etc/pki/nssdb -i /etc/pki/tls/certs/bh_ldap.crt -n BH_LDAP_CA -t "CT,,"
-
-# modutil modutil -dbdir /etc/pki/nssdb -add "My PKCS#11 modules" -libfile libmypkcs11.so
-# modutil -dbdir /etc/pki/nssdb -add "coolkey" -libfile /usr/lib64/libcoolkeypk11.so
-
-# semanage permissive -a sssd_t
-
 - name: Server configurations
   include: server.yml
-  when: "'workstation' not in group_names and 'htpc' not in group_names"
-
-- name: Suse Workstation
-  include: suse-workstation.yml
-  when: "ansible_os_family == 'Suse' and 'workstation' in group_names"
-
-# - name: Build Containers
-#   include: container-build.yml
-#   when: "'workstation' in group_names and 'localhost' in inventory_hostname"
+  when: "'htpc' not in group_names"
 
 - name: Server Contain Configuration
   include: containers/main.yml
-  when: "'workstation' not in group_names and 'htpc' not in group_names"
-
-# - name: DNS Slave Deployment
-#   include: dns-slave.yml
-#   when: "'dns_slave_servers' in group_names"
+  when: "'htpc' not in group_names"
 
 - name: Spotinuc
   include: spotinuc.yml
   when: "'htpc' in group_names"
+
+- name: Backup Client
+  include: borgbackup.yml
+  when: "'DailySet1' in group_names"
 

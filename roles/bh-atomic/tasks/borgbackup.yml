@@ -1,0 +1,68 @@
+
+- file:
+    state: directory
+    path: /root/.ssh/
+    mode: 0700
+  become: true
+  tags:
+    - backup
+
+- openssh_keypair:
+    path: /root/.ssh/backup_id_ssh_ecdsa
+    type: ecdsa
+    size: 521
+  become: true
+  tags:
+    - backup
+
+- copy:
+    dest: /root/.ssh/config
+    content: |
+        Host topaz.prd.blackhats.net.au
+            User backup
+            IdentityFile ~/.ssh/backup_id_ssh_ecdsa
+  become: true
+  tags:
+    - backup
+
+- name: Push backup script
+  template: src=base/borgbackup/{{ item }} dest=/root/{{ item }} owner=root group=root mode=0700
+  with_items:
+    - backup.sh
+  notify: daemon-reload
+  become: true
+  tags:
+    - backup
+
+- name: Push systemd unit files
+  template: src=base/borgbackup/{{ item }} dest=/etc/systemd/system/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - borgbackup.service
+    - borgbackup.timer
+  notify: daemon-reload
+  become: true
+  tags:
+    - backup
+
+- meta: flush_handlers
+  tags:
+    - backup
+
+- name: Ensure backup services enabled
+  become: yes
+  ignore_errors: yes
+  service: name=borgbackup.timer enabled=yes
+  tags:
+    - backup
+
+# transactional-update pkg install borgbackup borgbackup-zsh-completion
+
+# BORG_REPO=ssh://backup@topaz.prd.blackhats.net.au:22/home/backup/$(cat /etc/hostname) borg init -e none
+
+
+
+
+
+# Finalise:
+# 
+

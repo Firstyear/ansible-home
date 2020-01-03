@@ -1,0 +1,10 @@
+
+[Unit]
+Description=Backup hosts
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh -c /root/backup.sh
+TimeoutSec=infinity
+
+

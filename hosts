@@ -7,10 +7,6 @@ mion.prd.blackhats.net.au patch_day=never ansible_virtualization_role=physical
 [htpc]
 spotinuc.prd.blackhats.net.au
 
-[workstation]
-felix.prd.blackhats.net.au
-localhost
-
 [atomic]
 amber.prd.blackhats.net.au patch_day=sat
 lazuli.prd.blackhats.net.au patch_day=mon

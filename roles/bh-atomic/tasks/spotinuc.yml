@@ -26,3 +26,5 @@
   become: yes
   action: template src=spotinuc/sources.xml dest=/home/admin/.kodi/userdata/sources.xml owner=admin group=users mode=0644
 
+# make gcc libpulse-devel alsa-devel cargo rust libopenssl-devel
+
