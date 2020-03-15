@@ -260,7 +260,7 @@
   become: true
   docker_container:
     name: kanidmd
-    image: firstyear/kanidmd:latest
+    image: kanidm/server:latest
     command: /sbin/kanidmd server -D /data/kanidm.db --bindaddr 0.0.0.0:80
     volumes:
       - "kanidmd:/data"

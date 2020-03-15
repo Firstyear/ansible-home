@@ -30,6 +30,6 @@ borg prune                          \
     --list                          \
     --prefix '{hostname}-'          \
     --show-rc                       \
-    --keep-daily    7
+    --keep-within 7d
 
 

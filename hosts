@@ -11,6 +11,7 @@ spotinuc.prd.blackhats.net.au
 amber.prd.blackhats.net.au patch_day=sat
 lazuli.prd.blackhats.net.au patch_day=mon
 topaz.prd.blackhats.net.au patch_day=tue
+pyrite.dev.blackhats.net.au patch_day=fri
 victorique.prd.blackhats.net.au patch_day=wed ansible_python_interpreter=/usr/bin/python
 
 [atomic:vars]

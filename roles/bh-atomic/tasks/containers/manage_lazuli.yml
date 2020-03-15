@@ -119,7 +119,7 @@
   become: true
   docker_container:
     name: kanidm_radiusd
-    image: firstyear/kanidm_radius:latest
+    image: kanidm/radius:latest
     ports:
       - 1812:1812
       - 1812:1812/udp
@@ -128,6 +128,8 @@
     volumes:
       - "kanidm_radiusd:/data"
     restart_policy: always
+    env:
+      DEBUG: "true"
     pull: yes
   tags:
     - docker

@@ -171,7 +171,8 @@ KerberosAuthentication no
 PubkeyAuthentication yes
 UsePAM yes
 
-AuthorizedKeysCommand /usr/bin/kanidm_ssh_authorizedkeys -D anonymous %u
+AuthorizedKeysCommand /usr/sbin/kanidm_ssh_authorizedkeys %u
+# AuthorizedKeysCommand /usr/sbin/kanidm_ssh_authorizedkeys_direct -D anonymous %u
 AuthorizedKeysCommandUser nobody
 
 # GSSAPIAuthentication yes

@@ -21,31 +21,61 @@
   become: yes
   ignore_errors: yes
   zypper:
-    name: ['sssd', 'sssd-ad', 'sssd-ldap', 'sssd-tools', 'docker', 'zsh', 'python3-pyOpenSSL', 'certbot', 'ipcalc', 'python3-docker', 'mozilla-nss-tools', 'rdiff-backup', 'avahi']
+    name: ['docker', 'zsh', 'ipcalc', 'python3-docker', 'mozilla-nss-tools', 'avahi', 'borgbackup']
     state: present
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == False"
 
 # Also:
 # zypper ar obs://home:firstyear:kanidm home:firstyear:kanidm
 # zypper ref
-# transactional-update pkg install kanidm-clients
-
+# transactional-update pkg install kanidm-clients kanidm-unixd-clients
 
 - name: Configure Kanidm configuration
   become: yes
   template: src=base/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     - kanidm/config
-    - kanidm/sshd_config
+    - kanidm/unixd
   tags:
     - kanidm_client
 
-- name: Configure secure LDAP configurations
+- name: Configure kanidm unixd service enabled
   become: yes
-  template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0600
+  service: name=kanidm-unixd enabled=yes state=started
+  tags:
+    - kanidm_client
+
+- name: Configure secure kanidm configurations
+  become: yes
+  template: src=base/kanidm/{{ item }} dest=/etc/sudoers.d/{{ item }} owner=root group=root mode=0600
   with_items:
-    - sssd/sssd.conf
-    - sudoers.d/bh_admins-sudo
+    - net_admins-sudo
+  tags:
+    - kanidm_client
+
+- name: Configure Kanidm ssh configuration
+  become: yes
+  template: src=base/kanidm/{{ item }} dest=/etc/ssh/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - sshd_config
+  tags:
+    - kanidm_client
+
+- name: Configure Kanidm unixd configuration
+  become: yes
+  template: src=base/kanidm/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - nsswitch.conf
+    - pam.d/common-account-pc
+    - pam.d/common-auth-pc
+    - pam.d/common-password-pc
+    - pam.d/common-session-pc
+  tags:
+    - kanidm_client
+
+# - name: Configure secure SSSD configurations
+#   become: yes
+#   template: src=../../templates/auth/sssd/sssd.conf dest=/etc/sssd/sssd.conf owner=root group=root mode=0600
 
 - name: Ensure tls/certs directory
   become: yes
@@ -83,17 +113,18 @@
     - ntpd
     - nscd
     - firewalld
+    # - sssd
 
 - name: Ensure services enabled
   become: yes
   ignore_errors: yes
   service: name={{ item }} enabled=yes
   with_items:
-    - sssd
     - sshd
     - docker
     - chronyd
     - certbot.timer
+    - avahi-daemon
 
 - name: Ensure transactional services enabled
   become: yes
@@ -120,15 +151,15 @@
   template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
     # Need to mkdir this?
-    - pam.d/common-account-pc
-    - pam.d/common-auth-pc
-    - pam.d/common-password-pc
-    - pam.d/common-session-pc
+    # - pam.d/common-account-pc
+    # - pam.d/common-auth-pc
+    # - pam.d/common-password-pc
+    # - pam.d/common-session-pc
     # - ssh/sshd_config
     - openldap/ldap.conf
-    - nsswitch.conf
+    # - nsswitch.conf
     - nscd.conf
-    - pki/tls/certs/bh_ldap.crt
+    # - pki/tls/certs/bh_ldap.crt
   when: "ansible_os_family == 'Suse'"
 
 - name: Fix SUSE sudoers
