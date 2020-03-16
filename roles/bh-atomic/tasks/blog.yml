@@ -1,0 +1,15 @@
+
+- name: Create blog root
+  become: yes
+  file:
+    path: /srv/www/vhosts/fy.blackhats.net.au
+    owner: william
+    group: william
+    mode: 0755
+    state: directory
+
+- name: certbot vhost
+  become: yes
+  template: src=blog/blog.conf dest=/etc/apache2/vhosts.d/blog.conf owner=root group=root mode=0644
+
+# certbot certonly -n --webroot -w /srv/www/vhosts/fy.blackhats.net.au --agree-tos --email william@blackhats.net.au -d fy.blackhats.net.au

@@ -186,4 +186,8 @@
   include: mailrouter.yml
   when: "'email_relay_servers' in group_names"
 
+- name: Blog Server
+  include: blog.yml
+  when: "'blog_servers' in group_names"
+
 

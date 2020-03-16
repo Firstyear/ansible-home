@@ -43,7 +43,7 @@
   become: yes
   template: src=email/certbot.conf dest=/etc/apache2/vhosts.d/certbot.conf owner=root group=root mode=0644
 
-# certbot certonly --webroot -w /srv/www/vhosts/certbot --agree-tos --email william@blackhats.net.au  -d mxb.blackhats.net.au
+# certbot certonly -n --webroot -w /srv/www/vhosts/certbot --agree-tos --email william@blackhats.net.au  -d mxb.blackhats.net.au
 
 - name: Enable mail services
   become: true
