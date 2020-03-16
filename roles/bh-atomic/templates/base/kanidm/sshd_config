@@ -39,19 +39,12 @@ HostKey /etc/ssh/ssh_host_ecdsa_key
 # Logging
 # obsoletes QuietMode and FascistLogging
 #SyslogFacility AUTH
-{% if ansible_system != 'FreeBSD' %}
-SyslogFacility AUTHPRIV
-{% endif %}
 #LogLevel INFO
 
 # Authentication:
 
 #LoginGraceTime 2m
-{% if 'linode_servers' not in group_names and 'workstation' not in group_names %}
-PermitRootLogin yes
-{% else %}
 PermitRootLogin no
-{% endif %}
 #StrictModes yes
 #MaxAuthTries 6
 #MaxSessions 10
@@ -125,7 +118,7 @@ ChallengeResponseAuthentication no
 #PrintLastLog yes
 #TCPKeepAlive yes
 #UseLogin no
-UsePrivilegeSeparation sandbox		# Default for new installations.
+# UsePrivilegeSeparation sandbox		# Default for new installations.
 #PermitUserEnvironment no
 #Compression delayed
 ClientAliveInterval 60

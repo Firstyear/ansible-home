@@ -1,0 +1,13 @@
+[Unit]
+Description=Update the system
+Documentation=man:transactional-update(8)
+ConditionACPower=true
+Wants=network.target
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/zypper dup -y --download in-advance
+ExecStartPost=/sbin/reboot
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7

@@ -1,0 +1,11 @@
+{% if 'workstation' in group_names %}
+pam_allowed_login_groups = ["blackhats_workstation_admins"]
+{% else %}
+pam_allowed_login_groups = ["blackhats_network_admins"]
+{% endif %}
+
+{% if 'linode_servers' in group_names %}
+conn_timeout = 8
+cache_timeout = 60
+{% endif %}
+

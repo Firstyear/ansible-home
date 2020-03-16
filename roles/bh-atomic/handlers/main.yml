@@ -11,16 +11,26 @@
   become: yes
   shell: /root/network-suse.sh
 
-- name: run docker-post.sh
-  become: yes
-  shell: /root/docker-post.sh
-
-- name: restart named
-  become: true
-  action: service name=named state=restarted
-
 - name: daemon-reload
   become: true
   command: systemctl daemon-reload
 
+- name: restart sshd
+  become: true
+  action: service name=sshd state=restarted
+
+- name: postmap
+  become: true
+  shell: postmap /etc/postfix/{{ item }}
+  with_items:
+    - transport
+    - recipientmap
+    - relay_recipients
+
+- name: restart postfix
+  become: true
+  service: name={{ item }} state=restarted
+  with_items:
+    - postgrey
+    - postfix
 

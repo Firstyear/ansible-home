@@ -1,0 +1,39 @@
+# This file is part of package postfix.
+#
+# Copyright (c) 2011 SuSE LINUX Products GmbH, Germany.
+# Author: Werner Fink
+# Please send feedback to http://www.suse.de/feedback
+#
+# Description:
+#
+#  Used to start the postfix Mail Transport Agent service
+#  which handles all mails stored at /var/spool/postfix/ and
+#  all connections on port 25 aka smtp at localhost as well
+#  as on all other network interfaces.
+#
+
+[Unit]
+Description=Postfix Mail Transport Agent
+Requires=var-run.mount
+After=var-run.mount nss-lookup.target network.target time-sync.target
+After=amavis.service mysql.service cyrus.service ldap.service openslp.service ypbind.service
+Conflicts=sendmail.service exim.service
+
+[Service]
+Type=exec
+# PIDFile=/var/spool/postfix/pid/master.pid
+ExecStartPre=-/bin/echo 'Starting mail service (Postfix)'
+EnvironmentFile=-/etc/sysconfig/postfix
+ExecStartPre=/etc/postfix/system/config_postfix
+ExecStartPre=/etc/postfix/system/update_chroot
+ExecStartPre=/etc/postfix/system/update_postmaps
+ExecStart=/usr/sbin/postfix start-fg
+ExecStartPost=/etc/postfix/system/wait_qmgr 60
+ExecStartPost=/etc/postfix/system/cond_slp register
+ExecReload=/usr/sbin/postfix reload
+ExecReload=/usr/sbin/postfix flush
+ExecStop=/usr/sbin/postfix stop
+ExecStopPost=/etc/postfix/system/cond_slp deregister
+
+[Install]
+WantedBy=multi-user.target

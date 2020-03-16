@@ -8,60 +8,37 @@ mion.prd.blackhats.net.au patch_day=never ansible_virtualization_role=physical
 spotinuc.prd.blackhats.net.au
 
 [atomic]
-amber.prd.blackhats.net.au patch_day=sat
-lazuli.prd.blackhats.net.au patch_day=mon
-topaz.prd.blackhats.net.au patch_day=tue
-pyrite.dev.blackhats.net.au patch_day=fri
-victorique.prd.blackhats.net.au patch_day=wed ansible_python_interpreter=/usr/bin/python
+amber.prd.blackhats.net.au
+lazuli.prd.blackhats.net.au
+topaz.prd.blackhats.net.au
+pyrite.dev.blackhats.net.au
+robin.prd.blackhats.net.au
+adularia.prd.blackhats.net.au
+barite.prd.blackhats.net.au
 
 [atomic:vars]
 ansible_python_interpreter=/usr/bin/python3
 
-# Bootstrap with:
-#  ansible -m raw -a "pkg update -f"
-#  ansible -m raw -a "pkg install -y python27" <hostname>
-# set ansible_connection=paramiko temporarily before you have SSH keys
-
-[freebsd:vars]
-ansible_python_interpreter=/usr/local/bin/python3.6
-
-[freebsd]
-sparkle.net.blackhats.net.au
-
-[laptops]
-rei.prd.blackhats.net.au
-
 [blog_servers]
-adara.prd.blackhats.net.au
+barite.prd.blackhats.net.au
 
 [email_relay_servers]
-adara.prd.blackhats.net.au patch_day=thu
-cassia.prd.blackhats.net.au patch_day=fri
-ariel.prd.blackhats.net.au patch_day=sat
-robin.prd.blackhats.net.au patch_day=sun
-
-[dns_slave_servers]
-adara.prd.blackhats.net.au patch_day=thu
-cassia.prd.blackhats.net.au patch_day=fri
-ariel.prd.blackhats.net.au patch_day=sat
+adularia.prd.blackhats.net.au
+barite.prd.blackhats.net.au
 
 [rdiff_backup]
-topaz.prd.blackhats.net.au patch_day=tue
+topaz.prd.blackhats.net.au
 
 [DailySet1]
-amber.prd.blackhats.net.au patch_day=sat
-lazuli.prd.blackhats.net.au patch_day=mon
+amber.prd.blackhats.net.au
+lazuli.prd.blackhats.net.au
 
 [syd1_servers]
 jinjo.prd.blackhats.net.au
 
+[linode_servers]
+robin.prd.blackhats.net.au
+
 [linode_servers:children]
 email_relay_servers
-
-# Enable python 3 for fedora 27 and above.
-[py3:children]
-# atomic
-
-[py3:vars]
-ansible_python_interpreter=/usr/bin/python3
 

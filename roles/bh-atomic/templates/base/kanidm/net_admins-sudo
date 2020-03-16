@@ -1,0 +1,7 @@
+
+{% if 'workstation' in group_names %}
+%blackhats_workstation_admins  ALL=(ALL) NOPASSWD: ALL
+{% else %}
+%blackhats_network_admins  ALL=(ALL) ALL
+{% endif %}
+

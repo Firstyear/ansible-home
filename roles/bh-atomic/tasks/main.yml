@@ -1,3 +1,14 @@
+# For converting to tumbleweed:
+# rm /etc/zypp/repos.d/*.repo
+# zypper ar -f -c http://download.opensuse.org/tumbleweed/repo/oss repo-oss
+# zypper ar -f -c http://download.opensuse.org/tumbleweed/repo/non-oss repo-non-oss
+# zypper ar -f -c http://download.opensuse.org/tumbleweed/repo/debug repo-debug
+# zypper ar -f -c http://download.opensuse.org/update/tumbleweed/ repo-update
+# zypper ar obs://home:firstyear:kanidm home:firstyear:kanidm
+# zypper ref
+#
+# in nmcli
+# set ipv6.addr-gen-mode  eui64
 
 # certbot --test-cert certonly -m william@blackhats.net.au --manual --preferred-challenges=dns --manual-public-ip-logging-ok --agree-tos -d test-cert.net.blackhats.net.au
 # After the DNS challenge is done, then all good to go
@@ -21,13 +32,10 @@
   become: yes
   ignore_errors: yes
   zypper:
-    name: ['docker', 'zsh', 'ipcalc', 'python3-docker', 'mozilla-nss-tools', 'avahi', 'borgbackup']
+    name: ['tmux', 'docker', 'zsh', 'ipcalc', 'python3-docker', 'mozilla-nss-tools', 'avahi', 'borgbackup', 'kanidm-clients', 'kanidm-unixd-clients']
     state: present
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == False"
 
-# Also:
-# zypper ar obs://home:firstyear:kanidm home:firstyear:kanidm
-# zypper ref
 # transactional-update pkg install kanidm-clients kanidm-unixd-clients
 
 - name: Configure Kanidm configuration
@@ -60,22 +68,21 @@
     - sshd_config
   tags:
     - kanidm_client
+  notify: restart sshd
+
+- meta: flush_handlers
 
 - name: Configure Kanidm unixd configuration
   become: yes
   template: src=base/kanidm/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
-    - nsswitch.conf
-    - pam.d/common-account-pc
-    - pam.d/common-auth-pc
     - pam.d/common-password-pc
     - pam.d/common-session-pc
+    - pam.d/common-auth-pc
+    - pam.d/common-account-pc
+    - nsswitch.conf
   tags:
     - kanidm_client
-
-# - name: Configure secure SSSD configurations
-#   become: yes
-#   template: src=../../templates/auth/sssd/sssd.conf dest=/etc/sssd/sssd.conf owner=root group=root mode=0600
 
 - name: Ensure tls/certs directory
   become: yes
@@ -92,17 +99,6 @@
   become: yes
   template: src=../../scripts/ssca.py dest=/root/ssca.py owner=root group=root mode=0755
 
-- name: Push systemd unit files
-  become: yes
-  template: src=base/systemd/{{ item }} dest=/etc/systemd/system/{{ item }} owner=root group=root mode=0644
-  with_items:
-    - certbot.service
-    - certbot.timer
-  notify: daemon-reload
-  when: "ansible_os_family != 'Suse'"
-
-- meta: flush_handlers
-
 - name: Ensure services disabled
   become: yes
   ignore_errors: yes
@@ -113,7 +109,7 @@
     - ntpd
     - nscd
     - firewalld
-    # - sssd
+    - sssd
 
 - name: Ensure services enabled
   become: yes
@@ -135,31 +131,32 @@
     - transactional-update.timer
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == True"
 
-- name: Configure Fedora AUTH configurations
+# When we aren't transactional, we still want auto updates though.
+# Note, that mion is transactional, so this won't accidentally capture that.
+- name: Push systemd unit files
   become: yes
-  template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  template: src=base/systemd/{{ item }} dest=/etc/systemd/system/{{ item }} owner=root group=root mode=0644
   with_items:
-    - pki/tls/certs/bh_ldap.crt
-    - pam.d/password-auth-ac
-    - pam.d/system-auth-ac
-    - ssh/sshd_config
-    - openldap/ldap.conf
-  when: "ansible_os_family != 'Suse'"
+    - zypperupdate.service
+    - zypperupdate.timer
+  notify: daemon-reload
+  when: "ansible_os_family == 'Suse' and trans_suse.stat.exists != True"
+
+- meta: flush_handlers
+
+- name: Ensure zypper update services enabled
+  become: yes
+  ignore_errors: yes
+  service: name={{ item }} enabled=yes
+  with_items:
+    - zypperupdate.timer
+  when: "ansible_os_family == 'Suse' and trans_suse.stat.exists != True"
 
 - name: Configure SUSE AUTH configurations
   become: yes
   template: src=../../templates/auth/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
-    # Need to mkdir this?
-    # - pam.d/common-account-pc
-    # - pam.d/common-auth-pc
-    # - pam.d/common-password-pc
-    # - pam.d/common-session-pc
-    # - ssh/sshd_config
-    - openldap/ldap.conf
-    # - nsswitch.conf
     - nscd.conf
-    # - pki/tls/certs/bh_ldap.crt
   when: "ansible_os_family == 'Suse'"
 
 - name: Fix SUSE sudoers
@@ -173,7 +170,7 @@
   include: server.yml
   when: "'htpc' not in group_names"
 
-- name: Server Contain Configuration
+- name: Server Container Configuration
   include: containers/main.yml
   when: "'htpc' not in group_names"
 
@@ -184,4 +181,9 @@
 - name: Backup Client
   include: borgbackup.yml
   when: "'DailySet1' in group_names"
+
+- name: Mail Router
+  include: mailrouter.yml
+  when: "'email_relay_servers' in group_names"
+
 

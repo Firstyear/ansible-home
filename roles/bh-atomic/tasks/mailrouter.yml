@@ -1,0 +1,56 @@
+#
+#
+
+- name: Configure MailRouter packages
+  become: yes
+  ignore_errors: yes
+  zypper:
+    name: ['postfix', 'postgrey', 'python3-certbot', 'certbot-systemd-timer', 'apache2']
+    state: present
+  tags:
+    - mail
+
+- name: Deploy postfix hash configurations
+  become: true
+  template: src=email/postfix/{{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - transport
+    - relay_recipients
+    - recipientmap
+  notify:
+    - postmap
+    - restart postfix
+
+- name: Deploy postfix configurations
+  become: true
+  template: src=email/postfix/{{ item }} dest=/etc/postfix/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - main.cf
+    - master.cf
+    - postgrey_whitelist_clients.local
+  notify: restart postfix
+
+- name: Create certbot root
+  become: yes
+  file:
+    path: /srv/www/vhosts/certbot
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- name: certbot vhost
+  become: yes
+  template: src=email/certbot.conf dest=/etc/apache2/vhosts.d/certbot.conf owner=root group=root mode=0644
+
+# certbot certonly --webroot -w /srv/www/vhosts/certbot --agree-tos --email william@blackhats.net.au  -d mxb.blackhats.net.au
+
+- name: Enable mail services
+  become: true
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - postfix
+    - postgrey
+    - apache2
+    - certbot-renew.timer
+
