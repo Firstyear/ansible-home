@@ -50,7 +50,7 @@
   become: true
   docker_container:
     name: nextcloud
-    image: nextcloud:latest
+    image: nextcloud:18
     volumes:
       - "nextcloud:/var/www/html"
     purge_networks: yes
