@@ -5,6 +5,7 @@
 # zypper ar -f -c http://download.opensuse.org/tumbleweed/repo/debug repo-debug
 # zypper ar -f -c http://download.opensuse.org/update/tumbleweed/ repo-update
 # zypper ar obs://home:firstyear:kanidm home:firstyear:kanidm
+# zypper mr -f home_firstyear_kanidm
 # zypper ref
 #
 # in nmcli

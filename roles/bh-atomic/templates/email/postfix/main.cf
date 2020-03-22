@@ -788,7 +788,7 @@ smtpd_tls_key_file = /etc/letsencrypt/live/mxa.blackhats.net.au/privkey.pem
 
 smtpd_tls_ciphers = high
 smtpd_tls_exclude_ciphers = aNULL, DES, 3DES, MD5, DES+MD5, RC4
-smtpd_tls_protocols = TLSv1, !SSLv2, !SSLv3
+smtpd_tls_protocols = !TLSv1.1, !TLSv1, !SSLv2, !SSLv3
 ############################################################
 # Start MySQL from postfixwiki.org
 ############################################################

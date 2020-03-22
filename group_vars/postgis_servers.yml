@@ -1,6 +1,0 @@
----
-# This could probbaly be improved to be perhost or similar ...
-
-ovirt_instance_cpus: 2
-ovirt_instance_mem: 2048
-
