@@ -10,6 +10,35 @@
   with_items:
     - docker-csr.sh
 
+# Give every host an ipv6 nat setup
+- name: deploy daemon.json
+  become: yes
+  template: src=base/docker/daemon.json dest=/etc/docker/daemon.json owner=root group=root mode=0640
+  tags:
+    - docker
+    - ipv6nat
+
+# Add an ipv6nat capable daemon.json.
+- name: Create ipv6nat infra
+  become: true
+  docker_container:
+    name: ipv6nat
+    image: robbertkl/ipv6nat:latest
+    network_mode: host
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/lib/modules:/lib/modules:ro"
+    restart_policy: always
+    pull: yes
+    log_driver: journald
+    capabilities:
+      - NET_ADMIN
+      - SYS_MODULE
+      - NET_RAW
+  tags:
+    - docker
+    - ipv6nat
+
 - include: apps_amber.yml
   when: "'amber' in inventory_hostname"
 

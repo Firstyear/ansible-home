@@ -1,0 +1,10 @@
+{
+  "ipv6": true,
+  "fixed-cidr-v6": "fc00::/64",
+  "log-level": "warn",
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "5"
+  }
+}

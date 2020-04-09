@@ -106,6 +106,7 @@
       - 1812:1812/udp
       - 1813:1813
       - 1813:1813/udp
+    network_mode: host
     volumes:
       - "kanidm_radiusd:/data"
     restart_policy: always

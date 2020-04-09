@@ -1,4 +1,44 @@
 
+# 389 DS Ldap
+- name: Create internal ldap network
+  become: true
+  docker_network:
+    name: ldap_net
+  tags:
+    - docker
+    - 389ds
+
+- name: Create 389ds volume
+  become: true
+  docker_volume:
+    name: 389ds_data
+  tags:
+    - docker
+    - 389ds
+
+- name: Create 389ds container
+  become: true
+  docker_container:
+    name: 389ds
+    image: 389ds/dirsrv:latest
+    shm_size: 256M
+    purge_networks: yes
+    networks:
+      - name: ldap_net
+    # user: 1389:1389
+    volumes:
+      - "389ds_data:/data"
+    ports:
+      - "3389:3389"
+      - "3636:3636"
+    restart_policy: always
+    pull: yes
+    log_driver: journald
+  tags:
+    - docker
+    - 389ds
+
+
 - name: Create docker volume for nextcloud_db
   become: true
   docker_volume:
@@ -36,7 +76,6 @@
     networks:
       - name: nextcloud_net
     restart_policy: always
-    # Apparently this pulls the latest image always?
     pull: yes
     log_driver: journald
   tags:
@@ -57,8 +96,8 @@
     purge_networks: yes
     networks:
       - name: nextcloud_net
+      - name: ldap_net
     restart_policy: always
-    # Apparently this pulls the latest image always?
     pull: yes
     log_driver: journald
   tags:
@@ -163,35 +202,6 @@
     - docker
     - samba
 
-
-# 389 DS Ldap
-
-- name: Create 389ds volume
-  become: true
-  docker_volume:
-    name: 389ds_data
-  tags:
-    - docker
-    - 389ds
-
-- name: Create 389ds container
-  become: true
-  docker_container:
-    name: 389ds
-    image: 389ds/dirsrv:latest
-    shm_size: 256M
-    # user: 1389:1389
-    volumes:
-      - "389ds_data:/data"
-    ports:
-      - "3389:3389"
-      - "3636:3636"
-    restart_policy: always
-    pull: yes
-    log_driver: journald
-  tags:
-    - docker
-    - 389ds
 
 # KANIDM setup
 - name: Create docker volume for kanidmd
