@@ -27,12 +27,23 @@
     - docker
     - micd
 
+- name: Create lifx network
+  become: true
+  docker_network:
+    name: lifx_net
+  tags:
+    - docker
+    - lifx
+
 - name: Create lifx controller
   become: true
   docker_container:
     name: lifx
     image: firstyear/lifx:latest
     restart_policy: always
+    purge_networks: yes
+    networks:
+      - name: lifx_net
     pull: yes
     user: 1005:1005
     memory: 400M
@@ -96,6 +107,8 @@
     - radius
     - kanidm
 
+# This is in network mode host to allow ipv6 contact to kandim, but we could try the ipv6nat
+# support ....
 - name: Create kanidm radiusd controller
   become: true
   docker_container:

@@ -23,10 +23,13 @@
 #
 # # Only needed if you don't have static ip
 # net.ipv6.conf.enp1s0.accept_ra = 2
-# 
+#
 # net.ipv6.conf.all.forwarding = 1
 # net.ipv6.conf.default.forwarding = 1
 #
+
+#### Remember that anything that uses an expose DOESN'T need ipv6, and the ipv6nat
+# is really for building/host mode/other routing
 
 # Add an ipv6nat capable daemon.json.
 - name: Create ipv6nat infra
