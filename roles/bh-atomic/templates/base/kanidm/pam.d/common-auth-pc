@@ -13,6 +13,9 @@
 #
 
 auth        required      pam_env.so
+{% if 'htpc' in group_names %}
+auth        optional      pam_gnome_keyring.so
+{% endif %}
 auth        [default=1 ignore=ignore success=ok] pam_localuser.so
 auth        sufficient    pam_unix.so nullok try_first_pass
 auth        requisite     pam_succeed_if.so uid >= 1000 quiet_success

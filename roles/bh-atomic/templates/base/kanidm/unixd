@@ -1,5 +1,7 @@
 {% if 'workstation' in group_names %}
 pam_allowed_login_groups = ["blackhats_workstation_admins"]
+{% elif 'topaz' in inventory_hostname %}
+pam_allowed_login_groups = ["blackhats_network_admins", "backup_operators"]
 {% else %}
 pam_allowed_login_groups = ["blackhats_network_admins"]
 {% endif %}

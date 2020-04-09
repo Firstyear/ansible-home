@@ -1,0 +1,5 @@
+rdomain 0
+description "VLAN16 dns64"
+inet 172.24.16.2 255.255.255.0 NONE
+inet6 2001:44b8:2155:2c16::2 64
+up

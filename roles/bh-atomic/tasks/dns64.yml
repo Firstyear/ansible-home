@@ -1,0 +1,23 @@
+
+
+# Install named
+#  bind-utils bind
+
+# Deploy the configs as needed?
+
+- name: Ensure bind enabled
+  become: yes
+  service: name=named enabled=yes
+  tags:
+    - dns64
+
+# Put the configs in place
+- name: named config.
+  become: yes
+  template: src=dns64/{{ item }} dest=/etc/{{ item }} owner=root group=named mode=0644
+  with_items:
+    - named.conf
+  tags:
+    - dns64
+
+

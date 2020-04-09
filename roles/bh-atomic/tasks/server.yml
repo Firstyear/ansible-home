@@ -14,13 +14,13 @@
     - 02-atomic.conf
   when: "'linode_servers' not in group_names"
 
-- name: static network for suse hosts
-  template: src=base/scripts/{{ item }} dest=/root/{{ item }} owner=root group=root mode=0750
-  become: yes
-  with_items:
-    - network-suse.sh
-  notify:
-    - run network-suse.sh
-  when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names and ansible_os_family == 'Suse'"
+# - name: static network for suse hosts
+#   template: src=base/scripts/{{ item }} dest=/root/{{ item }} owner=root group=root mode=0750
+#   become: yes
+#   with_items:
+#     - network-suse.sh
+#   notify:
+#     - run network-suse.sh
+#   when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names and ansible_os_family == 'Suse'"
 
 

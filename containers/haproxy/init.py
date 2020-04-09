@@ -8,6 +8,7 @@ def do_main():
     print(os.environ)
 
     target_host = os.environ.get('HAPROXY_TARGET', 'www')
+    target_port = os.environ.get('HAPROXY_TARGET_PORT', '80')
     hostname = os.environ.get('HAPROXY_HOSTNAME', 'localhost')
     linode_key = os.environ.get('HAPROXY_LINODE_KEY', None)
 
@@ -69,9 +70,10 @@ dns_linode_version =
     with open('/etc/haproxy/haproxy.cfg', 'w') as f:
         for l in lines:
             l1 = l.replace('TARGET_HOST', target_host)
-            l2 = l1.replace('HOSTNAME', hostname)
-            l3 = l2.replace('CERTPATH', cpath)
-            f.write(l3)
+            l2 = l1.replace('TARGET_PORT', target_port)
+            l3 = l2.replace('HOSTNAME', hostname)
+            l4 = l3.replace('CERTPATH', cpath)
+            f.write(l4)
 
     subprocess.call([
         'cat',

@@ -1,0 +1,7 @@
+---
+- hosts: nat64
+  gather_facts: True
+  roles:
+    - bh-nat64
+  vars_files:
+    - ~/secure/ansible_home_secrets.yml

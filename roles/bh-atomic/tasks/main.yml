@@ -33,7 +33,7 @@
   become: yes
   ignore_errors: yes
   zypper:
-    name: ['tmux', 'docker', 'zsh', 'ipcalc', 'python3-docker', 'mozilla-nss-tools', 'avahi', 'borgbackup', 'kanidm-clients', 'kanidm-unixd-clients']
+    name: ['tmux', 'docker', 'zsh', 'ipcalc', 'python3-docker', 'mozilla-nss-tools', 'avahi', 'borgbackup', 'kanidm-clients', 'kanidm-unixd-clients', 'nmap', 'tcpdump']
     state: present
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == False"
 
@@ -85,9 +85,10 @@
   tags:
     - kanidm_client
 
-- name: Ensure tls/certs directory
+# This breaks some applications on suse if we ensure it, make sure we DONT have it I guess ...
+- name: Ensure tls/certs directory removed
   become: yes
-  file: state=directory mode=0755 path=/etc/pki/tls/certs owner=root group=root
+  file: state=absent path=/etc/pki/tls/certs
 
 - name: Configure hostname
   become: yes
@@ -190,5 +191,9 @@
 - name: Blog Server
   include: blog.yml
   when: "'blog_servers' in group_names"
+
+- name: dns64
+  include: dns64.yml
+  when: "'dns64' in group_names"
 
 

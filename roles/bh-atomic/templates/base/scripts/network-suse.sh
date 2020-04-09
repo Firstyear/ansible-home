@@ -33,9 +33,8 @@ default $GW6 - ${DEV}
 DEVEOF
 
 cat > /etc/resolv.conf << DEVEOF
-search blackhats.net.au prd.blackhats.net.au
-nameserver 172.24.11.12
-nameserver 2001:44b8:2155:2c11:5054:ff:fe0c:110e
+nameserver $GW6
+nameserver $GW
 DEVEOF
 
 fi

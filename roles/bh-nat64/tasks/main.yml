@@ -1,0 +1,37 @@
+
+
+# We symlink python manually so it can be found by ansible.
+
+- name: Install packages
+  become: true
+  openbsd_pkg:
+    name: ['python-3.7.4', 'sudo', 'vim', 'zsh', 'nmap']
+    state: present
+
+- name: Configure Base System
+  become: true
+  template: src={{ item }} dest=/etc/{{ item }} owner=root group=wheel mode=0644
+  with_items:
+    - resolv.conf
+    - rc.conf.local
+    - sysctl.conf
+    - mygate
+
+- name: Configure network
+  become: true
+  template: src=hostname.vio0 dest=/etc/hostname.vio0 owner=root group=wheel mode=0640
+
+- name: Configure firewall (pf.conf)
+  become: true
+  template: src=pf.conf dest=/etc/pf.conf owner=root group=wheel mode=0600
+
+- name: Validate firewall
+  become: true
+  command: /sbin/pfctl -nf /etc/pf.conf
+
+- name: Reload firewall
+  become: true
+  command: /sbin/pfctl -f /etc/pf.conf
+
+
+

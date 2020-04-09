@@ -38,6 +38,7 @@
     restart_policy: always
     # Apparently this pulls the latest image always?
     pull: yes
+    log_driver: journald
   tags:
     - docker
     - nextcloud
@@ -59,6 +60,7 @@
     restart_policy: always
     # Apparently this pulls the latest image always?
     pull: yes
+    log_driver: journald
   tags:
     - docker
     - nextcloud
@@ -101,6 +103,7 @@
       - "8080:8080"
     # Apparently this pulls the latest image always?
     pull: yes
+    log_driver: journald
   tags:
     - docker
     - haproxy
@@ -176,6 +179,8 @@
   docker_container:
     name: 389ds
     image: 389ds/dirsrv:latest
+    shm_size: 256M
+    # user: 1389:1389
     volumes:
       - "389ds_data:/data"
     ports:
@@ -183,6 +188,7 @@
       - "3636:3636"
     restart_policy: always
     pull: yes
+    log_driver: journald
   tags:
     - docker
     - 389ds
@@ -209,7 +215,8 @@
   docker_container:
     name: kanidmd
     image: kanidm/server:latest
-    command: /sbin/kanidmd server -D /data/kanidm.db --bindaddr 0.0.0.0:80
+    user: 1400:1400
+    command: /sbin/kanidmd server -D /data/kanidm.db --bindaddr 0.0.0.0:8080
     volumes:
       - "kanidmd:/data"
     purge_networks: yes
@@ -222,6 +229,7 @@
       RUST_BACKTRACE: full
     # Apparently this pulls the latest image always?
     pull: yes
+    log_driver: journald
   tags:
     - docker
     - kanidm
@@ -258,6 +266,7 @@
     restart_policy: always
     env:
       HAPROXY_TARGET: kanidmd
+      HAPROXY_TARGET_PORT: "8080"
       HAPROXY_HOSTNAME: idm.blackhats.net.au
       HAPROXY_LINODE_KEY: "{{ haproxy_linode_key }}"
     ports:
@@ -266,6 +275,7 @@
       - "8081:8080"
     # Apparently this pulls the latest image always?
     pull: yes
+    log_driver: journald
   tags:
     - docker
     - haproxy
