@@ -4,8 +4,14 @@
 - name: Configure SUSE spotinuc packages
   become: yes
   zypper:
-    name: ['flatpak', 'vlc']
+    name: ['flatpak', 'vlc', 'clatd']
     state: present
+
+- name: Ensure clatd enabled
+  become: yes
+  service: name={{ item }} enabled=yes
+  with_items:
+    - clatd.service
 
 - name: Deploy gdm autologin
   become: yes
