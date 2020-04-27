@@ -7,13 +7,6 @@
 #     - rebuild grub2
 #   when: "ansible_virtualization_role == 'guest' and 'linode_servers' not in group_names"
 
-- name: sysctl for atomic servers
-  template: src=base/sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
-  become: yes
-  with_items:
-    - 02-atomic.conf
-  when: "'linode_servers' not in group_names"
-
 # - name: static network for suse hosts
 #   template: src=base/scripts/{{ item }} dest=/root/{{ item }} owner=root group=root mode=0750
 #   become: yes

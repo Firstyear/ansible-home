@@ -1,14 +1,14 @@
 
-- name: deploy ca.certs
-  become: yes
-  ignore_errors: yes
-  action: copy src=../../templates/docker/certs.d/registry.blackhats.net.au dest=/etc/docker/certs.d/
-
-- name: Deploy the setup cert script
-  template: src=base/scripts/{{ item }} dest=/etc/docker/certs.d/registry.blackhats.net.au/{{ item }} owner=root group=root mode=0750
-  become: yes
-  with_items:
-    - docker-csr.sh
+# - name: deploy ca.certs
+#   become: yes
+#   ignore_errors: yes
+#   action: copy src=../../templates/docker/certs.d/registry.blackhats.net.au dest=/etc/docker/certs.d/
+# 
+# - name: Deploy the setup cert script
+#   template: src=base/scripts/{{ item }} dest=/etc/docker/certs.d/registry.blackhats.net.au/{{ item }} owner=root group=root mode=0750
+#   become: yes
+#   with_items:
+#     - docker-csr.sh
 
 # Give every host an ipv6 nat setup
 - name: deploy daemon.json
@@ -27,6 +27,16 @@
 # net.ipv6.conf.all.forwarding = 1
 # net.ipv6.conf.default.forwarding = 1
 #
+
+- name: sysctl for docker servers
+  template: src=base/sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
+  become: yes
+  with_items:
+    - 80-atomic.conf
+  when: "'linode_servers' not in group_names"
+  tags:
+    - docker
+    - ipv6nat
 
 #### Remember that anything that uses an expose DOESN'T need ipv6, and the ipv6nat
 # is really for building/host mode/other routing
@@ -51,6 +61,8 @@
   tags:
     - docker
     - ipv6nat
+
+
 
 - include: apps_amber.yml
   when: "'amber' in inventory_hostname"

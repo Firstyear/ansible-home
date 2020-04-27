@@ -4,8 +4,10 @@
 # zypper ar -f -c http://download.opensuse.org/tumbleweed/repo/non-oss repo-non-oss
 # zypper ar -f -c http://download.opensuse.org/tumbleweed/repo/debug repo-debug
 # zypper ar -f -c http://download.opensuse.org/update/tumbleweed/ repo-update
-# zypper ar obs://home:firstyear:kanidm home:firstyear:kanidm
+# zypper ar obs://home:firstyear:kanidm home_firstyear_kanidm
 # zypper mr -f home_firstyear_kanidm
+# zypper ar obs://home:firstyear home_firstyear
+# zypper mr -f home_firstyear
 # zypper ref
 #
 # in nmcli
@@ -23,17 +25,23 @@
   stat: path=/usr/sbin/transactional-update
   register: trans_suse
 
+- name: Setup serial grub console on virtual transactional servers
+  become: yes
+  template: src=base/grub dest=/etc/default/grub owner=root group=root mode=0644
+  when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == True and ansible_virtualization_role == 'guest'"
+
 - name: sysctl for atomic hosts
   template: src=base/sysctl/{{ item }} dest=/etc/sysctl.d/{{ item }} owner=root group=root mode=0644
   become: yes
   with_items:
     - 01-uofa.conf
 
+# Add systemd-netlogd when more confident later.
 - name: Configure SUSE packages
   become: yes
   ignore_errors: yes
   zypper:
-    name: ['tmux', 'docker', 'zsh', 'ipcalc', 'python3-docker', 'mozilla-nss-tools', 'avahi', 'borgbackup', 'kanidm-clients', 'kanidm-unixd-clients', 'nmap', 'tcpdump']
+    name: ['tmux', 'docker', 'zsh', 'ipcalc', 'python3-docker', 'mozilla-nss-tools', 'avahi', 'borgbackup', 'kanidm-clients', 'kanidm-unixd-clients', 'nmap', 'tcpdump', 'clatd']
     state: present
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == False"
 
@@ -77,13 +85,17 @@
   become: yes
   template: src=base/kanidm/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
   with_items:
-    - pam.d/common-password-pc
-    - pam.d/common-session-pc
-    - pam.d/common-auth-pc
-    - pam.d/common-account-pc
+    - pam.d/common-password
+    - pam.d/common-session
+    - pam.d/common-auth
+    - pam.d/common-account
     - nsswitch.conf
   tags:
     - kanidm_client
+
+- name: Remove admin ssh keys if they exist
+  become: yes
+  file: path=/home/admin/.ssh/authorized_keys state=absent
 
 # This breaks some applications on suse if we ensure it, make sure we DONT have it I guess ...
 - name: Ensure tls/certs directory removed
@@ -100,6 +112,10 @@
 - name: Push SSCA script to all hosts
   become: yes
   template: src=../../scripts/ssca.py dest=/root/ssca.py owner=root group=root mode=0755
+
+- name: Configure systemd netlogd
+  become: yes
+  template: src=base/systemd-netlogd.conf dest=/etc/systemd-netlogd.conf owner=root group=root mode=0644
 
 - name: Ensure services disabled
   become: yes
@@ -168,13 +184,13 @@
     - sudoers
   when: "ansible_os_family == 'Suse'"
 
-- name: Server configurations
-  include: server.yml
-  when: "'htpc' not in group_names"
+# - name: Server configurations
+#   include: server.yml
+#   when: "'htpc' not in group_names"
 
 - name: Server Container Configuration
   include: containers/main.yml
-  when: "'htpc' not in group_names"
+  when: "'lazuli' in inventory_hostname or 'amber' in inventory_hostname"
 
 - name: Spotinuc
   include: spotinuc.yml

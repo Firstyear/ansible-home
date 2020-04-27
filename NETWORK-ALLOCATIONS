@@ -1,28 +1,18 @@
-
 # Allocated
+# 172.16.0.0
+# 172.17.0.0
+# 172.18.0.0
+# 172.19.0.0
 172.20.0.0/16 Micolous
-172.24.0.0/16 Firstyear
+# 172.21.0.0
 172.22.0.0/16 Keeper
-
-# Potentially allocated
-172.26.0.0/16 Kleinig
-172.25.0.0/16 gm
-172.28.0.0/16 ----
-
-# Sub allocations
+# 172.23.0.0
+172.24.0.0/16 Firstyear
+172.25.0.0/16 ?? gm
+172.26.0.0/16 ?? Kleinig
+# 172.27.0.0
+172.28.0.0/16 ?? ----
 172.29.0.0/20 Nextyear
-# HostMin:	172.24.0.1
-# HostMax:	172.24.15.254
-
-# next - 172.29.16.0
-
-
-# Special: Site-to-Site layer
-
-172.29.240.1/20
-
-# Within this, we us /30's between sites.
-
-Ny <-> fy 172.29.240.1/30
-
+172.30.0.0/16 charcol
+# 172.31.0.0
 
