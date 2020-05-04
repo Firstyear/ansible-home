@@ -4,6 +4,10 @@
   become: true
   docker_network:
     name: ldap_net
+    ipam_config:
+      - gateway: 172.16.0.1
+        iprange: 172.16.0.64/26
+        subnet: 172.16.0.0/24
   tags:
     - docker
     - 389ds
@@ -60,6 +64,10 @@
   become: true
   docker_network:
     name: nextcloud_net
+    ipam_config:
+      - gateway: 172.16.1.1
+        iprange: 172.16.1.64/26
+        subnet: 172.16.1.0/24
   tags:
     - docker
     - nextcloud
@@ -191,6 +199,13 @@
     - docker
     - samba
 
+- name: Deploy rsyncd config
+  become: yes
+  template: src=samba/rsyncd.conf dest=/etc/rsyncd.conf owner=root group=root mode=0644
+  tags:
+    - docker
+    - samba
+
 # - name: Deploy timemachine quota
 #   become: yes
 #   template: src=samba/com.apple.TimeMachine.quote.plist dest=/var/data/backup/timemachine/.com.apple.TimeMachine.quote.plist owner=timemachine group=timemachine mode=0600
@@ -202,6 +217,12 @@
     - docker
     - samba
 
+- name: Ensure rsyncd active
+  become: yes
+  service: name=rsyncd enabled=yes
+  tags:
+    - docker
+    - samba
 
 # KANIDM setup
 - name: Create docker volume for kanidmd
@@ -216,6 +237,10 @@
   become: true
   docker_network:
     name: kanidm_net
+    ipam_config:
+      - gateway: 172.16.2.1
+        iprange: 172.16.2.64/26
+        subnet: 172.16.2.0/24
   tags:
     - docker
     - kanidm
@@ -234,6 +259,7 @@
       - "80"
     networks:
       - name: kanidm_net
+        ipv4_address: 172.16.2.120
     restart_policy: always
     env:
       RUST_BACKTRACE: full

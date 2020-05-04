@@ -190,7 +190,7 @@
 
 - name: Server Container Configuration
   include: containers/main.yml
-  when: "'lazuli' in inventory_hostname or 'amber' in inventory_hostname"
+  when: "'lazuli' in inventory_hostname or 'amber' in inventory_hostname or 'pyrite' in inventory_hostname"
 
 - name: Spotinuc
   include: spotinuc.yml
