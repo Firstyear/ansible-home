@@ -1,0 +1,41 @@
+
+# Install: transactional-update pkg install apache2 nagios-www nagios nagios-contrib 
+# monitoring-plugins-ldap monitoring-plugins-radius monitoring-plugins-rsync monitoring-plugins-apcupsd
+
+# Ensure you run a2enmod php7
+
+- name: Base nagios config
+  become: yes
+  template: src=nagios/nagios.cfg dest=/etc/nagios/nagios.cfg owner=root group=root mode=0644
+  tags:
+    - nagios
+
+- name: Deploy nagios site configurations
+  become: yes
+  template: src=nagios/{{ item }} dest=/etc/nagios/objects/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - bne1-network.cfg
+    - bne1-servers.cfg
+    - bne2-network.cfg
+    - contacts.cfg
+    - ex-commands.cfg
+  tags:
+    - nagios
+
+- name: Deploy nagios apache2 configuration
+  become: yes
+  template: src=nagios/vhost-nagios.conf dest=/etc/apache2/vhosts.d/nagios.conf owner=root group=root mode=0644
+  tags:
+    - nagios
+
+- name: Enable nagios services
+  become: yes
+  service: name={{ item }} enabled=yes
+  with_items:
+    - nagios
+    - nagios-archive.timer
+    - apache2
+  tags:
+    - nagios
+
+
