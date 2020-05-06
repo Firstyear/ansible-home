@@ -6,7 +6,10 @@
 
 - name: Base nagios config
   become: yes
-  template: src=nagios/nagios.cfg dest=/etc/nagios/nagios.cfg owner=root group=root mode=0644
+  template: src=nagios/{{ item }} dest=/etc/nagios/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - nagios.cfg
+    - cgi.cfg
   tags:
     - nagios
 
