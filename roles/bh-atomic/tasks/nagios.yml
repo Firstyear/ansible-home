@@ -4,6 +4,35 @@
 
 # Ensure you run a2enmod php7
 
+- name: Apache in nagios group for cmd
+  become: yes
+  user: name=wwwrun group=nagios append=yes
+  tags:
+    - nagios
+
+- name: Fix effective rights mask
+  become: yes
+  acl:
+    path: /var/spool/nagios
+    etype: mask
+    permissions: rw
+    state: present
+    default: yes
+  tags:
+    - nagios
+
+- name: Allow apache to write to cmd
+  become: yes
+  acl:
+    path: /var/spool/nagios
+    etype: user
+    entity: wwwrun
+    permissions: rw
+    state: present
+    default: yes
+  tags:
+    - nagios
+
 - name: Base nagios config
   become: yes
   template: src=nagios/{{ item }} dest=/etc/nagios/{{ item }} owner=root group=root mode=0644
@@ -22,6 +51,7 @@
     - bne2-network.cfg
     - contacts.cfg
     - ex-commands.cfg
+    - templates.cfg
   tags:
     - nagios
 

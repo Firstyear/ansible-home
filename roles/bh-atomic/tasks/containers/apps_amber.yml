@@ -192,6 +192,13 @@
     - docker
     - samba
 
+- name: Ensure scanner user
+  become: yes
+  user: name=scanner group=users uid=1002
+  tags:
+    - docker
+    - samba
+
 - name: Deploy samba config
   become: yes
   template: src=samba/smb.conf dest=/etc/samba/smb.conf owner=root group=root mode=0600
