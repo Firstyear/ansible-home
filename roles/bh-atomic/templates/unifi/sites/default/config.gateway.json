@@ -1,0 +1,1724 @@
+{
+    "firewall": {
+        "all-ping": "enable",
+        "broadcast-ping": "disable",
+        "group": {
+            "address-group": {
+                "host4_status": {
+                    "address": [
+                        "172.24.10.20"
+                    ],
+                    "description": "host4_status"
+                },
+                "net4_10_0_25_0_24": {
+                    "address": [
+                        "10.0.25.0/24"
+                    ],
+                    "description": "net4_10_0_25_0_24"
+                },
+                "net4_app_servers": {
+                    "address": [
+                        "172.24.11.0/24"
+                    ],
+                    "description": "net4_app_servers"
+                },
+                "net4_bne1_all": {
+                    "address": [
+                        "172.24.0.0/16"
+                    ],
+                    "description": "net4_bne1_all"
+                },
+                "net4_char_all": {
+                    "address": [
+                        "172.30.0.0/16",
+                        "172.24.252.16/29"
+                    ],
+                    "description": "net4_char_all"
+                },
+                "net4_char_mgmt": {
+                    "address": [
+                        "172.24.252.16/29",
+                        "172.30.1.0/24",
+                        "10.0.25.0/24"
+                    ],
+                    "description": "net4_char_mgmt"
+                },
+                "net4_char_priv": {
+                    "address": [
+                        "172.30.3.0/24"
+                    ],
+                    "description": "net4_char_priv"
+                },
+                "net4_char_trust_users": {
+                    "address": [
+                        "172.30.3.0/24",
+                        "172.30.4.0/24"
+                    ],
+                    "description": "net4_char_trust_users"
+                },
+                "net4_domain": {
+                    "address": [
+                        "172.24.16.0/24"
+                    ],
+                    "description": "net4_domain"
+                },
+                "net4_external_vpn": {
+                    "address": [
+                        "172.24.249.0/26",
+                        "172.24.249.128/26",
+                        "172.24.249.64/26"
+                    ],
+                    "description": "net4_external_vpn"
+                },
+                "net4_internetofshit": {
+                    "address": [
+                        "172.24.18.0/24"
+                    ],
+                    "description": "net4_internetofshit"
+                },
+                "net4_keeper_all": {
+                    "address": [
+                        "172.22.0.0/16",
+                        "172.24.252.8/29"
+                    ],
+                    "description": "net4_keeper_all"
+                },
+                "net4_mgmt": {
+                    "address": [
+                        "172.24.10.0/24"
+                    ],
+                    "description": "net4_mgmt"
+                },
+                "net4_micolous_all": {
+                    "address": [
+                        "172.20.0.0/16",
+                        "172.24.252.0/29"
+                    ],
+                    "description": "net4_micolous_all"
+                },
+                "net4_priv": {
+                    "address": [
+                        "172.24.12.0/24"
+                    ],
+                    "description": "net4_priv"
+                },
+                "net4_suse_corp": {
+                    "address": [
+                        "10.0.0.0/8",
+                        "137.65.0.0/16",
+                        "147.2.0.0/16",
+                        "149.44.0.0/16",
+                        "151.155.128.0/17",
+                        "164.99.0.0/16"
+                    ],
+                    "description": "net4_suse_corp"
+                },
+                "net4_suse_front": {
+                    "address": [
+                        "172.24.17.0/24"
+                    ],
+                    "description": "net4_suse_front"
+                },
+                "net4_suse_internal": {
+                    "address": [
+                        "172.24.20.0/24"
+                    ],
+                    "description": "net4_suse_internal"
+                },
+                "net4_unit2_untrust": {
+                    "address": [
+                        "172.24.14.0/24"
+                    ],
+                    "description": "net4_unit2_untrust"
+                },
+                "net4_users": {
+                    "address": [
+                        "172.24.13.0/24"
+                    ],
+                    "description": "net4_users"
+                }
+            },
+            "ipv6-address-group": {
+                "host6_amber.prd": {
+                    "description": "host6_amber.prd.blackhats.net.au",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c11:5054:ff:fee6:5586"
+                    ]
+                },
+                "host6_status": {
+                    "description": "host6_status",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c10:5054:ff:fea6:cd47"
+                    ]
+                },
+                "net6_app_servers": {
+                    "description": "net6_app_servers",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c11::/64"
+                    ]
+                },
+                "net6_bne1_all": {
+                    "description": "net6_bne1_all",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c00::/56"
+                    ]
+                },
+                "net6_domain": {
+                    "description": "net6_domain",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c16::/64"
+                    ]
+                },
+                "net6_external_idm_trust": {
+                    "description": "net6_external_idm_trust",
+                    "ipv6-address": [
+                        "2400:8907::f03c:92ff:febc:182",
+                        "2400:8902::f03c:92ff:febc:21e5",
+                        "2400:8907::f03c:92ff:fea5:d6ce"
+                    ]
+                },
+                "net6_external_vpn": {
+                    "description": "net6_external_vpn",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2cf9::/64",
+                        "2001:44b8:2155:2cfa::/64"
+                    ]
+                },
+                "net6_internetofshit": {
+                    "description": "net6_internetofshit",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c18::/64"
+                    ]
+                },
+                "net6_linklocal": {
+                    "description": "net6_linklocal",
+                    "ipv6-address": [
+                        "fe80::/64"
+                    ]
+                },
+                "net6_mgmt": {
+                    "description": "net6_mgmt",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c10::/64"
+                    ]
+                },
+                "net6_nat64_route": {
+                    "description": "net6_nat64_route",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c64::/96"
+                    ]
+                },
+                "net6_priv": {
+                    "description": "net6_priv",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c12::/64"
+                    ]
+                },
+                "net6_suse_corp": {
+                    "description": "net6_suse_corp",
+                    "ipv6-address": [
+                        "2620:113:80c0:8000::/50"
+                    ]
+                },
+                "net6_suse_front": {
+                    "description": "net6_suse_front",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c17::/64"
+                    ]
+                },
+                "net6_suse_internal": {
+                    "description": "net6_suse_internal",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c20::/64"
+                    ]
+                },
+                "net6_unit2_untrust": {
+                    "description": "net6_unit2_untrust",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c14::/64"
+                    ]
+                },
+                "net6_users": {
+                    "description": "net6_users",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c13::/64"
+                    ]
+                }
+            },
+            "ipv6-network-group": {
+                "remote_client_vpn_networkv6": {
+                    "description": "IPv6 remote client VPN subnets"
+                },
+                "remote_site_vpn_networkv6": {
+                    "description": "IPv6 remote site VPN subnets"
+                },
+                "remote_user_vpn_networkv6": {
+                    "description": "IPv6 Remote User VPN subnets",
+                    "ipv6-network": [
+                        "2001:44b8:2155:2cf9::/64",
+                        "2001:44b8:2155:2cfa::/64"
+                    ]
+                }
+            },
+            "network-group": {
+                "remote_client_vpn_network": {
+                    "description": "remote client VPN subnets"
+                },
+                "remote_site_vpn_network": {
+                    "description": "remote site VPN subnets",
+                    "network": [
+                        "172.24.252.0/29",
+                        "172.20.0.0/16",
+                        "172.24.252.8/29",
+                        "172.22.0.0/16",
+                        "172.24.252.16/29",
+                        "172.30.0.0/16"
+                    ]
+                },
+                "remote_user_vpn_network": {
+                    "description": "Remote User VPN subnets",
+                    "network": [
+                        "172.24.249.0/26",
+                        "172.24.249.64/26",
+                        "172.24.249.128/26"
+                    ]
+                }
+            },
+            "port-group": {
+                "airplay_backchat": {
+                    "description": "airplay_backchat",
+                    "port": [
+                        "32000-65535"
+                    ]
+                },
+                "dhcp6": {
+                    "description": "dhcp6",
+                    "port": [
+                        "546",
+                        "547"
+                    ]
+                },
+                "dns": {
+                    "description": "dns",
+                    "port": [
+                        "53",
+                        "5353"
+                    ]
+                },
+                "https": {
+                    "description": "https",
+                    "port": [
+                        "80",
+                        "443"
+                    ]
+                },
+                "https_alt_idm": {
+                    "description": "https_alt_idm",
+                    "port": [
+                        "8443"
+                    ]
+                },
+                "router_admin": {
+                    "description": "router_admin",
+                    "port": [
+                        "22",
+                        "8080",
+                        "8443",
+                        "443",
+                        "162"
+                    ]
+                },
+                "ssh": {
+                    "description": "ssh",
+                    "port": [
+                        "22"
+                    ]
+                },
+                "syslog": {
+                    "description": "syslog",
+                    "port": [
+                        "514"
+                    ]
+                },
+                "unifi_remote_tcp": {
+                    "description": "unifi_remote_tcp",
+                    "port": [
+                        "8443",
+                        "6789",
+                        "8843",
+                        "8880",
+                        "8080",
+                        "1814",
+                        "1815"
+                    ]
+                },
+                "unifi_remote_udp": {
+                    "description": "unifi_remote_udp",
+                    "port": [
+                        "3478",
+                        "10001",
+                        "1814",
+                        "1815"
+                    ]
+                }
+            }
+        },
+        "ipv6-name": {
+            "GUESTv6_IN": {
+                "default-action": "accept",
+                "description": "packets from guest network",
+                "rule": {
+                    "1000": {
+                        "action": "accept",
+                        "description": "allow related, established",
+                        "protocol": "all",
+                        "state": {
+                            "established": "enable",
+                            "invalid": "disable",
+                            "new": "disable",
+                            "related": "enable"
+                        }
+                    },
+                    "1010": {
+                        "action": "accept",
+                        "description": "any guest to net6_app_servers (https_alt_idm)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_app_servers",
+                                "port-group": "https_alt_idm"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "state": {
+                            "established": "disable",
+                            "invalid": "disable",
+                            "new": "enable",
+                            "related": "disable"
+                        }
+                    },
+                    "1020": {
+                        "action": "accept",
+                        "description": "net6_unit2_untrust to net6_app_servers",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_unit2_untrust"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_app_servers"
+                            }
+                        },
+                        "state": {
+                            "established": "disable",
+                            "invalid": "disable",
+                            "new": "enable",
+                            "related": "disable"
+                        }
+                    },
+                    "1030": {
+                        "action": "accept",
+                        "description": "net6_unit2_untrust to host6_status (https)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "host6_status",
+                                "port-group": "https"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_unit2_untrust"
+                            }
+                        }
+                    },
+                    "5000": {
+                        "action": "reject",
+                        "description": "deny any guest to net6_bne1_all",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_bne1_all"
+                            }
+                        },
+                        "log": "enable",
+                        "protocol": "all"
+                    }
+                }
+            },
+            "LANv6_IN": {
+                "default-action": "accept",
+                "description": "packets from intranet",
+                "rule": {
+                    "1000": {
+                        "action": "accept",
+                        "description": "Allow related, established",
+                        "protocol": "all",
+                        "state": {
+                            "established": "enable",
+                            "invalid": "disable",
+                            "new": "disable",
+                            "related": "enable"
+                        }
+                    },
+                    "1010": {
+                        "action": "accept",
+                        "description": "allow all ping",
+                        "protocol": "icmpv6"
+                    },
+                    "1020": {
+                        "action": "accept",
+                        "description": "allow any to net6_nat64_route",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_nat64_route"
+                            }
+                        },
+                        "protocol": "all"
+                    },
+                    "1030": {
+                        "action": "accept",
+                        "description": "net6_app_servers to net6_mgmt (syslog)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_mgmt",
+                                "port-group": "syslog"
+                            }
+                        },
+                        "protocol": "tcp_udp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_app_servers"
+                            }
+                        }
+                    },
+                    "1040": {
+                        "action": "accept",
+                        "description": "net6_users to net6_app_servers",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_app_servers"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_users"
+                            }
+                        }
+                    },
+                    "1050": {
+                        "action": "accept",
+                        "description": "net6_users to net6_priv (airplay_backchat)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_priv",
+                                "port-group": "airplay_backchat"
+                            }
+                        },
+                        "protocol": "tcp_udp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_users"
+                            }
+                        }
+                    },
+                    "1060": {
+                        "action": "accept",
+                        "description": "net6_users to host6_status (https)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "host6_status",
+                                "port-group": "https"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_users"
+                            }
+                        }
+                    },
+                    "1070": {
+                        "action": "accept",
+                        "description": "net6_priv to net6_mgmt",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_mgmt"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_priv"
+                            }
+                        }
+                    },
+                    "1080": {
+                        "action": "accept",
+                        "description": "net6_mgmt to net6_app_servers",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_app_servers"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_mgmt"
+                            }
+                        }
+                    },
+                    "1090": {
+                        "action": "accept",
+                        "description": "net6_mgmt to net6_domain -- monitoring",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_domain"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_mgmt"
+                            }
+                        }
+                    },
+                    "1100": {
+                        "action": "accept",
+                        "description": "net6_mgmt to net6_suse_internal (ssh) -- monitoring",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_suse_internal",
+                                "port-group": "ssh"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_mgmt"
+                            }
+                        }
+                    },
+                    "1110": {
+                        "action": "accept",
+                        "description": "net6_priv to net6_app_servers",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_app_servers"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_priv"
+                            }
+                        }
+                    },
+                    "1120": {
+                        "action": "accept",
+                        "description": "net6_priv to net6_domain",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_domain"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_priv"
+                            }
+                        }
+                    },
+                    "1130": {
+                        "action": "accept",
+                        "description": "net6_priv to net6_users",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_users"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_priv"
+                            }
+                        }
+                    },
+                    "1140": {
+                        "action": "accept",
+                        "description": "net6_priv to net6_internetofshit",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_internetofshit"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_priv"
+                            }
+                        }
+                    },
+                    "1150": {
+                        "action": "accept",
+                        "description": "net6_app_servers to net6_mgmt (ssh) -- borgbackup",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_mgmt",
+                                "port-group": "ssh"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_app_servers"
+                            }
+                        }
+                    },
+                    "1160": {
+                        "action": "accept",
+                        "description": "allow net6_external_vpn to net6_app_servers (https_alt_idm)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_app_servers",
+                                "port-group": "https_alt_idm"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_external_vpn"
+                            }
+                        }
+                    },
+                    "1170": {
+                        "action": "accept",
+                        "description": "net6_suse_front to net6_mgmt (syslog)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_mgmt",
+                                "port-group": "syslog"
+                            }
+                        },
+                        "protocol": "tcp_udp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_suse_front"
+                            }
+                        }
+                    },
+                    "1180": {
+                        "action": "accept",
+                        "description": "allow net6_suse_internal to net6_app_servers (https_alt_idm)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_app_servers",
+                                "port-group": "https_alt_idm"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_suse_internal"
+                            }
+                        }
+                    },
+                    "5000": {
+                        "action": "reject",
+                        "description": "deny all to net6_bne1_all",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_bne1_all"
+                            }
+                        },
+                        "log": "enable",
+                        "protocol": "all"
+                    },
+                    "5010": {
+                        "action": "reject",
+                        "description": "deny net6_internetofshit to any (external)",
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_internetofshit"
+                            }
+                        }
+                    }
+                }
+            },
+            "LANv6_LOCAL": {
+                "default-action": "accept",
+                "description": "packets from intranet to gateway",
+                "rule": {
+                    "1000": {
+                        "action": "accept",
+                        "description": "net6_mgmt to router any",
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_mgmt"
+                            }
+                        }
+                    },
+                    "1010": {
+                        "action": "accept",
+                        "description": "net6_priv to router any",
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_priv"
+                            }
+                        }
+                    },
+                    "1020": {
+                        "action": "reject",
+                        "description": "deny all to router admin",
+                        "destination": {
+                            "group": {
+                                "port-group": "router_admin"
+                            }
+                        },
+                        "log": "enable",
+                        "protocol": "all"
+                    },
+                    "1030": {
+                        "action": "accept",
+                        "description": "allow all to router services",
+                        "protocol": "all"
+                    }
+                }
+            },
+            "WANv6_IN": {
+                "default-action": "drop",
+                "description": "packets from internet to intranet",
+                "rule": {
+                    "1000": {
+                        "action": "accept",
+                        "description": "net6_external_idm_trust -> host6_amber.prd (https_alt_idm)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "host6_amber.prd",
+                                "port-group": "https_alt_idm"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_external_idm_trust"
+                            }
+                        },
+                        "state": {
+                            "established": "enable",
+                            "invalid": "disable",
+                            "new": "enable",
+                            "related": "enable"
+                        }
+                    }
+                }
+            },
+            "WANv6_LOCAL": {
+                "default-action": "drop",
+                "description": "packets from internet to gateway",
+                "rule": {
+                    "1000": {
+                        "action": "accept",
+                        "description": "Allow icmpv6",
+                        "protocol": "icmpv6"
+                    },
+                    "1010": {
+                        "action": "accept",
+                        "description": "Allow OpenVPN client clients in (443 tcp)",
+                        "destination": {
+                            "port": "443"
+                        },
+                        "log": "disable",
+                        "protocol": "tcp"
+                    },
+                    "1020": {
+                        "action": "accept",
+                        "description": "Allow OpenVPN client clients in (1194 udp)",
+                        "destination": {
+                            "port": "1194"
+                        },
+                        "log": "disable",
+                        "protocol": "udp"
+                    }
+                }
+            }
+        },
+        "name": {
+            "GUEST_IN": {
+                "default-action": "accept",
+                "description": "packets from guest network",
+                "enable-default-log": "''",
+                "rule": {
+                    "1000": {
+                        "action": "accept",
+                        "description": "allow related, established",
+                        "protocol": "all",
+                        "state": {
+                            "established": "enable",
+                            "invalid": "disable",
+                            "new": "disable",
+                            "related": "enable"
+                        }
+                    },
+                    "1010": {
+                        "action": "accept",
+                        "description": "any guest to net4_app_servers (https_alt_idm)",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_app_servers",
+                                "port-group": "https_alt_idm"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "state": {
+                            "established": "disable",
+                            "invalid": "disable",
+                            "new": "enable",
+                            "related": "disable"
+                        }
+                    },
+                    "1020": {
+                        "action": "accept",
+                        "description": "net4_unit2_untrust to net4_app_servers",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_app_servers"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_unit2_untrust"
+                            }
+                        },
+                        "state": {
+                            "established": "disable",
+                            "invalid": "disable",
+                            "new": "enable",
+                            "related": "disable"
+                        }
+                    },
+                    "1030": {
+                        "action": "accept",
+                        "description": "net4_unit2_untrust to host4_status (https)",
+                        "destination": {
+                            "group": {
+                                "address-group": "host4_status",
+                                "port-group": "https"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_unit2_untrust"
+                            }
+                        }
+                    },
+                    "5000": {
+                        "action": "reject",
+                        "description": "deny all net4_bne1_all",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_bne1_all"
+                            }
+                        },
+                        "log": "enable",
+                        "protocol": "all"
+                    }
+                }
+            },
+            "GUEST_LOCAL": {
+                "default-action": "drop",
+                "description": "packets from guest network to gateway",
+                "enable-default-log": "''"
+            },
+            "LAN_IN": {
+                "default-action": "accept",
+                "description": "packets from intranet",
+                "enable-default-log": "''",
+                "rule": {
+                    "1000": {
+                        "action": "accept",
+                        "description": "Allow related, established",
+                        "protocol": "all",
+                        "state": {
+                            "established": "enable",
+                            "invalid": "disable",
+                            "new": "disable",
+                            "related": "enable"
+                        }
+                    },
+                    "1010": {
+                        "action": "accept",
+                        "description": "allow all ping",
+                        "icmp": {
+                            "type-name": "any"
+                        },
+                        "protocol": "icmp"
+                    },
+                    "1020": {
+                        "action": "accept",
+                        "description": "net4_suse_front to net4_mgmt (syslog)",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_mgmt",
+                                "port-group": "syslog"
+                            }
+                        },
+                        "protocol": "tcp_udp",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_suse_front"
+                            }
+                        }
+                    },
+                    "1030": {
+                        "action": "accept",
+                        "description": "net4_app_servers to net4_mgmt (syslog)",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_mgmt",
+                                "port-group": "syslog"
+                            }
+                        },
+                        "protocol": "tcp_udp",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_app_servers"
+                            }
+                        }
+                    },
+                    "1040": {
+                        "action": "accept",
+                        "description": "net4_users to net4_app_servers",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_app_servers"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_users"
+                            }
+                        }
+                    },
+                    "1050": {
+                        "action": "accept",
+                        "description": "net4_users to host4_status (https)",
+                        "destination": {
+                            "group": {
+                                "address-group": "host4_status",
+                                "port-group": "https"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_users"
+                            }
+                        }
+                    },
+                    "1060": {
+                        "action": "accept",
+                        "description": "net4_priv to net4_mgmt",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_mgmt"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_priv"
+                            }
+                        }
+                    },
+                    "1070": {
+                        "action": "accept",
+                        "description": "net4_priv to net4_app_servers",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_app_servers"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_priv"
+                            }
+                        }
+                    },
+                    "1080": {
+                        "action": "accept",
+                        "description": "net4_priv to net4_ios_locked",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_internetofshit"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_priv"
+                            }
+                        }
+                    },
+                    "1090": {
+                        "action": "accept",
+                        "description": "net4_micolous to net4_app_servers",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_app_servers"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_micolous_all"
+                            }
+                        }
+                    },
+                    "1100": {
+                        "action": "accept",
+                        "description": "net4_keeper to net4_app_servers",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_app_servers"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_keeper_all"
+                            }
+                        }
+                    },
+                    "1110": {
+                        "action": "accept",
+                        "description": "net4_priv to net4_keeper",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_keeper_all"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_priv"
+                            }
+                        }
+                    },
+                    "1120": {
+                        "action": "accept",
+                        "description": "net4_priv to net4_micolous",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_micolous_all"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_priv"
+                            }
+                        }
+                    },
+                    "1130": {
+                        "action": "accept",
+                        "description": "net4_priv to net4_users",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_users"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_priv"
+                            }
+                        }
+                    },
+                    "1140": {
+                        "action": "accept",
+                        "description": "net4_priv to net4_char_mgmt",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_char_mgmt"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_priv"
+                            }
+                        }
+                    },
+                    "1150": {
+                        "action": "accept",
+                        "description": "net4_external_vpn to net4_app_servers",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_app_servers"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_external_vpn"
+                            }
+                        }
+                    },
+                    "1160": {
+                        "action": "accept",
+                        "description": "net4_suse_internal to net4_app_servers (https_alt_idm)",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_app_servers",
+                                "port-group": "https_alt_idm"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_suse_internal"
+                            }
+                        }
+                    },
+                    "1170": {
+                        "action": "accept",
+                        "description": "net4_char_mgmt to net4_mgmt (unifi_remote_tcp)",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_mgmt",
+                                "port-group": "unifi_remote_tcp"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_char_mgmt"
+                            }
+                        }
+                    },
+                    "1180": {
+                        "action": "accept",
+                        "description": "net4_char_mgmt to net4_mgmt (unifi_remote_udp)",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_mgmt",
+                                "port-group": "unifi_remote_udp"
+                            }
+                        },
+                        "protocol": "udp",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_char_mgmt"
+                            }
+                        }
+                    },
+                    "1190": {
+                        "action": "accept",
+                        "description": "net4_char_priv to net4_mgmt (unifi_remote_tcp)",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_mgmt",
+                                "port-group": "unifi_remote_tcp"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_char_priv"
+                            }
+                        }
+                    },
+                    "1200": {
+                        "action": "accept",
+                        "description": "net4_char_trust_users to net4_app_servers",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_app_servers"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_char_trust_users"
+                            }
+                        }
+                    },
+                    "1210": {
+                        "action": "accept",
+                        "description": "net4_char_trust_users to host4_status (https)",
+                        "destination": {
+                            "group": {
+                                "address-group": "host4_status",
+                                "port-group": "https"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_char_trust_users"
+                            }
+                        }
+                    },
+                    "1220": {
+                        "action": "accept",
+                        "description": "net4_mgmt to net4_app_servers",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_app_servers"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_mgmt"
+                            }
+                        }
+                    },
+                    "1230": {
+                        "action": "accept",
+                        "description": "net4_mgmt to net4_char_mgmt",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_char_mgmt"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_mgmt"
+                            }
+                        }
+                    },
+                    "1240": {
+                        "action": "accept",
+                        "description": "net4_mgmt to net4_internetofshit",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_internetofshit"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_mgmt"
+                            }
+                        }
+                    },
+                    "5000": {
+                        "action": "reject",
+                        "description": "deny all net4_bne1_all",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_bne1_all"
+                            }
+                        },
+                        "log": "enable",
+                        "protocol": "all"
+                    },
+                    "5010": {
+                        "action": "reject",
+                        "description": "deny net4_internetofshit to any",
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_internetofshit"
+                            }
+                        }
+                    }
+                }
+            },
+            "LAN_LOCAL": {
+                "default-action": "accept",
+                "description": "packets from intranet to gateway",
+                "enable-default-log": "''",
+                "rule": {
+                    "1000": {
+                        "action": "accept",
+                        "description": "net4_mgmt to router any",
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_mgmt"
+                            }
+                        }
+                    },
+                    "1010": {
+                        "action": "accept",
+                        "description": "net4_priv to router any",
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_priv"
+                            }
+                        }
+                    },
+                    "1020": {
+                        "action": "reject",
+                        "description": "deny all to router admin",
+                        "destination": {
+                            "group": {
+                                "port-group": "router_admin"
+                            }
+                        },
+                        "log": "enable",
+                        "protocol": "all"
+                    },
+                    "1030": {
+                        "action": "accept",
+                        "description": "allow all to router services",
+                        "protocol": "all"
+                    }
+                }
+            },
+            "WAN_LOCAL": {
+                "default-action": "drop",
+                "description": "packets from internet to gateway",
+                "rule": {
+                    "1000": {
+                        "action": "accept",
+                        "description": "Allow icmp",
+                        "icmp": {
+                            "type-name": "any"
+                        },
+                        "protocol": "icmp"
+                    },
+                    "1010": {
+                        "action": "accept",
+                        "description": "Allow OpenVPN client clients in (443 tcp)",
+                        "destination": {
+                            "port": "443"
+                        },
+                        "log": "disable",
+                        "protocol": "tcp"
+                    },
+                    "1020": {
+                        "action": "accept",
+                        "description": "Allow OpenVPN client clients in (1194 udp)",
+                        "destination": {
+                            "port": "1194"
+                        },
+                        "log": "disable",
+                        "protocol": "udp"
+                    },
+                    "1030": {
+                        "action": "accept",
+                        "description": "Allow OpenVPN mic clients in (1196 udp)",
+                        "destination": {
+                            "port": "1196"
+                        },
+                        "log": "disable",
+                        "protocol": "udp"
+                    },
+                    "1040": {
+                        "action": "accept",
+                        "description": "Allow OpenVPN kee clients in (1197 udp)",
+                        "destination": {
+                            "port": "1197"
+                        },
+                        "log": "disable",
+                        "protocol": "udp"
+                    },
+                    "1050": {
+                        "action": "accept",
+                        "description": "Allow OpenVPN char clients in (1198 udp)",
+                        "destination": {
+                            "port": "1198"
+                        },
+                        "log": "disable",
+                        "protocol": "udp"
+                    }
+                }
+            }
+        }
+    },
+    "interfaces": {
+        "openvpn": {
+            "vtun0": {
+                "description": "VPN endpoint for TCP6",
+                "encryption": "aes256",
+                "firewall": {
+                    "in": {
+                        "ipv6-name": "LANv6_IN",
+                        "name": "LAN_IN"
+                    },
+                    "local": {
+                        "ipv6-name": "LANv6_LOCAL",
+                        "name": "LAN_LOCAL"
+                    },
+                    "out": {
+                        "ipv6-name": "LANv6_OUT",
+                        "name": "LAN_OUT"
+                    }
+                },
+                "mode": "server",
+                "openvpn-option": [
+                    "--persist-tun",
+                    "--server-ipv6 2001:44b8:2155:2cfa::1/64",
+                    "--client-config-dir /config/auth/openvpn/ccd",
+                    "--duplicate-cn",
+                    "--mssfix",
+                    "--tun-mtu 1500",
+                    "--verb 2",
+                    "--cipher AES-256-CBC",
+                    "--tls-cipher TLS-DHE-RSA-WITH-AES-256-CBC-SHA",
+                    "--plugin /usr/lib/openvpn/openvpn-auth-pam.so openvpn",
+                    "--client-cert-not-required --username-as-common-name",
+                    "--keepalive 10 60",
+                    "--user nobody",
+                    "--group nogroup",
+                    "--proto tcp6",
+                    "--port 443",
+                    "--push redirect-gateway def1",
+                    "--push route-ipv6 ::/0",
+                    "--push dhcp-option DNS 172.24.10.1"
+                ],
+                "server": {
+                    "push-route": "172.24.0.0/17",
+                    "subnet": "172.24.249.128/26"
+                },
+                "tls": {
+                    "ca-cert-file": "/config/auth/openvpn/client/ca.crt",
+                    "cert-file": "/config/auth/openvpn/client/server.crt",
+                    "dh-file": "/config/auth/openvpn/dh2048.pem",
+                    "key-file": "/config/auth/openvpn/client/server.key"
+                }
+            },
+            "vtun1": {
+                "description": "VPN endpoint for UDP6",
+                "encryption": "aes256",
+                "firewall": {
+                    "in": {
+                        "ipv6-name": "LANv6_IN",
+                        "name": "LAN_IN"
+                    },
+                    "local": {
+                        "ipv6-name": "LANv6_LOCAL",
+                        "name": "LAN_LOCAL"
+                    },
+                    "out": {
+                        "ipv6-name": "LANv6_OUT",
+                        "name": "LAN_OUT"
+                    }
+                },
+                "mode": "server",
+                "openvpn-option": [
+                    "--persist-tun",
+                    "--server-ipv6 2001:44b8:2155:2cf9::1/64",
+                    "--client-config-dir /config/auth/openvpn/ccd",
+                    "--duplicate-cn",
+                    "--mssfix",
+                    "--tun-mtu 1500",
+                    "--verb 2",
+                    "--cipher AES-256-CBC",
+                    "--tls-cipher TLS-DHE-RSA-WITH-AES-256-CBC-SHA",
+                    "--plugin /usr/lib/openvpn/openvpn-auth-pam.so openvpn",
+                    "--client-cert-not-required --username-as-common-name",
+                    "--keepalive 10 60",
+                    "--user nobody",
+                    "--group nogroup",
+                    "--proto udp6",
+                    "--port 1194",
+                    "--push redirect-gateway def1",
+                    "--push route-ipv6 ::/0",
+                    "--push dhcp-option DNS 172.24.10.1"
+                ],
+                "server": {
+                    "push-route": "172.24.0.0/17",
+                    "subnet": "172.24.249.64/26"
+                },
+                "tls": {
+                    "ca-cert-file": "/config/auth/openvpn/client/ca.crt",
+                    "cert-file": "/config/auth/openvpn/client/server.crt",
+                    "dh-file": "/config/auth/openvpn/dh2048.pem",
+                    "key-file": "/config/auth/openvpn/client/server.key"
+                }
+            },
+            "vtun2": {
+                "description": "VPN site to site micolous",
+                "encryption": "aes256",
+                "firewall": {
+                    "in": {
+                        "ipv6-name": "LANv6_IN",
+                        "name": "LAN_IN"
+                    },
+                    "local": {
+                        "ipv6-name": "LANv6_LOCAL",
+                        "name": "LAN_LOCAL"
+                    },
+                    "out": {
+                        "ipv6-name": "LANv6_OUT",
+                        "name": "LAN_OUT"
+                    }
+                },
+                "mode": "server",
+                "openvpn-option": [
+                    "--persist-tun",
+                    "--client-config-dir /config/auth/openvpn/ccd",
+                    "--keepalive 10 60",
+                    "--user nobody",
+                    "--group nogroup",
+                    "--proto udp",
+                    "--link-mtu 1484",
+                    "--port 1196"
+                ],
+                "server": {
+                    "push-route": "172.24.0.0/17",
+                    "subnet": "172.24.252.0/29"
+                },
+                "tls": {
+                    "ca-cert-file": "/config/auth/openvpn/mic/mic-ca.crt",
+                    "cert-file": "/config/auth/openvpn/mic/mic-server.crt",
+                    "dh-file": "/config/auth/openvpn/dh2048.pem",
+                    "key-file": "/config/auth/openvpn/mic/mic-server.key"
+                }
+            },
+            "vtun3": {
+                "description": "VPN site to site keeper",
+                "encryption": "aes256",
+                "firewall": {
+                    "in": {
+                        "ipv6-name": "LANv6_IN",
+                        "name": "LAN_IN"
+                    },
+                    "local": {
+                        "ipv6-name": "LANv6_LOCAL",
+                        "name": "LAN_LOCAL"
+                    },
+                    "out": {
+                        "ipv6-name": "LANv6_OUT",
+                        "name": "LAN_OUT"
+                    }
+                },
+                "mode": "server",
+                "openvpn-option": [
+                    "--persist-tun",
+                    "--client-config-dir /config/auth/openvpn/ccd",
+                    "--keepalive 10 60",
+                    "--user nobody",
+                    "--group nogroup",
+                    "--proto udp",
+                    "--port 1197"
+                ],
+                "server": {
+                    "push-route": "172.24.0.0/17",
+                    "subnet": "172.24.252.8/29"
+                },
+                "tls": {
+                    "ca-cert-file": "/config/auth/openvpn/kee/kee-ca.crt",
+                    "cert-file": "/config/auth/openvpn/kee/kee-server.crt",
+                    "dh-file": "/config/auth/openvpn/dh2048.pem",
+                    "key-file": "/config/auth/openvpn/kee/kee-server.key"
+                }
+            },
+            "vtun4": {
+                "description": "VPN site to site char (bne2)",
+                "encryption": "aes256",
+                "firewall": {
+                    "in": {
+                        "ipv6-name": "LANv6_IN",
+                        "name": "LAN_IN"
+                    },
+                    "local": {
+                        "ipv6-name": "LANv6_LOCAL",
+                        "name": "LAN_LOCAL"
+                    },
+                    "out": {
+                        "ipv6-name": "LANv6_OUT",
+                        "name": "LAN_OUT"
+                    }
+                },
+                "mode": "server",
+                "openvpn-option": [
+                    "--persist-tun",
+                    "--client-config-dir /config/auth/openvpn/ccd",
+                    "--keepalive 10 60",
+                    "--user nobody",
+                    "--group nogroup",
+                    "--proto udp",
+                    "--port 1198"
+                ],
+                "server": {
+                    "push-route": "172.24.0.0/17",
+                    "subnet": "172.24.252.16/29"
+                },
+                "tls": {
+                    "ca-cert-file": "/config/auth/openvpn/char/server-ca.crt",
+                    "cert-file": "/config/auth/openvpn/char/server.crt",
+                    "dh-file": "/config/auth/openvpn/dh2048.pem",
+                    "key-file": "/config/auth/openvpn/char/server.key"
+                }
+            }
+        }
+    },
+    "protocols": {
+        "static": {
+            "route": {
+                "172.20.0.0/16": {
+                    "next-hop": {
+                        "172.24.252.3": {
+                            "distance": "1"
+                        }
+                    }
+                },
+                "172.22.0.0/16": {
+                    "next-hop": {
+                        "172.24.252.10": {
+                            "distance": "1"
+                        }
+                    }
+                },
+                "172.30.0.0/16": {
+                    "next-hop": {
+                        "172.24.252.18": {
+                            "distance": "1"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "service": {
+        "dns": {
+            "forwarding": {
+                "cache-size": "256",
+                "except-interface": [
+                    "pppoe0"
+                ],
+                "name-server": [
+                    "172.24.16.4"
+                ],
+                "options": [
+                    "ptr-record=1.10.24.172.in-addr.arpa,usg4-bne1netblackhatsnetau",
+                    "host-record=unifi,172.24.10.19"
+                ]
+            }
+        },
+        "gui": {
+            "http-port": "8080",
+            "https-port": "8443"
+        }
+    },
+    "system": {
+        "domain-name": "net.blackhats.net.au",
+        "host-name": "usg4",
+        "task-scheduler": {
+            "task": {
+                "postprovision": {
+                    "executable": {
+                        "path": "/config/scripts/postprovision.sh"
+                    },
+                    "interval": "3m"
+                }
+            }
+        }
+    }
+}

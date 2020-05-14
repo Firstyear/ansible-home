@@ -68,6 +68,16 @@
     - docker
     - unifi
 
+- name: Deploy sites config.gateway.json
+  become: yes
+  template: src=unifi/{{ item }} dest=/var/lib/docker/volumes/unifi_data/_data/{{ item }} owner=root group=root mode=0600
+  with_items:
+    - sites/default/config.gateway.json
+    - sites/abvd2n5d/config.gateway.json
+  tags:
+    - docker
+    - unifi
+
 - name: Create unifi log volume
   become: true
   docker_volume:

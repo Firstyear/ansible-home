@@ -1,0 +1,74 @@
+{
+    "interfaces": {
+        "openvpn": {
+            "vtun0": {
+                "description": "primary vpn to bne1",
+                "encryption": "aes256",
+                "mode": "client",
+                "remote-host": "59.167.222.212",
+                "remote-port" : "1198",
+                "openvpn-option": [
+                    "--persist-tun",
+                    "--keepalive 10 60",
+                    "--user nobody",
+                    "--group nogroup",
+                    "--verb 4",
+                    "--proto udp"
+                ],
+                "tls": {
+                    "ca-cert-file": "/config/auth/openvpn/char/server-ca.crt",
+                    "cert-file": "/config/auth/openvpn/char/client.crt",
+                    "key-file": "/config/auth/openvpn/char/client.key"
+                },
+                "firewall": {
+                    "in": {
+                        "ipv6-name": "LANv6_IN",
+                        "name": "LAN_IN"
+                    },
+                    "local": {
+                        "ipv6-name": "LANv6_LOCAL",
+                        "name": "LAN_LOCAL"
+                    },
+                    "out": {
+                        "ipv6-name": "LANv6_OUT",
+                        "name": "LAN_OUT"
+                    }
+                }
+            },
+            "vtun1": {
+                "description": "recovery vpn if for connection to lan2 at bne1",
+                "encryption": "aes256",
+                "mode": "client",
+                "remote-host": "10.0.25.1",
+                "remote-port" : "1198",
+                "openvpn-option": [
+                    "--persist-tun",
+                    "--keepalive 10 60",
+                    "--user nobody",
+                    "--group nogroup",
+                    "--verb 4",
+                    "--proto udp"
+                ],
+                "tls": {
+                    "ca-cert-file": "/config/auth/openvpn/char/server-ca.crt",
+                    "cert-file": "/config/auth/openvpn/char/client.crt",
+                    "key-file": "/config/auth/openvpn/char/client.key"
+                },
+                "firewall": {
+                    "in": {
+                        "ipv6-name": "LANv6_IN",
+                        "name": "LAN_IN"
+                    },
+                    "local": {
+                        "ipv6-name": "LANv6_LOCAL",
+                        "name": "LAN_LOCAL"
+                    },
+                    "out": {
+                        "ipv6-name": "LANv6_OUT",
+                        "name": "LAN_OUT"
+                    }
+                }
+            }
+        }
+    }
+}

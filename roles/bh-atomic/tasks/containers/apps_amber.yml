@@ -1,4 +1,18 @@
 
+# Since this is the fileserver we add it's nagios config.
+
+- name: Deploy nrpe config
+  become: yes
+  template: src=nagios/fileserver-nrpe.cfg dest=/etc/nrpe.cfg owner=root group=root mode=0644
+  tags:
+    - nrpe
+
+- name: Ensure nrpe active
+  become: yes
+  service: name=nrpe enabled=yes
+  tags:
+    - nrpe
+
 # 389 DS Ldap
 - name: Create internal ldap network
   become: true

@@ -1,6 +1,6 @@
 
 # Install: transactional-update pkg install apache2 nagios-www nagios nagios-contrib 
-# monitoring-plugins-ldap monitoring-plugins-radius monitoring-plugins-rsync monitoring-plugins-apcupsd
+# monitoring-plugins-ldap monitoring-plugins-radius monitoring-plugins-rsync monitoring-plugins-apcupsd monitoring-plugins-nrpe
 
 # Ensure you run a2enmod php7
 

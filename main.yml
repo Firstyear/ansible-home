@@ -5,3 +5,14 @@
     - bh-atomic
   vars_files:
     - ~/secure/ansible_home_secrets.yml
+  vars:
+    fileserver_nrpe_disks:
+      - vda2
+      - nextcloud
+      - backup
+      - home
+      - nextcloud_db
+      - pub
+
+
+
