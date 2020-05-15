@@ -328,6 +328,13 @@
                         "162"
                     ]
                 },
+                "samba": {
+                    "description": "samba",
+                    "port": [
+                        "139",
+                        "445"
+                    ]
+                },
                 "ssh": {
                     "description": "ssh",
                     "port": [
@@ -724,6 +731,22 @@
                             }
                         }
                     },
+                    "1190": {
+                        "action": "accept",
+                        "description": "allow net6_internetofshit to net6_app_servers (samba)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_app_servers",
+                                "port-group": "samba"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_internetofshit"
+                            }
+                        }
+                    },
                     "5000": {
                         "action": "reject",
                         "description": "deny all to net6_bne1_all",
@@ -1055,7 +1078,7 @@
                     },
                     "1080": {
                         "action": "accept",
-                        "description": "net4_priv to net4_ios_locked",
+                        "description": "net4_priv to net4_internetofshit",
                         "destination": {
                             "group": {
                                 "address-group": "net4_internetofshit"
@@ -1300,16 +1323,17 @@
                     },
                     "1240": {
                         "action": "accept",
-                        "description": "net4_mgmt to net4_internetofshit",
+                        "description": "net4_internetofshit to net4_app_servers (samba)",
                         "destination": {
                             "group": {
-                                "address-group": "net4_internetofshit"
+                                "address-group": "net4_app_servers",
+                                "port-group": "samba"
                             }
                         },
                         "protocol": "all",
                         "source": {
                             "group": {
-                                "address-group": "net4_mgmt"
+                                "address-group": "net4_internetofshit"
                             }
                         }
                     },
