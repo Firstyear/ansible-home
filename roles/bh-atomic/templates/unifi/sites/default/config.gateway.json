@@ -318,6 +318,12 @@
                         "8443"
                     ]
                 },
+                "nrpe": {
+                    "description": "nrpe",
+                    "port": [
+                        "5666"
+                    ]
+                },
                 "router_admin": {
                     "description": "router_admin",
                     "port": [
@@ -576,6 +582,21 @@
                             }
                         }
                     },
+                    "1085": {
+                        "action": "accept",
+                        "description": "net6_mgmt to net6_internetofshit",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_internetofshit"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_mgmt"
+                            }
+                        }
+                    },
                     "1090": {
                         "action": "accept",
                         "description": "net6_mgmt to net6_domain -- monitoring",
@@ -591,6 +612,22 @@
                             }
                         }
                     },
+                    "1095": {
+                        "action": "accept",
+                        "description": "allow net6_domain to net6_app_servers (https_alt_idm)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_app_servers",
+                                "port-group": "https_alt_idm"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_domain"
+                            }
+                        }
+                    },
                     "1100": {
                         "action": "accept",
                         "description": "net6_mgmt to net6_suse_internal (ssh) -- monitoring",
@@ -598,6 +635,22 @@
                             "group": {
                                 "ipv6-address-group": "net6_suse_internal",
                                 "port-group": "ssh"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_mgmt"
+                            }
+                        }
+                    },
+                    "1105": {
+                        "action": "accept",
+                        "description": "net6_mgmt to net6_suse_internal (nrpe) -- monitoring",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_suse_internal",
+                                "port-group": "nrpe"
                             }
                         },
                         "protocol": "all",
@@ -1297,6 +1350,21 @@
                         "destination": {
                             "group": {
                                 "address-group": "net4_app_servers"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_mgmt"
+                            }
+                        }
+                    },
+                    "1225": {
+                        "action": "accept",
+                        "description": "net4_mgmt to net4_internetofshit",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_internetofshit"
                             }
                         },
                         "protocol": "all",

@@ -3,7 +3,7 @@
 
 - name: Deploy nrpe config
   become: yes
-  template: src=nagios/fileserver-nrpe.cfg dest=/etc/nrpe.cfg owner=root group=root mode=0644
+  template: src=nagios/fileserver-nrpe.cfg dest=/etc/nrpe.d/fileserver.cfg owner=root group=root mode=0644
   tags:
     - nrpe
 

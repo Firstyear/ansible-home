@@ -20,6 +20,8 @@
   notify:
     - postmap
     - restart postfix
+  tags:
+    - mail
 
 - name: Deploy postfix configurations
   become: true
@@ -29,6 +31,8 @@
     - master.cf
     - postgrey_whitelist_clients.local
   notify: restart postfix
+  tags:
+    - mail
 
 - name: Create certbot root
   become: yes
@@ -38,10 +42,20 @@
     group: root
     mode: 0755
     state: directory
+  tags:
+    - mail
 
 - name: certbot vhost
   become: yes
   template: src=email/certbot.conf dest=/etc/apache2/vhosts.d/certbot.conf owner=root group=root mode=0644
+  tags:
+    - mail
+
+- name: global ssl config
+  become: yes
+  template: src=email/ssl-global.conf dest=/etc/apache2/ssl-global.conf owner=root group=root mode=0644
+  tags:
+    - mail
 
 # certbot certonly -n --webroot -w /srv/www/vhosts/certbot --agree-tos --email william@blackhats.net.au  -d mxb.blackhats.net.au
 
@@ -53,4 +67,6 @@
     - postgrey
     - apache2
     - certbot-renew.timer
+  tags:
+    - mail
 

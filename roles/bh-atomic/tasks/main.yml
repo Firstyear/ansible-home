@@ -45,7 +45,7 @@
     state: present
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == False"
 
-# transactional-update pkg install kanidm-clients kanidm-unixd-clients
+# transactional-update pkg install kanidm-clients kanidm-unixd-clients nrpe
 
 - name: Configure Kanidm configuration
   become: yes
@@ -67,6 +67,7 @@
   template: src=base/kanidm/{{ item }} dest=/etc/sudoers.d/{{ item }} owner=root group=root mode=0600
   with_items:
     - net_admins-sudo
+    - nrpe-sudo
   tags:
     - kanidm_client
 
@@ -140,13 +141,23 @@
     - certbot.timer
     - avahi-daemon
 
+- name: Transactional Monitoring Config
+  become: yes
+  template: src=nagios/{{ item }} dest=/etc/nrpe.d/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - allow.cfg
+    - trans.cfg
+  tags:
+    - nrpe
+  when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == True"
+
 - name: Ensure transactional services enabled
   become: yes
-  ignore_errors: yes
   service: name={{ item }} enabled=yes
   with_items:
     - rebootmgr.service
     - transactional-update.timer
+    - nrpe.service
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == True"
 
 # When we aren't transactional, we still want auto updates though.
