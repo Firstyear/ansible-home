@@ -1,0 +1,18 @@
+ASNUM	Maintainer	Use	Allocated v4	Allocated v6	Remarks
+4266000000	BHNA	Network Reserved	100.64.0.0/10	fe80::/10	
+-	DOCKER NA	DO NOT USE	172.16.0.0	-	
+-	-	FREE	172.17.0.0/16	-	
+-	-	FREE	172.18.0.0/16	-	
+-	-	FREE	172.19.0.0/16 	-	
+-	micolous	homenet	172.20.0.0/16	-	
+-	-	FREE	172.21.0.0/16	-	
+-	keeper	homenet	172.22.0.0/16	-	
+-	-	FREE	172.23.0.0/16	-	
+-	firstyear	homenet	172.24.0.0/16	-	
+-	gm	homenet	172.25.0.0/16	-	May no longer be active
+4266172026	kleinig	homenet	172.26.0.0/16	fdec:3b3e:42a7::/48	
+-	-	FREE	172.27.0.0/16	-	
+-	-	FREE	172.28.0.0/16	-	
+-	nextyear	homenet	172.29.0.0/16	-	Not on VPN
+-	charcol	homenet	172.30.0.0/16	-	Conflict w_ peer
+4266172030	peer	homenet	172.30.0.0/16	fd0c:62a5:44e5::/48	Conflict w_ charcol
