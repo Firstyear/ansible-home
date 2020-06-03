@@ -1,0 +1,9 @@
+Host topaz.prd.blackhats.net.au
+    User backup
+    IdentityFile ~/.ssh/backup_id_ssh_ecdsa
+
+
+Host {{ borgbasename }}.repo.borgbase.com
+    User {{ borgbasename }}
+    IdentityFile ~/.ssh/backup_id_ssh_ecdsa
+

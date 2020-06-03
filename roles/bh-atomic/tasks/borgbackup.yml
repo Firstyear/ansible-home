@@ -15,12 +15,12 @@
   tags:
     - backup
 
-- copy:
+- template:
+    src: base/borgbackup/ssh_config
     dest: /root/.ssh/config
-    content: |
-        Host topaz.prd.blackhats.net.au
-            User backup
-            IdentityFile ~/.ssh/backup_id_ssh_ecdsa
+    owner: root
+    group: root
+    mode: 0700
   become: true
   tags:
     - backup
