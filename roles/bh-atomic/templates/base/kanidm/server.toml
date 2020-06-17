@@ -1,0 +1,4 @@
+bindaddress = "0.0.0.0:8080"
+ldapbindaddress = "0.0.0.0:3389"
+db_path = "/data/kanidm.db"
+log_level = "perfbasic"

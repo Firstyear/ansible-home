@@ -14,47 +14,47 @@
     - nrpe
 
 # 389 DS Ldap
-- name: Create internal ldap network
-  become: true
-  docker_network:
-    name: ldap_net
-    ipam_config:
-      - gateway: 172.16.0.1
-        iprange: 172.16.0.64/26
-        subnet: 172.16.0.0/24
-  tags:
-    - docker
-    - 389ds
-
-- name: Create 389ds volume
-  become: true
-  docker_volume:
-    name: 389ds_data
-  tags:
-    - docker
-    - 389ds
-
-- name: Create 389ds container
-  become: true
-  docker_container:
-    name: 389ds
-    image: 389ds/dirsrv:latest
-    shm_size: 256M
-    purge_networks: yes
-    networks:
-      - name: ldap_net
-    # user: 1389:1389
-    volumes:
-      - "389ds_data:/data"
-    ports:
-      - "3389:3389"
-      - "3636:3636"
-    restart_policy: always
-    pull: yes
-    log_driver: journald
-  tags:
-    - docker
-    - 389ds
+# - name: Create internal ldap network
+#   become: true
+#   docker_network:
+#     name: ldap_net
+#     ipam_config:
+#       - gateway: 172.16.0.1
+#         iprange: 172.16.0.64/26
+#         subnet: 172.16.0.0/24
+#   tags:
+#     - docker
+#     - 389ds
+# 
+# - name: Create 389ds volume
+#   become: true
+#   docker_volume:
+#     name: 389ds_data
+#   tags:
+#     - docker
+#     - 389ds
+# 
+# - name: Create 389ds container
+#   become: true
+#   docker_container:
+#     name: 389ds
+#     image: 389ds/dirsrv:latest
+#     shm_size: 256M
+#     purge_networks: yes
+#     networks:
+#       - name: ldap_net
+#     # user: 1389:1389
+#     volumes:
+#       - "389ds_data:/data"
+#     ports:
+#       - "3389:3389"
+#       - "3636:3636"
+#     restart_policy: always
+#     pull: yes
+#     log_driver: journald
+#   tags:
+#     - docker
+#     - 389ds
 
 
 - name: Create docker volume for nextcloud_db
@@ -266,25 +266,28 @@
     - docker
     - kanidm
 
+- name: Deploy kanidm server.toml
+  become: yes
+  template: src=base/kanidm/server.toml dest=/var/lib/docker/volumes/kanidmd/_data/server.toml owner=root group=root mode=0644
+  tags:
+    - docker
+    - kanidm
+
 - name: Create kanidmd
   become: true
   docker_container:
     name: kanidmd
     image: kanidm/server:latest
     user: 1400:1400
-    command: /sbin/kanidmd server -D /data/kanidm.db --bindaddr 0.0.0.0:8080
     volumes:
       - "kanidmd:/data"
     purge_networks: yes
-    exposed_ports:
-      - "80"
     networks:
       - name: kanidm_net
         ipv4_address: 172.16.2.120
     restart_policy: always
     env:
       RUST_BACKTRACE: full
-    # Apparently this pulls the latest image always?
     pull: yes
     log_driver: journald
   tags:
@@ -326,10 +329,13 @@
       HAPROXY_TARGET_PORT: "8080"
       HAPROXY_HOSTNAME: idm.blackhats.net.au
       HAPROXY_LINODE_KEY: "{{ haproxy_linode_key }}"
+      HAPROXY_RAW_TARGET_PORT: "3389"
+      HAPROXY_RAW_LISTEN_PORT: "636"
     ports:
       - "8000:80"
       - "8443:443"
       - "8081:8080"
+      - "636:636"
     # Apparently this pulls the latest image always?
     pull: yes
     log_driver: journald
