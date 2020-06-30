@@ -141,7 +141,7 @@
   become: true
   docker_container:
     name: kanidm_radiusd
-    image: kanidm/radius:latest
+    image: kanidm/radius:devel
     purge_networks: yes
     networks:
       - name: radiusd_net

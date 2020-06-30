@@ -16,4 +16,8 @@ cache_timeout = 60
 db_path = "/dev/shm/kanidm.cache.db"
 {% endif %}
 
+home_attr = "name"
+uid_attr_map = "name"
+gid_attr_map = "name"
+
 

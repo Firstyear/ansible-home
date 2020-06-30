@@ -277,7 +277,7 @@
   become: true
   docker_container:
     name: kanidmd
-    image: kanidm/server:latest
+    image: kanidm/server:devel
     user: 1400:1400
     volumes:
       - "kanidmd:/data"
@@ -343,5 +343,172 @@
     - docker
     - haproxy
     - kanidm
+
+- name: Create docker volumes for tftpd
+  become: true
+  docker_volume:
+    name: tftpd
+  with_items:
+    - tftpd
+  tags:
+    - docker
+    - tftpd
+
+- name: Create tftpd pxe boot server
+  become: true
+  docker_container:
+    name: tftpd
+    image: pghalliday/tftp:latest
+    volumes:
+      - "tftpd:/var/tftpboot"
+      - "/usr/share/tftpboot-installation:/var/tftpboot/images"
+      - "/usr/share/ipxe:/var/tftpboot/ipxe"
+      - "/usr/share/syslinux/efi64/cat.c32:/var/tftpboot/efi64/cat.c32"
+      - "/usr/share/syslinux/efi64/chain.c32:/var/tftpboot/efi64/chain.c32"
+      - "/usr/share/syslinux/efi64/cmd.c32:/var/tftpboot/efi64/cmd.c32"
+      - "/usr/share/syslinux/efi64/cmenu.c32:/var/tftpboot/efi64/cmenu.c32"
+      - "/usr/share/syslinux/efi64/config.c32:/var/tftpboot/efi64/config.c32"
+      - "/usr/share/syslinux/efi64/cptime.c32:/var/tftpboot/efi64/cptime.c32"
+      - "/usr/share/syslinux/efi64/cpu.c32:/var/tftpboot/efi64/cpu.c32"
+      - "/usr/share/syslinux/efi64/cpuid.c32:/var/tftpboot/efi64/cpuid.c32"
+      - "/usr/share/syslinux/efi64/cpuidtest.c32:/var/tftpboot/efi64/cpuidtest.c32"
+      - "/usr/share/syslinux/efi64/debug.c32:/var/tftpboot/efi64/debug.c32"
+      - "/usr/share/syslinux/efi64/dhcp.c32:/var/tftpboot/efi64/dhcp.c32"
+      - "/usr/share/syslinux/efi64/dir.c32:/var/tftpboot/efi64/dir.c32"
+      - "/usr/share/syslinux/efi64/dmi.c32:/var/tftpboot/efi64/dmi.c32"
+      - "/usr/share/syslinux/efi64/dmitest.c32:/var/tftpboot/efi64/dmitest.c32"
+      - "/usr/share/syslinux/efi64/gfxboot.c32:/var/tftpboot/efi64/gfxboot.c32"
+      - "/usr/share/syslinux/efi64/hdt.c32:/var/tftpboot/efi64/hdt.c32"
+      - "/usr/share/syslinux/efi64/hexdump.c32:/var/tftpboot/efi64/hexdump.c32"
+      - "/usr/share/syslinux/efi64/host.c32:/var/tftpboot/efi64/host.c32"
+      - "/usr/share/syslinux/efi64/ifcpu.c32:/var/tftpboot/efi64/ifcpu.c32"
+      - "/usr/share/syslinux/efi64/ifcpu64.c32:/var/tftpboot/efi64/ifcpu64.c32"
+      - "/usr/share/syslinux/efi64/ldlinux.e64:/var/tftpboot/efi64/ldlinux.e64"
+      - "/usr/share/syslinux/efi64/lfs.c32:/var/tftpboot/efi64/lfs.c32"
+      - "/usr/share/syslinux/efi64/libcom32.c32:/var/tftpboot/efi64/libcom32.c32"
+      - "/usr/share/syslinux/efi64/libgpl.c32:/var/tftpboot/efi64/libgpl.c32"
+      - "/usr/share/syslinux/efi64/liblua.c32:/var/tftpboot/efi64/liblua.c32"
+      - "/usr/share/syslinux/efi64/libmenu.c32:/var/tftpboot/efi64/libmenu.c32"
+      - "/usr/share/syslinux/efi64/libutil.c32:/var/tftpboot/efi64/libutil.c32"
+      - "/usr/share/syslinux/efi64/linux.c32:/var/tftpboot/efi64/linux.c32"
+      - "/usr/share/syslinux/efi64/ls.c32:/var/tftpboot/efi64/ls.c32"
+      - "/usr/share/syslinux/efi64/lua.c32:/var/tftpboot/efi64/lua.c32"
+      - "/usr/share/syslinux/efi64/mboot.c32:/var/tftpboot/efi64/mboot.c32"
+      - "/usr/share/syslinux/efi64/meminfo.c32:/var/tftpboot/efi64/meminfo.c32"
+      - "/usr/share/syslinux/efi64/menu.c32:/var/tftpboot/efi64/menu.c32"
+      - "/usr/share/syslinux/efi64/pci.c32:/var/tftpboot/efi64/pci.c32"
+      - "/usr/share/syslinux/efi64/pwd.c32:/var/tftpboot/efi64/pwd.c32"
+      - "/usr/share/syslinux/efi64/reboot.c32:/var/tftpboot/efi64/reboot.c32"
+      - "/usr/share/syslinux/efi64/rosh.c32:/var/tftpboot/efi64/rosh.c32"
+      - "/usr/share/syslinux/efi64/sysdump.c32:/var/tftpboot/efi64/sysdump.c32"
+      - "/usr/share/syslinux/efi64/syslinux.c32:/var/tftpboot/efi64/syslinux.c32"
+      - "/usr/share/syslinux/efi64/syslinux.efi:/var/tftpboot/efi64/syslinux.efi"
+      - "/usr/share/syslinux/efi64/vesa.c32:/var/tftpboot/efi64/vesa.c32"
+      - "/usr/share/syslinux/efi64/vesamenu.c32:/var/tftpboot/efi64/vesamenu.c32"
+      - "/usr/share/syslinux/efi64/vpdtest.c32:/var/tftpboot/efi64/vpdtest.c32"
+      - "/usr/share/syslinux/efi64/whichsys.c32:/var/tftpboot/efi64/whichsys.c32"
+      - "/usr/share/syslinux/efi64/zzjson.c32:/var/tftpboot/efi64/zzjson.c32"
+      - "/usr/share/syslinux/altmbr.bin:/var/tftpboot/bios/altmbr.bin"
+      - "/usr/share/syslinux/altmbr_c.bin:/var/tftpboot/bios/altmbr_c.bin"
+      - "/usr/share/syslinux/altmbr_f.bin:/var/tftpboot/bios/altmbr_f.bin"
+      - "/usr/share/syslinux/cat.c32:/var/tftpboot/bios/cat.c32"
+      - "/usr/share/syslinux/chain.c32:/var/tftpboot/bios/chain.c32"
+      - "/usr/share/syslinux/cmd.c32:/var/tftpboot/bios/cmd.c32"
+      - "/usr/share/syslinux/cmenu.c32:/var/tftpboot/bios/cmenu.c32"
+      - "/usr/share/syslinux/config.c32:/var/tftpboot/bios/config.c32"
+      - "/usr/share/syslinux/cptime.c32:/var/tftpboot/bios/cptime.c32"
+      - "/usr/share/syslinux/cpu.c32:/var/tftpboot/bios/cpu.c32"
+      - "/usr/share/syslinux/cpuid.c32:/var/tftpboot/bios/cpuid.c32"
+      - "/usr/share/syslinux/cpuidtest.c32:/var/tftpboot/bios/cpuidtest.c32"
+      - "/usr/share/syslinux/debug.c32:/var/tftpboot/bios/debug.c32"
+      - "/usr/share/syslinux/dhcp.c32:/var/tftpboot/bios/dhcp.c32"
+      - "/usr/share/syslinux/diag:/var/tftpboot/bios/diag"
+      - "/usr/share/syslinux/diag/geodsp1s.img.xz:/var/tftpboot/bios/diag/geodsp1s.img.xz"
+      - "/usr/share/syslinux/diag/geodspms.img.xz:/var/tftpboot/bios/diag/geodspms.img.xz"
+      - "/usr/share/syslinux/diag/handoff.bin:/var/tftpboot/bios/diag/handoff.bin"
+      - "/usr/share/syslinux/dir.c32:/var/tftpboot/bios/dir.c32"
+      - "/usr/share/syslinux/disk.c32:/var/tftpboot/bios/disk.c32"
+      - "/usr/share/syslinux/dmi.c32:/var/tftpboot/bios/dmi.c32"
+      - "/usr/share/syslinux/dmitest.c32:/var/tftpboot/bios/dmitest.c32"
+      - "/usr/share/syslinux/dosutil:/var/tftpboot/bios/dosutil"
+      - "/usr/share/syslinux/dosutil/copybs.com:/var/tftpboot/bios/dosutil/copybs.com"
+      - "/usr/share/syslinux/dosutil/eltorito.sys:/var/tftpboot/bios/dosutil/eltorito.sys"
+      - "/usr/share/syslinux/dosutil/mdiskchk.com:/var/tftpboot/bios/dosutil/mdiskchk.com"
+      - "/usr/share/syslinux/elf.c32:/var/tftpboot/bios/elf.c32"
+      - "/usr/share/syslinux/ethersel.c32:/var/tftpboot/bios/ethersel.c32"
+      - "/usr/share/syslinux/gfxboot.c32:/var/tftpboot/bios/gfxboot.c32"
+      - "/usr/share/syslinux/gptmbr.bin:/var/tftpboot/bios/gptmbr.bin"
+      - "/usr/share/syslinux/gptmbr_c.bin:/var/tftpboot/bios/gptmbr_c.bin"
+      - "/usr/share/syslinux/gptmbr_f.bin:/var/tftpboot/bios/gptmbr_f.bin"
+      - "/usr/share/syslinux/gpxecmd.c32:/var/tftpboot/bios/gpxecmd.c32"
+      - "/usr/share/syslinux/hdt.c32:/var/tftpboot/bios/hdt.c32"
+      - "/usr/share/syslinux/hexdump.c32:/var/tftpboot/bios/hexdump.c32"
+      - "/usr/share/syslinux/host.c32:/var/tftpboot/bios/host.c32"
+      - "/usr/share/syslinux/ifcpu.c32:/var/tftpboot/bios/ifcpu.c32"
+      - "/usr/share/syslinux/ifcpu64.c32:/var/tftpboot/bios/ifcpu64.c32"
+      - "/usr/share/syslinux/ifmemdsk.c32:/var/tftpboot/bios/ifmemdsk.c32"
+      - "/usr/share/syslinux/ifplop.c32:/var/tftpboot/bios/ifplop.c32"
+      - "/usr/share/syslinux/isohdpfx.bin:/var/tftpboot/bios/isohdpfx.bin"
+      - "/usr/share/syslinux/isohdpfx_c.bin:/var/tftpboot/bios/isohdpfx_c.bin"
+      - "/usr/share/syslinux/isohdpfx_f.bin:/var/tftpboot/bios/isohdpfx_f.bin"
+      - "/usr/share/syslinux/isohdppx.bin:/var/tftpboot/bios/isohdppx.bin"
+      - "/usr/share/syslinux/isohdppx_c.bin:/var/tftpboot/bios/isohdppx_c.bin"
+      - "/usr/share/syslinux/isohdppx_f.bin:/var/tftpboot/bios/isohdppx_f.bin"
+      - "/usr/share/syslinux/isolinux-debug.bin:/var/tftpboot/bios/isolinux-debug.bin"
+      - "/usr/share/syslinux/isolinux.bin:/var/tftpboot/bios/isolinux.bin"
+      - "/usr/share/syslinux/kbdmap.c32:/var/tftpboot/bios/kbdmap.c32"
+      - "/usr/share/syslinux/kontron_wdt.c32:/var/tftpboot/bios/kontron_wdt.c32"
+      - "/usr/share/syslinux/ldlinux.c32:/var/tftpboot/bios/ldlinux.c32"
+      - "/usr/share/syslinux/lfs.c32:/var/tftpboot/bios/lfs.c32"
+      - "/usr/share/syslinux/libcom32.c32:/var/tftpboot/bios/libcom32.c32"
+      - "/usr/share/syslinux/libgpl.c32:/var/tftpboot/bios/libgpl.c32"
+      - "/usr/share/syslinux/liblua.c32:/var/tftpboot/bios/liblua.c32"
+      - "/usr/share/syslinux/libmenu.c32:/var/tftpboot/bios/libmenu.c32"
+      - "/usr/share/syslinux/libutil.c32:/var/tftpboot/bios/libutil.c32"
+      - "/usr/share/syslinux/linux.c32:/var/tftpboot/bios/linux.c32"
+      - "/usr/share/syslinux/lpxelinux.0:/var/tftpboot/bios/lpxelinux.0"
+      - "/usr/share/syslinux/ls.c32:/var/tftpboot/bios/ls.c32"
+      - "/usr/share/syslinux/lua.c32:/var/tftpboot/bios/lua.c32"
+      - "/usr/share/syslinux/mboot.c32:/var/tftpboot/bios/mboot.c32"
+      - "/usr/share/syslinux/mbr.bin:/var/tftpboot/bios/mbr.bin"
+      - "/usr/share/syslinux/mbr_c.bin:/var/tftpboot/bios/mbr_c.bin"
+      - "/usr/share/syslinux/mbr_f.bin:/var/tftpboot/bios/mbr_f.bin"
+      - "/usr/share/syslinux/memdisk:/var/tftpboot/bios/memdisk"
+      - "/usr/share/syslinux/meminfo.c32:/var/tftpboot/bios/meminfo.c32"
+      - "/usr/share/syslinux/menu.c32:/var/tftpboot/bios/menu.c32"
+      - "/usr/share/syslinux/pci.c32:/var/tftpboot/bios/pci.c32"
+      - "/usr/share/syslinux/pcitest.c32:/var/tftpboot/bios/pcitest.c32"
+      - "/usr/share/syslinux/pmload.c32:/var/tftpboot/bios/pmload.c32"
+      - "/usr/share/syslinux/poweroff.c32:/var/tftpboot/bios/poweroff.c32"
+      - "/usr/share/syslinux/prdhcp.c32:/var/tftpboot/bios/prdhcp.c32"
+      - "/usr/share/syslinux/pwd.c32:/var/tftpboot/bios/pwd.c32"
+      - "/usr/share/syslinux/pxechn.c32:/var/tftpboot/bios/pxechn.c32"
+      - "/usr/share/syslinux/pxelinux.0:/var/tftpboot/bios/pxelinux.0"
+      - "/usr/share/syslinux/reboot.c32:/var/tftpboot/bios/reboot.c32"
+      - "/usr/share/syslinux/rosh.c32:/var/tftpboot/bios/rosh.c32"
+      - "/usr/share/syslinux/sanboot.c32:/var/tftpboot/bios/sanboot.c32"
+      - "/usr/share/syslinux/sdi.c32:/var/tftpboot/bios/sdi.c32"
+      - "/usr/share/syslinux/sysdump.c32:/var/tftpboot/bios/sysdump.c32"
+      - "/usr/share/syslinux/syslinux.c32:/var/tftpboot/bios/syslinux.c32"
+      - "/usr/share/syslinux/syslinux.com:/var/tftpboot/bios/syslinux.com"
+      - "/usr/share/syslinux/vesa.c32:/var/tftpboot/bios/vesa.c32"
+      - "/usr/share/syslinux/vesainfo.c32:/var/tftpboot/bios/vesainfo.c32"
+      - "/usr/share/syslinux/vesamenu.c32:/var/tftpboot/bios/vesamenu.c32"
+      - "/usr/share/syslinux/vpdtest.c32:/var/tftpboot/bios/vpdtest.c32"
+      - "/usr/share/syslinux/whichsys.c32:/var/tftpboot/bios/whichsys.c32"
+      - "/usr/share/syslinux/zzjson.c32:/var/tftpboot/bios/zzjson.c32"
+    purge_networks: yes
+    networks:
+      - name: bridge
+    restart_policy: always
+    ports:
+      - "69:69"
+      - "69:69/udp"
+    pull: yes
+    log_driver: journald
+  tags:
+    - docker
+    - tftpd
+
 
 

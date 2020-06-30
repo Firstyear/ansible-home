@@ -353,6 +353,12 @@
                         "514"
                     ]
                 },
+                "tftp": {
+                    "description": "tftp",
+                    "port": [
+                        "69"
+                    ]
+                },
                 "unifi_remote_tcp": {
                     "description": "unifi_remote_tcp",
                     "port": [
@@ -1797,6 +1803,14 @@
         "gui": {
             "http-port": "8080",
             "https-port": "8443"
+        },
+        "dhcp-server": {
+            "disabled": "false",
+            "global-parameters": [
+                "option ntp-servers 192.231.203.132;",
+                "next-server 172.24.11.41;",
+                "if exists user-class and option user-class = &quot;iPXE&quot; { filename &quot;/bios/lpxelinux.0&quot;; } else { filename &quot;/ipxe/undionly.kpxe&quot;; }"
+            ]
         }
     },
     "system": {
