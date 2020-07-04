@@ -70,3 +70,6 @@
 - include: manage_lazuli.yml
   when: "'lazuli' in inventory_hostname"
 
+- include: manage_nuc.yml
+  when: "'nuc' in inventory_hostname"
+

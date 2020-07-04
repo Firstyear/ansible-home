@@ -24,6 +24,9 @@
   become: yes
   stat: path=/usr/sbin/transactional-update
   register: trans_suse
+  tags:
+    - nrpe
+    - docker
 
 - name: Setup serial grub console on virtual transactional servers
   become: yes
@@ -143,6 +146,7 @@
 
 - name: Transactional Monitoring Config
   become: yes
+  ignore_errors: yes
   template: src=nagios/{{ item }} dest=/etc/nrpe.d/{{ item }} owner=root group=root mode=0644
   with_items:
     - allow.cfg
@@ -153,6 +157,7 @@
 
 - name: Ensure transactional services enabled
   become: yes
+  ignore_errors: yes
   service: name={{ item }} enabled=yes
   with_items:
     - rebootmgr.service
@@ -195,21 +200,13 @@
     - sudoers
   when: "ansible_os_family == 'Suse'"
 
-# - name: Server configurations
-#   include: server.yml
-#   when: "'htpc' not in group_names"
-
 - name: Server Container Configuration
   include: containers/main.yml
-  when: "'lazuli' in inventory_hostname or 'amber' in inventory_hostname or 'pyrite' in inventory_hostname"
+  when: "'container' in group_names"
 
 - name: Monitoring
   include: nagios.yml
   when: "'topaz' in inventory_hostname"
-
-- name: Spotinuc
-  include: spotinuc.yml
-  when: "'htpc' in group_names"
 
 - name: Backup Client
   include: borgbackup.yml

@@ -59,3 +59,9 @@ borg create                         \
     /root                           \
     /var/lib/docker/volumes/
 
+borg prune                          \
+    --list                          \
+    --prefix '{hostname}-'          \
+    --show-rc                       \
+    --keep-within 14d
+

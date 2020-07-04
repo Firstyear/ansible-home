@@ -4,9 +4,6 @@ localhost ansible_connection=local
 [nonatomic_servers]
 mion.prd.blackhats.net.au patch_day=never ansible_virtualization_role=physical
 
-[htpc]
-spotinuc.prd.blackhats.net.au
-
 [atomic]
 amber.prd.blackhats.net.au
 lazuli.prd.blackhats.net.au
@@ -16,13 +13,19 @@ adularia.prd.blackhats.net.au
 barite.prd.blackhats.net.au
 olivine.net.blackhats.net.au
 pyrite.suse.blackhats.net.au
-dssync.suse.blackhats.net.au
+nuc.dev.blackhats.net.au
 
 [dns64]
 olivine.net.blackhats.net.au
 
 [nat64]
 garnet.net.blackhats.net.au
+
+[container]
+amber.prd.blackhats.net.au
+lazuli.prd.blackhats.net.au
+nuc.dev.blackhats.net.au
+pyrite.suse.blackhats.net.au
 
 [atomic:vars]
 ansible_python_interpreter=/usr/bin/python3
@@ -40,9 +43,6 @@ topaz.prd.blackhats.net.au
 [DailySet1]
 amber.prd.blackhats.net.au
 lazuli.prd.blackhats.net.au
-
-[syd1_servers]
-jinjo.prd.blackhats.net.au
 
 [linode_servers]
 robin.prd.blackhats.net.au

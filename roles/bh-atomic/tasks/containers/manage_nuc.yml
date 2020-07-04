@@ -1,0 +1,149 @@
+- name: Create uv1-uv10network (mgmt)
+  become: true
+  docker_network:
+    name: dk_v10_mgmt
+    enable_ipv6: yes
+    driver: macvlan
+    ipam_config:
+      - subnet: "172.24.10.0/24"
+        iprange: "172.24.10.128/28"
+        gateway: "172.24.10.1"
+      - subnet: "2001:44b8:2155:2c10::/64"
+        iprange: "2001:44b8:2155:2c10::1000/116"
+        gateway: "2001:44b8:2155:2c10::1"
+    driver_options:
+      parent: "eno1.1"
+      macvlan_mode: "bridge"
+  tags:
+    - docker
+
+- name: Create vlan11 (servers)
+  become: true
+  docker_network:
+    name: dk_v11_srvs
+    enable_ipv6: yes
+    driver: macvlan
+    ipam_config:
+      - subnet: "172.24.11.0/24"
+        iprange: "172.24.11.128/28"
+        gateway: "172.24.11.1"
+      - subnet: "2001:44b8:2155:2c11::/64"
+        iprange: "2001:44b8:2155:2c11::1000/116"
+        gateway: "2001:44b8:2155:2c11::1"
+    driver_options:
+      parent: "eno1.11"
+      macvlan_mode: "bridge"
+  tags:
+    - docker
+
+- name: Create vlan16 (dns + nat64)
+  become: true
+  docker_network:
+    name: dk_v16_dns
+    enable_ipv6: yes
+    driver: macvlan
+    ipam_config:
+      - subnet: "172.24.16.0/24"
+        iprange: "172.24.16.128/28"
+        gateway: "172.24.16.1"
+      - subnet: "2001:44b8:2155:2c16::/64"
+        iprange: "2001:44b8:2155:2c16::1000/116"
+        gateway: "2001:44b8:2155:2c16::1"
+    driver_options:
+      parent: "eno1.16"
+      macvlan_mode: "bridge"
+  tags:
+    - docker
+
+- name: Create vlan18 (internet of shit)
+  become: true
+  docker_network:
+    name: dk_v18_ios
+    enable_ipv6: yes
+    driver: macvlan
+    ipam_config:
+      - subnet: "172.24.18.0/24"
+        iprange: "172.24.18.128/28"
+        gateway: "172.24.18.1"
+      - subnet: "2001:44b8:2155:2c18::/64"
+        iprange: "2001:44b8:2155:2c18::1000/116"
+        gateway: "2001:44b8:2155:2c18::1"
+    driver_options:
+      parent: "eno1.18"
+      macvlan_mode: "bridge"
+  tags:
+    - docker
+
+- name: Create zm volumes
+  become: true
+  docker_volume:
+    name: '{{ item }}'
+  with_items:
+    - zm_data
+    - zm_db
+    - zm_logs
+  tags:
+    - docker
+    - zm
+
+- name: Create zm container
+  become: true
+  docker_container:
+    name: zm
+    image: zoneminderhq/zoneminder:latest-el7
+    restart_policy: unless-stopped
+    # pull: yes
+    memory: 2048M
+    cpu_period: 100000
+    # Use 2x cpu
+    cpu_quota: 400000
+    # device_read_bps:
+    # device_read_iops:
+    # device_write_bps:
+    #   - path: 20M
+    # device_write_iops:
+    purge_networks: yes
+    networks:
+      - name: dk_v10_mgmt
+        ipv4_address: 172.24.10.129
+        ipv6_address: 2001:44b8:2155:2c10::1001
+    shm_size: 1024M
+    volumes:
+      - "zm_data:/var/lib/zoneminder/events"
+      - "zm_db:/var/lib/mysql"
+      - "zm_logs:/var/log/zm"
+    env:
+      TZ: "Australia/Brisbane"
+  tags:
+    - docker
+    - zm
+
+- name: Create tayga container
+  become: true
+  docker_container:
+    name: tayga
+    image: danehans/tayga:latest
+    restart_policy: unless-stopped
+    pull: yes
+    privileged: yes
+    memory: 1024M
+    # cpu_period: 100000
+    # cpu_quota: 100000
+    purge_networks: yes
+    networks:
+      - name: dk_v16_dns
+        ipv4_address: 172.24.16.129
+        ipv6_address: 2001:44b8:2155:2c16::1001
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: 0
+      net.ipv6.conf.all.forwarding: 1
+    env:
+      TAYGA_CONF_DATA_DIR: /var/db/tayga
+      TAYGA_CONF_DIR: /usr/local/etc
+      TAYGA_CONF_IPV4_ADDR: 172.24.16.129
+      TAYGA_IPV6_ADDR: 2001:44b8:2155:2c16::1001
+      TAYGA_CONF_PREFIX: 2001:44b8:2155:2c64::/96
+      TAYGA_CONF_DYNAMIC_POOL: 172.24.64.0/24
+  tags:
+    - docker
+    - tayga

@@ -12,7 +12,7 @@
   docker_container:
     name: micd
     image: firstyear/micd:latest
-    restart_policy: always
+    restart_policy: unless-stopped
     pull: yes
     user: 1006:1006
     memory: 400M
@@ -44,7 +44,7 @@
   docker_container:
     name: lifx
     image: firstyear/lifx:latest
-    restart_policy: always
+    restart_policy: unless-stopped
     purge_networks: yes
     networks:
       - name: lifx_net
@@ -86,7 +86,7 @@
     - docker
     - unifi
 
-## docker create --restart always --name unifi --network host -v unifi_data:/unifi/data -v unifi_log:/unifi/log -v /etc/timezone:/etc/timezone:ro -v /etc/localtime:/etc/localtime:ro -e TZ=Australia/Brisbane jacobalberty/unifi:5.9
+## docker create --restart unless-stopped --name unifi --network host -v unifi_data:/unifi/data -v unifi_log:/unifi/log -v /etc/timezone:/etc/timezone:ro -v /etc/localtime:/etc/localtime:ro -e TZ=Australia/Brisbane jacobalberty/unifi:5.9
 
 - name: Create unifi controller
   become: true
@@ -105,7 +105,7 @@
       - "/etc/localtime:/etc/localtime:ro"
     # env:
     #   TZ: "Australia/Brisbane"
-    restart_policy: always
+    restart_policy: unless-stopped
     pull: yes
     log_driver: journald
   tags:
@@ -152,7 +152,7 @@
       - 1813:1813/udp
     volumes:
       - "kanidm_radiusd:/data"
-    restart_policy: always
+    restart_policy: unless-stopped
     env:
       DEBUG: "true"
     log_driver: journald
@@ -186,7 +186,7 @@
       - 1815:1813/udp
     volumes:
       - "kanidm_radiusd_bne2:/data"
-    restart_policy: always
+    restart_policy: unless-stopped
     env:
       DEBUG: "true"
     log_driver: journald
