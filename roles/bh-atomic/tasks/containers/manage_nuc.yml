@@ -103,6 +103,7 @@
     #   - path: 20M
     # device_write_iops:
     purge_networks: yes
+    log_driver: journald
     networks:
       - name: dk_v10_mgmt
         ipv4_address: 172.24.10.129
@@ -127,9 +128,10 @@
     pull: yes
     privileged: yes
     memory: 1024M
-    # cpu_period: 100000
-    # cpu_quota: 100000
+    cpu_period: 100000
+    cpu_quota: 100000
     purge_networks: yes
+    log_driver: journald
     networks:
       - name: dk_v16_dns
         ipv4_address: 172.24.16.129
@@ -147,3 +149,65 @@
   tags:
     - docker
     - tayga
+
+- name: Create micd data volume
+  become: true
+  docker_volume:
+    name: micd_data
+  tags:
+    - docker
+    - micd
+
+- name: Create micd controller
+  become: true
+  docker_container:
+    name: micd
+    image: firstyear/micd:latest
+    restart_policy: unless-stopped
+    pull: yes
+    user: 1006:1006
+    memory: 400M
+    cpu_period: 100000
+    cpu_quota: 100000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v18_ios
+        ipv4_address: 172.24.18.140
+        ipv6_address: 2001:44b8:2155:2c18::1001
+      - name: dk_v10_mgmt
+        ipv4_address: 172.24.10.130
+        ipv6_address: 2001:44b8:2155:2c10::1002
+    volumes:
+      - "micd_data:/data"
+    env:
+      RUST_LOG: "actix=info,micd=info,mic=info"
+  tags:
+    - docker
+    - micd
+
+- name: Create lifx controller
+  become: true
+  docker_container:
+    name: lifx
+    image: firstyear/lifx:latest
+    restart_policy: unless-stopped
+    pull: yes
+    user: 1005:1005
+    memory: 400M
+    cpu_period: 100000
+    cpu_quota: 100000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v18_ios
+        ipv4_address: 172.24.18.141
+        ipv6_address: 2001:44b8:2155:2c18::1002
+      - name: dk_v10_mgmt
+        ipv4_address: 172.24.10.131
+        ipv6_address: 2001:44b8:2155:2c10::1003
+    env:
+      RUST_LOG: "actix=debug,lifx=info"
+  tags:
+    - docker
+    - lifx

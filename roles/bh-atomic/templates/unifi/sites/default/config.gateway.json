@@ -10,12 +10,6 @@
                     ],
                     "description": "host4_status"
                 },
-                "net4_10_0_25_0_24": {
-                    "address": [
-                        "10.0.25.0/24"
-                    ],
-                    "description": "net4_10_0_25_0_24"
-                },
                 "net4_app_servers": {
                     "address": [
                         "172.24.11.0/24"
@@ -39,7 +33,7 @@
                     "address": [
                         "172.24.252.16/29",
                         "172.30.1.0/24",
-                        "10.0.25.0/24"
+                        "192.168.0.0/24"
                     ],
                     "description": "net4_char_mgmt"
                 },
@@ -112,12 +106,6 @@
                         "164.99.0.0/16"
                     ],
                     "description": "net4_suse_corp"
-                },
-                "net4_suse_front": {
-                    "address": [
-                        "172.24.17.0/24"
-                    ],
-                    "description": "net4_suse_front"
                 },
                 "net4_suse_internal": {
                     "address": [
@@ -220,12 +208,6 @@
                         "2620:113:80c0:8000::/50"
                     ]
                 },
-                "net6_suse_front": {
-                    "description": "net6_suse_front",
-                    "ipv6-address": [
-                        "2001:44b8:2155:2c17::/64"
-                    ]
-                },
                 "net6_suse_internal": {
                     "description": "net6_suse_internal",
                     "ipv6-address": [
@@ -281,6 +263,13 @@
                         "172.24.249.0/26",
                         "172.24.249.64/26",
                         "172.24.249.128/26"
+                    ]
+                },
+                "allow_suse_vpn_network_nat": {
+                    "description": "Networks that can nat to suse corp resources.",
+                    "network": [
+                        "172.24.20.0/24",
+                        "172.24.16.0/24"
                     ]
                 }
             },
@@ -758,22 +747,6 @@
                             }
                         }
                     },
-                    "1170": {
-                        "action": "accept",
-                        "description": "net6_suse_front to net6_mgmt (syslog)",
-                        "destination": {
-                            "group": {
-                                "ipv6-address-group": "net6_mgmt",
-                                "port-group": "syslog"
-                            }
-                        },
-                        "protocol": "tcp_udp",
-                        "source": {
-                            "group": {
-                                "ipv6-address-group": "net6_suse_front"
-                            }
-                        }
-                    },
                     "1180": {
                         "action": "accept",
                         "description": "allow net6_suse_internal to net6_app_servers (https_alt_idm)",
@@ -784,6 +757,21 @@
                             }
                         },
                         "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_suse_internal"
+                            }
+                        }
+                    },
+                    "1185": {
+                        "action": "accept",
+                        "description": "net6_suse_internal to net6_suse_corp",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_suse_corp"
+                            }
+                        },
+                        "protocol": "all",
                         "source": {
                             "group": {
                                 "ipv6-address-group": "net6_suse_internal"
@@ -1042,22 +1030,6 @@
                         },
                         "protocol": "icmp"
                     },
-                    "1020": {
-                        "action": "accept",
-                        "description": "net4_suse_front to net4_mgmt (syslog)",
-                        "destination": {
-                            "group": {
-                                "address-group": "net4_mgmt",
-                                "port-group": "syslog"
-                            }
-                        },
-                        "protocol": "tcp_udp",
-                        "source": {
-                            "group": {
-                                "address-group": "net4_suse_front"
-                            }
-                        }
-                    },
                     "1030": {
                         "action": "accept",
                         "description": "net4_app_servers to net4_mgmt (syslog)",
@@ -1265,6 +1237,37 @@
                             }
                         },
                         "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_suse_internal"
+                            }
+                        }
+                    },
+                    "1165": {
+                        "action": "accept",
+                        "description": "net4_suse_internal to net4_suse_corp",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_suse_corp"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_suse_internal"
+                            }
+                        }
+                    },
+                    "1166": {
+                        "action": "accept",
+                        "description": "net4_domain to net4_suse_corp (dns)",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_suse_corp",
+                                "port-group": "dns"
+                            }
+                        },
+                        "protocol": "all",
                         "source": {
                             "group": {
                                 "address-group": "net4_suse_internal"
@@ -1754,6 +1757,46 @@
                     "dh-file": "/config/auth/openvpn/dh2048.pem",
                     "key-file": "/config/auth/openvpn/char/server.key"
                 }
+            },
+            "vtun5": {
+                "description": "VPN site to site SUSE corp",
+                "firewall": {
+                    "in": {
+                        "ipv6-name": "LANv6_IN",
+                        "name": "LAN_IN"
+                    },
+                    "local": {
+                        "ipv6-name": "LANv6_LOCAL",
+                        "name": "LAN_LOCAL"
+                    },
+                    "out": {
+                        "ipv6-name": "LANv6_OUT",
+                        "name": "LAN_OUT"
+                    }
+                },
+                "mode": "client",
+                "remote-host": "195.135.221.12",
+                "openvpn-option": [
+                    "--persist-tun",
+                    "--tun-ipv6",
+                    "--keepalive 10 60",
+                    "--user nobody",
+                    "--group nogroup",
+                    "--proto udp",
+                    "--port 1194",
+                    "--auth SHA512",
+                    "--cipher AES-256-CBC",
+                    "--tls-cipher TLS-DHE-RSA-WITH-AES-256-CBC-SHA",
+                    "--tls-auth /config/auth/openvpn/suse/ta.key 1",
+                    "--auth-user-pass /config/auth/openvpn/suse/creds",
+                    "--ns-cert-type server",
+                    "--comp-lzo"
+                ],
+                "tls": {
+                    "ca-cert-file": "/config/auth/openvpn/suse/SUSE_Trust_Root.crt",
+                    "cert-file": "/config/auth/openvpn/suse/SUSE-wbrown.crt",
+                    "key-file": "/config/auth/openvpn/suse/SUSE-wbrown.key"
+                }
             }
         }
     },
@@ -1811,6 +1854,22 @@
                 "next-server 172.24.11.41;",
                 "if exists user-class and option user-class = &quot;iPXE&quot; { filename &quot;/bios/lpxelinux.0&quot;; } else { filename &quot;/ipxe/undionly.kpxe&quot;; }"
             ]
+        },
+        "nat": {
+            "rule": {
+                "7000": {
+                    "description": "MASQ corporate_network to SUSE VPN",
+                    "log": "disable",
+                    "outbound-interface": "vtun5",
+                    "protocol": "all",
+                    "source": {
+                            "group": {
+                                    "network-group": "allow_suse_vpn_network_nat"
+                            }
+                    },
+                    "type": "masquerade"
+                }
+            }
         }
     },
     "system": {

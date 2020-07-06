@@ -18,9 +18,6 @@ nuc.dev.blackhats.net.au
 [dns64]
 olivine.net.blackhats.net.au
 
-[nat64]
-garnet.net.blackhats.net.au
-
 [container]
 amber.prd.blackhats.net.au
 lazuli.prd.blackhats.net.au
@@ -41,8 +38,8 @@ barite.prd.blackhats.net.au
 topaz.prd.blackhats.net.au
 
 [DailySet1]
-amber.prd.blackhats.net.au
 lazuli.prd.blackhats.net.au
+nuc.dev.blackhats.net.au
 
 [linode_servers]
 robin.prd.blackhats.net.au

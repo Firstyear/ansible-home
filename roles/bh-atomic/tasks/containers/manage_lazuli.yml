@@ -1,64 +1,64 @@
 
-- name: Create micd data volume
-  become: true
-  docker_volume:
-    name: micd_data
-  tags:
-    - docker
-    - micd
-
-- name: Create micd controller
-  become: true
-  docker_container:
-    name: micd
-    image: firstyear/micd:latest
-    restart_policy: unless-stopped
-    pull: yes
-    user: 1006:1006
-    memory: 400M
-    network_mode: host
-    volumes:
-      - "micd_data:/data"
-    env:
-      RUST_LOG: "actix=info,micd=info,mic=info"
-      # RUST_LOG: "actix=debug,micd=debug,mic=debug"
-    log_driver: journald
-  tags:
-    - docker
-    - micd
-
-- name: Create lifx network
-  become: true
-  docker_network:
-    name: lifx_net
-    ipam_config:
-      - gateway: 172.16.0.1
-        iprange: 172.16.0.64/26
-        subnet: 172.16.0.0/24
-  tags:
-    - docker
-    - lifx
-
-- name: Create lifx controller
-  become: true
-  docker_container:
-    name: lifx
-    image: firstyear/lifx:latest
-    restart_policy: unless-stopped
-    purge_networks: yes
-    networks:
-      - name: lifx_net
-    pull: yes
-    user: 1005:1005
-    memory: 400M
-    ports:
-      - "8081:8081"
-    env:
-      RUST_LOG: "actix=debug,lifx=debug"
-    log_driver: journald
-  tags:
-    - docker
-    - lifx
+# - name: Create micd data volume
+#   become: true
+#   docker_volume:
+#     name: micd_data
+#   tags:
+#     - docker
+#     - micd
+# 
+# - name: Create micd controller
+#   become: true
+#   docker_container:
+#     name: micd
+#     image: firstyear/micd:latest
+#     restart_policy: unless-stopped
+#     pull: yes
+#     user: 1006:1006
+#     memory: 400M
+#     network_mode: host
+#     volumes:
+#       - "micd_data:/data"
+#     env:
+#       RUST_LOG: "actix=info,micd=info,mic=info"
+#       # RUST_LOG: "actix=debug,micd=debug,mic=debug"
+#     log_driver: journald
+#   tags:
+#     - docker
+#     - micd
+# 
+# - name: Create lifx network
+#   become: true
+#   docker_network:
+#     name: lifx_net
+#     ipam_config:
+#       - gateway: 172.16.0.1
+#         iprange: 172.16.0.64/26
+#         subnet: 172.16.0.0/24
+#   tags:
+#     - docker
+#     - lifx
+# 
+# - name: Create lifx controller
+#   become: true
+#   docker_container:
+#     name: lifx
+#     image: firstyear/lifx:latest
+#     restart_policy: unless-stopped
+#     purge_networks: yes
+#     networks:
+#       - name: lifx_net
+#     pull: yes
+#     user: 1005:1005
+#     memory: 400M
+#     ports:
+#       - "8081:8081"
+#     env:
+#       RUST_LOG: "actix=debug,lifx=info"
+#     log_driver: journald
+#   tags:
+#     - docker
+#     - lifx
 
 - name: Create unifi data volume
   become: true
@@ -77,6 +77,7 @@
   tags:
     - docker
     - unifi
+    - unificfg
 
 - name: Create unifi log volume
   become: true
