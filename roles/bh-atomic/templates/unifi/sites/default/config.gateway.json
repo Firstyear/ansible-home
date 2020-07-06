@@ -805,6 +805,17 @@
                         "log": "enable",
                         "protocol": "all"
                     },
+                    "5005": {
+                        "action": "reject",
+                        "description": "deny all to net6_suse_corp",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_suse_corp"
+                            }
+                        },
+                        "log": "enable",
+                        "protocol": "all"
+                    },
                     "5010": {
                         "action": "reject",
                         "description": "deny net6_internetofshit to any (external)",
@@ -1420,6 +1431,17 @@
                         "destination": {
                             "group": {
                                 "address-group": "net4_bne1_all"
+                            }
+                        },
+                        "log": "enable",
+                        "protocol": "all"
+                    },
+                    "5005": {
+                        "action": "reject",
+                        "description": "deny all net4_suse_corp",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_suse_corp"
                             }
                         },
                         "log": "enable",
