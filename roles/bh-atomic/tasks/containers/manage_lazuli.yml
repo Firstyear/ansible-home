@@ -114,85 +114,85 @@
     - unifi
 
 
-- name: Create radiusd network
-  become: true
-  docker_network:
-    name: radiusd_net
-    ipam_config:
-      - gateway: 172.16.1.1
-        iprange: 172.16.1.64/26
-        subnet: 172.16.1.0/24
-  tags:
-    - docker
-    - radius
-    - kanidm
-
-- name: Create kanidm radiusd volume (bne1)
-  become: true
-  docker_volume:
-    name: kanidm_radiusd
-  tags:
-    - docker
-    - radius
-    - kanidm
-
-# This is in network mode host to allow ipv6 contact to kandim, but we could try the ipv6nat
-# support ....
-- name: Create kanidm radiusd controller (bne1)
-  become: true
-  docker_container:
-    name: kanidm_radiusd
-    image: kanidm/radius:devel
-    purge_networks: yes
-    networks:
-      - name: radiusd_net
-    ports:
-      - 1812:1812
-      - 1812:1812/udp
-      - 1813:1813
-      - 1813:1813/udp
-    volumes:
-      - "kanidm_radiusd:/data"
-    restart_policy: unless-stopped
-    env:
-      DEBUG: "true"
-    log_driver: journald
-    pull: yes
-  tags:
-    - docker
-    - kanidm
-    - radius
-
-- name: Create kanidm radiusd volume (bne2)
-  become: true
-  docker_volume:
-    name: kanidm_radiusd_bne2
-  tags:
-    - docker
-    - radius
-    - kanidm
-
-- name: Create kanidm radiusd controller (bne2)
-  become: true
-  docker_container:
-    name: kanidm_radiusd_bne2
-    image: kanidm/radius:latest
-    purge_networks: yes
-    networks:
-      - name: radiusd_net
-    ports:
-      - 1814:1812
-      - 1814:1812/udp
-      - 1815:1813
-      - 1815:1813/udp
-    volumes:
-      - "kanidm_radiusd_bne2:/data"
-    restart_policy: unless-stopped
-    env:
-      DEBUG: "true"
-    log_driver: journald
-    pull: yes
-  tags:
-    - docker
-    - kanidm
-    - radius
+# - name: Create radiusd network
+#   become: true
+#   docker_network:
+#     name: radiusd_net
+#     ipam_config:
+#       - gateway: 172.16.1.1
+#         iprange: 172.16.1.64/26
+#         subnet: 172.16.1.0/24
+#   tags:
+#     - docker
+#     - radius
+#     - kanidm
+# 
+# - name: Create kanidm radiusd volume (bne1)
+#   become: true
+#   docker_volume:
+#     name: kanidm_radiusd
+#   tags:
+#     - docker
+#     - radius
+#     - kanidm
+# 
+# # This is in network mode host to allow ipv6 contact to kandim, but we could try the ipv6nat
+# # support ....
+# - name: Create kanidm radiusd controller (bne1)
+#   become: true
+#   docker_container:
+#     name: kanidm_radiusd
+#     image: kanidm/radius:devel
+#     purge_networks: yes
+#     networks:
+#       - name: radiusd_net
+#     ports:
+#       - 1812:1812
+#       - 1812:1812/udp
+#       - 1813:1813
+#       - 1813:1813/udp
+#     volumes:
+#       - "kanidm_radiusd:/data"
+#     restart_policy: unless-stopped
+#     env:
+#       DEBUG: "true"
+#     log_driver: journald
+#     pull: yes
+#   tags:
+#     - docker
+#     - kanidm
+#     - radius
+# 
+# - name: Create kanidm radiusd volume (bne2)
+#   become: true
+#   docker_volume:
+#     name: kanidm_radiusd_bne2
+#   tags:
+#     - docker
+#     - radius
+#     - kanidm
+# 
+# - name: Create kanidm radiusd controller (bne2)
+#   become: true
+#   docker_container:
+#     name: kanidm_radiusd_bne2
+#     image: kanidm/radius:latest
+#     purge_networks: yes
+#     networks:
+#       - name: radiusd_net
+#     ports:
+#       - 1814:1812
+#       - 1814:1812/udp
+#       - 1815:1813
+#       - 1815:1813/udp
+#     volumes:
+#       - "kanidm_radiusd_bne2:/data"
+#     restart_policy: unless-stopped
+#     env:
+#       DEBUG: "true"
+#     log_driver: journald
+#     pull: yes
+#   tags:
+#     - docker
+#     - kanidm
+#     - radius

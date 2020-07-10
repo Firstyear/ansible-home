@@ -219,9 +219,3 @@
 - name: Blog Server
   include: blog.yml
   when: "'blog_servers' in group_names"
-
-- name: dns64
-  include: dns64.yml
-  when: "'dns64' in group_names"
-
-

@@ -127,10 +127,10 @@
                 }
             },
             "ipv6-address-group": {
-                "host6_amber.prd": {
-                    "description": "host6_amber.prd.blackhats.net.au",
+                "host6_idm.prd": {
+                    "description": "host6_idm.prd.blackhats.net.au",
                     "ipv6-address": [
-                        "2001:44b8:2155:2c11:5054:ff:fee6:5586"
+                        "2001:44b8:2155:2c11::1001"
                     ]
                 },
                 "host6_status": {
@@ -266,7 +266,7 @@
                     ]
                 },
                 "allow_suse_vpn_network_nat": {
-                    "description": "Networks that can nat to suse corp resources.",
+                    "description": "Networks that can nat through to suse corp resources.",
                     "network": [
                         "172.24.20.0/24",
                         "172.24.16.0/24"
@@ -304,6 +304,7 @@
                 "https_alt_idm": {
                     "description": "https_alt_idm",
                     "port": [
+                        "443",
                         "8443"
                     ]
                 },
@@ -356,8 +357,8 @@
                         "8843",
                         "8880",
                         "8080",
-                        "1814",
-                        "1815"
+                        "1812",
+                        "1813"
                     ]
                 },
                 "unifi_remote_udp": {
@@ -365,8 +366,8 @@
                     "port": [
                         "3478",
                         "10001",
-                        "1814",
-                        "1815"
+                        "1812",
+                        "1813"
                     ]
                 }
             }
@@ -389,10 +390,10 @@
                     },
                     "1010": {
                         "action": "accept",
-                        "description": "any guest to net6_app_servers (https_alt_idm)",
+                        "description": "any guest to host6_idm.prd (https_alt_idm)",
                         "destination": {
                             "group": {
-                                "ipv6-address-group": "net6_app_servers",
+                                "ipv6-address-group": "host6_idm.prd",
                                 "port-group": "https_alt_idm"
                             }
                         },
@@ -609,10 +610,10 @@
                     },
                     "1095": {
                         "action": "accept",
-                        "description": "allow net6_domain to net6_app_servers (https_alt_idm)",
+                        "description": "allow net6_domain to host6_idm.prd (https_alt_idm)",
                         "destination": {
                             "group": {
-                                "ipv6-address-group": "net6_app_servers",
+                                "ipv6-address-group": "host6_idm.prd",
                                 "port-group": "https_alt_idm"
                             }
                         },
@@ -733,10 +734,10 @@
                     },
                     "1160": {
                         "action": "accept",
-                        "description": "allow net6_external_vpn to net6_app_servers (https_alt_idm)",
+                        "description": "allow net6_external_vpn to host6_idm.prd (https_alt_idm)",
                         "destination": {
                             "group": {
-                                "ipv6-address-group": "net6_app_servers",
+                                "ipv6-address-group": "host6_idm.prd",
                                 "port-group": "https_alt_idm"
                             }
                         },
@@ -749,10 +750,10 @@
                     },
                     "1180": {
                         "action": "accept",
-                        "description": "allow net6_suse_internal to net6_app_servers (https_alt_idm)",
+                        "description": "allow net6_suse_internal to host6_idm.prd (https_alt_idm)",
                         "destination": {
                             "group": {
-                                "ipv6-address-group": "net6_app_servers",
+                                "ipv6-address-group": "host6_idm.prd",
                                 "port-group": "https_alt_idm"
                             }
                         },
@@ -764,8 +765,8 @@
                         }
                     },
                     "1185": {
-                        "action": "accept",
-                        "description": "net6_suse_internal to net6_suse_corp",
+                        "action": "reject",
+                        "description": "net6_suse_internal to net6_suse_corp (TEMP REJECT)",
                         "destination": {
                             "group": {
                                 "ipv6-address-group": "net6_suse_corp"
@@ -876,10 +877,10 @@
                 "rule": {
                     "1000": {
                         "action": "accept",
-                        "description": "net6_external_idm_trust -> host6_amber.prd (https_alt_idm)",
+                        "description": "net6_external_idm_trust -> host6_idm.prd (https_alt_idm)",
                         "destination": {
                             "group": {
-                                "ipv6-address-group": "host6_amber.prd",
+                                "ipv6-address-group": "host6_idm.prd",
                                 "port-group": "https_alt_idm"
                             }
                         },
@@ -943,23 +944,6 @@
                             "invalid": "disable",
                             "new": "disable",
                             "related": "enable"
-                        }
-                    },
-                    "1010": {
-                        "action": "accept",
-                        "description": "any guest to net4_app_servers (https_alt_idm)",
-                        "destination": {
-                            "group": {
-                                "address-group": "net4_app_servers",
-                                "port-group": "https_alt_idm"
-                            }
-                        },
-                        "protocol": "tcp",
-                        "state": {
-                            "established": "disable",
-                            "invalid": "disable",
-                            "new": "enable",
-                            "related": "disable"
                         }
                     },
                     "1020": {
@@ -1238,22 +1222,6 @@
                             }
                         }
                     },
-                    "1160": {
-                        "action": "accept",
-                        "description": "net4_suse_internal to net4_app_servers (https_alt_idm)",
-                        "destination": {
-                            "group": {
-                                "address-group": "net4_app_servers",
-                                "port-group": "https_alt_idm"
-                            }
-                        },
-                        "protocol": "tcp",
-                        "source": {
-                            "group": {
-                                "address-group": "net4_suse_internal"
-                            }
-                        }
-                    },
                     "1165": {
                         "action": "accept",
                         "description": "net4_suse_internal to net4_suse_corp",
@@ -1278,10 +1246,10 @@
                                 "port-group": "dns"
                             }
                         },
-                        "protocol": "all",
+                        "protocol": "tcp_udp",
                         "source": {
                             "group": {
-                                "address-group": "net4_suse_internal"
+                                "address-group": "net4_domain"
                             }
                         }
                     },
@@ -1854,10 +1822,13 @@
             "forwarding": {
                 "cache-size": "256",
                 "except-interface": [
-                    "pppoe0"
+                    "pppoe0",
+                    "eth3.14",
+                    "eth3.19",
+                    "vtun5"
                 ],
                 "name-server": [
-                    "172.24.16.4"
+                    "172.24.16.130"
                 ],
                 "options": [
                     "ptr-record=1.10.24.172.in-addr.arpa,usg4-bne1netblackhatsnetau",
