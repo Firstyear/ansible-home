@@ -40,6 +40,9 @@
     - 01-uofa.conf
 
 # Add systemd-netlogd when more confident later.
+# transactional-update pkg install nrpe yast2-network tmux docker zsh ipcalc python3-docker avahi borgbackup kanidm-clients kanidm-unixd-clients nmap tcpdump libvirt-daemon qemu-kvm 
+# zfs zfs-kmp-default 
+# bridge-utils apcupsd monitoring-plugins-apcupsd libvirt-client libvirt-daemon-qemu
 - name: Configure SUSE packages
   become: yes
   ignore_errors: yes
@@ -47,8 +50,6 @@
     name: ['tmux', 'docker', 'zsh', 'ipcalc', 'python3-docker', 'mozilla-nss-tools', 'avahi', 'borgbackup', 'kanidm-clients', 'kanidm-unixd-clients', 'nmap', 'tcpdump', 'clatd']
     state: present
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == False"
-
-# transactional-update pkg install kanidm-clients kanidm-unixd-clients nrpe
 
 - name: Configure Kanidm configuration
   become: yes
@@ -132,6 +133,7 @@
     - nscd
     - firewalld
     - sssd
+    - zfs-share
 
 - name: Ensure services enabled
   become: yes
@@ -199,6 +201,10 @@
   with_items:
     - sudoers
   when: "ansible_os_family == 'Suse'"
+
+- name: ZFS configuration
+  include: zfs.yml
+  when: "'mion' in inventory_hostname"
 
 - name: Server Container Configuration
   include: containers/main.yml

@@ -213,13 +213,6 @@
     - docker
     - samba
 
-- name: Deploy samba config
-  become: yes
-  template: src=samba/smb.conf dest=/etc/samba/smb.conf owner=root group=root mode=0600
-  tags:
-    - docker
-    - samba
-
 - name: Deploy rsyncd config
   become: yes
   template: src=samba/rsyncd.conf dest=/etc/rsyncd.conf owner=root group=root mode=0644

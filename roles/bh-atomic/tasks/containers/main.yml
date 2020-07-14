@@ -73,3 +73,6 @@
 - include: manage_nuc.yml
   when: "'nuc' in inventory_hostname"
 
+- include: manage_mion.yml
+  when: "'mion' in inventory_hostname"
+

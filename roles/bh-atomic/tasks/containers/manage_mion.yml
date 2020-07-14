@@ -1,0 +1,597 @@
+- name: Create uv1-uv10network (mgmt)
+  become: true
+  docker_network:
+    name: dk_v10_mgmt
+    enable_ipv6: yes
+    driver: macvlan
+    ipam_config:
+      - subnet: "172.24.10.0/24"
+        iprange: "172.24.10.128/28"
+        gateway: "172.24.10.1"
+      - subnet: "2001:44b8:2155:2c10::/64"
+        iprange: "2001:44b8:2155:2c10::1000/116"
+        gateway: "2001:44b8:2155:2c10::1"
+    driver_options:
+      parent: "bond0.1"
+      macvlan_mode: "bridge"
+  tags:
+    - docker
+
+- name: Create vlan11 (servers)
+  become: true
+  docker_network:
+    name: dk_v11_srvs
+    enable_ipv6: yes
+    driver: macvlan
+    ipam_config:
+      - subnet: "172.24.11.0/24"
+        iprange: "172.24.11.128/28"
+        gateway: "172.24.11.1"
+      - subnet: "2001:44b8:2155:2c11::/64"
+        iprange: "2001:44b8:2155:2c11::1000/116"
+        gateway: "2001:44b8:2155:2c11::1"
+    driver_options:
+      parent: "bond0.11"
+      macvlan_mode: "bridge"
+  tags:
+    - docker
+
+- name: Create vlan16 (dns + nat64)
+  become: true
+  docker_network:
+    name: dk_v16_dns
+    enable_ipv6: yes
+    driver: macvlan
+    ipam_config:
+      - subnet: "172.24.16.0/24"
+        iprange: "172.24.16.128/28"
+        gateway: "172.24.16.1"
+      - subnet: "2001:44b8:2155:2c16::/64"
+        iprange: "2001:44b8:2155:2c16::1000/116"
+        gateway: "2001:44b8:2155:2c16::1"
+    driver_options:
+      parent: "bond0.16"
+      macvlan_mode: "bridge"
+  tags:
+    - docker
+
+- name: Create vlan18 (internet of shit)
+  become: true
+  docker_network:
+    name: dk_v18_ios
+    enable_ipv6: yes
+    driver: macvlan
+    ipam_config:
+      - subnet: "172.24.18.0/24"
+        iprange: "172.24.18.128/28"
+        gateway: "172.24.18.1"
+      - subnet: "2001:44b8:2155:2c18::/64"
+        iprange: "2001:44b8:2155:2c18::1000/116"
+        gateway: "2001:44b8:2155:2c18::1"
+    driver_options:
+      parent: "bond0.18"
+      macvlan_mode: "bridge"
+  tags:
+    - docker
+
+## NAT64 + DNS64
+
+- name: Create tayga container
+  become: true
+  docker_container:
+    name: tayga
+    image: danehans/tayga:latest
+    restart_policy: unless-stopped
+    pull: yes
+    privileged: yes
+    memory: 1024M
+    cpu_period: 100000
+    cpu_quota: 100000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v16_dns
+        ipv4_address: 172.24.16.129
+        ipv6_address: 2001:44b8:2155:2c16::1001
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: 0
+      net.ipv6.conf.all.forwarding: 1
+    env:
+      TAYGA_CONF_DATA_DIR: /var/db/tayga
+      TAYGA_CONF_DIR: /usr/local/etc
+      TAYGA_CONF_IPV4_ADDR: 172.24.16.129
+      TAYGA_IPV6_ADDR: 2001:44b8:2155:2c16::1001
+      TAYGA_CONF_PREFIX: 2001:44b8:2155:2c64::/96
+      TAYGA_CONF_DYNAMIC_POOL: 172.24.64.0/24
+  tags:
+    - docker
+    - tayga
+    - nat64
+
+- name: Create dns64 data volume
+  become: true
+  docker_volume:
+    name: dns64_data
+  tags:
+    - docker
+    - dns64
+    - nat64
+
+- name: dns64 config folder
+  become: true
+  file:
+    path: /etc/dns64
+    state: directory
+    mode: '0750'
+  tags:
+    - docker
+    - dns64
+    - nat64
+
+- name: dns64 config
+  become: true
+  template: src=dns64/named.conf dest=/etc/dns64/named.conf owner=root group=root mode=0644
+  with_items:
+    - named.conf
+  tags:
+    - docker
+    - dns64
+    - nat64
+
+- name: dns64 config
+  become: true
+  template: src=../../do_not_commit_templates/dns64/{{ item }} dest=/etc/dns64/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - rndc.key
+    - rndc.conf
+  tags:
+    - docker
+    - dns64
+    - nat64
+
+- name: Create DNS64 server
+  become: true
+  docker_container:
+    name: dns64
+    image: firstyear/dns64:latest
+    restart_policy: unless-stopped
+    pull: yes
+    # user: 1007:1007
+    memory: 512M
+    cpu_period: 100000
+    cpu_quota: 200000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v16_dns
+        ipv4_address: 172.24.16.130
+        ipv6_address: 2001:44b8:2155:2c16::1002
+    volumes:
+      - "dns64_data:/var/lib/named/slave/"
+      - "/etc/dns64/named.conf:/etc/named.conf"
+      - "/etc/dns64/rndc.key:/etc/rndc.key"
+      - "/etc/dns64/rndc.conf:/etc/rndc.conf"
+    sysctls:
+      net.ipv6.conf.all.accept_ra: 0
+      net.ipv6.conf.default.accept_ra: 0
+      net.ipv6.conf.eth0.accept_ra: 0
+      net.ipv6.conf.all.use_tempaddr: 0
+      net.ipv6.conf.default.use_tempaddr: 0
+      net.ipv6.conf.eth0.use_tempaddr: 0
+  tags:
+    - docker
+    - dns64
+    - nat64
+
+## LIFX
+
+- name: Create lifx controller
+  become: true
+  docker_container:
+    name: lifx
+    image: firstyear/lifx:latest
+    restart_policy: unless-stopped
+    pull: yes
+    user: 1005:1005
+    memory: 400M
+    cpu_period: 100000
+    cpu_quota: 100000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v18_ios
+        ipv4_address: 172.24.18.141
+        ipv6_address: 2001:44b8:2155:2c18::1002
+      - name: dk_v10_mgmt
+        ipv4_address: 172.24.10.131
+        ipv6_address: 2001:44b8:2155:2c10::1003
+    env:
+      RUST_LOG: "actix=debug,lifx=info"
+  tags:
+    - docker
+    - lifx
+
+## Nextcloud
+- name: zfs tank/comp/nexcloud
+  become: yes
+  zfs:
+    name: tank/comp/nextcloud
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp/nextcloud
+      quota: 1200G
+  tags:
+    - docker
+    - zfs
+    - nextcloud
+
+- name: zfs tank/nexcloud_db
+  become: yes
+  zfs:
+    name: tank/nextcloud_db
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/nextcloud_db
+      recordsize: 8K
+      logbias: throughput
+      primarycache: metadata
+      quota: 40G
+  tags:
+    - docker
+    - zfs
+    - nextcloud
+
+- name: Create private DB network
+  become: true
+  docker_network:
+    name: nextcloud_net
+    ipam_config:
+      - gateway: 172.16.1.1
+        iprange: 172.16.1.64/26
+        subnet: 172.16.1.0/24
+  tags:
+    - docker
+    - nextcloud
+
+- name: Create a pgsql instance for nextcloud
+  become: true
+  docker_container:
+    name: nextcloud_db
+    image: postgres:11
+    restart_policy: unless-stopped
+    pull: yes
+    # user
+    memory: 2048M
+    cpu_period: 100000
+    cpu_quota: 200000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: nextcloud_net
+    volumes:
+      - "/mnt/nextcloud_db:/var/lib/postgresql/data"
+    shm_size: 256M
+  tags:
+    - docker
+    - nextcloud
+
+# docker run --network test-net -p 8080:80 -v nextcloud:/var/www/html nextcloud:latest
+#
+# docker exec -i -t -u www-data nextcloud php occ upgrade
+# docker exec -i -t -u www-data nextcloud php occ maintenance:mode --on
+
+- name: Create nextcloud
+  become: true
+  docker_container:
+    name: nextcloud
+    image: nextcloud:18
+    restart_policy: unless-stopped
+    pull: yes
+    memory: 1024M
+    cpu_period: 100000
+    cpu_quota: 200000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: nextcloud_net
+    volumes:
+      - "/mnt/comp/nextcloud:/var/www/html"
+  tags:
+    - docker
+    - nextcloud
+
+- name: Create docker volume for haproxy_certs_le
+  become: true
+  docker_volume:
+    name: haproxy_certs_le
+  tags:
+    - docker
+    - haproxy
+
+- name: Create docker volume for haproxy_certs_cb
+  become: true
+  docker_volume:
+    name: haproxy_certs_cb
+  tags:
+    - docker
+    - haproxy
+
+- name: Create nextcloud-haproxy
+  become: true
+  docker_container:
+    name: haproxy
+    image: firstyear/haproxy-linode-dns:latest
+    restart_policy: unless-stopped
+    pull: yes
+    memory: 1024M
+    cpu_period: 100000
+    cpu_quota: 100000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: nextcloud_net
+      - name: dk_v11_srvs
+        ipv4_address: 172.24.11.130
+        ipv6_address: 2001:44b8:2155:2c11::1002
+    volumes:
+      - "haproxy_certs_le:/etc/letsencrypt"
+      - "haproxy_certs_cb:/etc/certbot"
+    env:
+      HAPROXY_TARGET: nextcloud
+      HAPROXY_HOSTNAME: nextcloud.blackhats.net.au
+      HAPROXY_LINODE_KEY: "{{ haproxy_linode_key }}"
+  tags:
+    - docker
+    - haproxy
+    - nextcloud
+
+## SAMBA
+
+- name: Create samba config volume
+  become: true
+  docker_volume:
+    name: samba_config
+  tags:
+    - docker
+    - samba
+
+- name: Deploy samba config
+  become: true
+  template:
+    src: "samba/smb.conf"
+    dest: "/var/lib/docker/volumes/samba_config/_data/smb.conf"
+    owner: root
+    group: root
+    mode: '0600'
+  tags:
+    - docker
+    - samba
+
+- name: zfs tank/samba_db
+  become: yes
+  zfs:
+    name: tank/samba_db
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/samba_db
+      recordsize: 4K
+      quota: 8G
+  tags:
+    - docker
+    - samba
+    - zfs
+
+- name: Create samba container
+  become: true
+  docker_container:
+    name: samba
+    image: firstyear/samba:latest
+    restart_policy: unless-stopped
+    pull: yes
+    memory: 1024M
+    cpu_period: 100000
+    cpu_quota: 100000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v11_srvs
+        ipv4_address: 172.24.11.131
+        ipv6_address: 2001:44b8:2155:2c11::1003
+    volumes:
+      - "/etc/nsswitch.conf:/etc/nsswitch.conf"
+      - "samba_config:/etc/samba"
+      - "/mnt/samba_db:/var/lib/samba"
+      - "/mnt/comp/home:/home"
+      - "/mnt/comp/pub:/var/data/pub"
+      - "/mnt/comp/backups:/var/data/backup"
+      - "/run/kanidm-unixd:/run/kanidm-unixd"
+  tags:
+    - docker
+    - samba
+
+## Radiusd
+
+- name: Create kanidm radiusd volume (bne1)
+  become: true
+  docker_volume:
+    name: kanidm_radiusd_bne1
+  tags:
+    - docker
+    - radius
+    - kanidm
+
+- name: Configure kanidm radiusd (bne1)
+  become: true
+  template:
+    src: "../../do_not_commit_templates/radiusd_bne1/{{ item }}"
+    dest: "/var/lib/docker/volumes/kanidm_radiusd_bne1/_data/{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+    - ca.pem
+    - cert.pem
+    - config.ini
+    - dh
+    - kanidm_ca.pem
+    - key.pem
+  tags:
+    - docker
+    - radius
+    - kanidm
+
+- name: Create kanidm radiusd controller (bne1)
+  become: true
+  docker_container:
+    name: radiusd_bne1
+    image: kanidm/radius:latest
+    restart_policy: unless-stopped
+    pull: yes
+    # user: 1008:1008
+    memory: 2048M
+    cpu_period: 100000
+    cpu_quota: 200000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v10_mgmt
+        ipv4_address: 172.24.10.132
+        ipv6_address: 2001:44b8:2155:2c10::1004
+    volumes:
+      - "kanidm_radiusd_bne1:/data"
+      - "/etc/resolv.conf:/etc/resolv.conf"
+    env:
+      DEBUG: "true"
+  tags:
+    - docker
+    - kanidm
+    - radius
+
+- name: Create kanidm radiusd volume (bne2)
+  become: true
+  docker_volume:
+    name: kanidm_radiusd_bne2
+  tags:
+    - docker
+    - radius
+    - kanidm
+
+- name: Configure kanidm radiusd (bne2)
+  become: true
+  template:
+    src: "../../do_not_commit_templates/radiusd_bne2/{{ item }}"
+    dest: "/var/lib/docker/volumes/kanidm_radiusd_bne2/_data/{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
+  with_items:
+    - ca.pem
+    - cert.pem
+    - config.ini
+    - dh
+    - kanidm_ca.pem
+    - key.pem
+  tags:
+    - docker
+    - radius
+    - kanidm
+
+- name: Create kanidm radiusd controller (bne2)
+  become: true
+  docker_container:
+    name: radiusd_bne2
+    image: kanidm/radius:latest
+    restart_policy: unless-stopped
+    pull: yes
+    # user: 1008:1008
+    memory: 2048M
+    cpu_period: 100000
+    cpu_quota: 200000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v10_mgmt
+        ipv4_address: 172.24.10.133
+        ipv6_address: 2001:44b8:2155:2c10::1005
+    volumes:
+      - "kanidm_radiusd_bne2:/data"
+      - "/etc/resolv.conf:/etc/resolv.conf"
+    env:
+      DEBUG: "true"
+  tags:
+    - docker
+    - kanidm
+    - radius
+
+## UNIFI
+# check: python -m json.tool config.gateway.json
+# show: mca-ctrl -t dump-cfg
+# sudo /opt/vyatta/sbin/dhcpv6-pd-client.pl --ifname pppoe0 --renew
+# 
+# can ssh to aps with ubnt:ubnt and run;
+# mca-cli
+# set-inform http://<host_ip>:8080/inform
+# set-inform http://172.24.10.134:8080/inform
+#
+
+- name: zfs tank/unifi_data
+  become: yes
+  zfs:
+    name: tank/unifi_data
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/unifi_data
+      recordsize: 4K
+      quota: 80G
+  tags:
+    - docker
+    - unifi
+    - zfs
+
+- name: Deploy sites config.gateway.json
+  become: yes
+  template: src=unifi/{{ item }} dest=/mnt/unifi_data/{{ item }} owner=root group=root mode=0600
+  with_items:
+    - sites/default/config.gateway.json
+    - sites/abvd2n5d/config.gateway.json
+  tags:
+    - docker
+    - unifi
+    - unificfg
+
+- name: Create unifi log volume
+  become: true
+  docker_volume:
+    name: unifi_log
+  tags:
+    - docker
+    - unifi
+
+- name: Create unifi controller
+  become: true
+  docker_container:
+    name: unifi
+    image: jacobalberty/unifi:stable
+    restart_policy: unless-stopped
+    pull: yes
+    memory: 2048M
+    cpu_period: 100000
+    cpu_quota: 200000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v10_mgmt
+        ipv4_address: 172.24.10.134
+        ipv6_address: 2001:44b8:2155:2c10::1006
+    volumes:
+      - "/mnt/unifi_data:/unifi/data"
+      - "unifi_log:/unifi/log"
+      - "/etc/localtime:/etc/localtime:ro"
+    # env:
+    #   TZ: "Australia/Brisbane"
+  tags:
+    - docker
+    - unifi
+
+
+

@@ -1,0 +1,175 @@
+- name: zfs kmod configuration
+  become: yes
+  template: src=zfs/module.conf dest=/etc/modprobe.d/zfs.conf owner=root group=root mode=0644
+  tags:
+    - zfs
+
+- name: zfs tank settings
+  become: yes
+  zfs:
+    name: tank
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt
+      relatime: on
+      dnodesize: auto
+      setuid: off
+      exec: off
+      devices: off
+  tags:
+    - zfs
+
+- name: zfs tank/comp settings
+  become: yes
+  zfs:
+    name: tank/comp
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp
+      compression: on
+  tags:
+    - zfs
+
+- name: zfs tank/comp/pub
+  become: yes
+  zfs:
+    name: tank/comp/pub
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp/pub
+      recordsize: 1M
+  tags:
+    - zfs
+
+- name: zfs tank/comp/backups
+  become: yes
+  zfs:
+    name: tank/comp/backups
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp/backups
+      recordsize: 4K
+      quota: 2500G
+  tags:
+    - zfs
+
+- name: zfs tank/comp/zm_data
+  become: yes
+  zfs:
+    name: tank/comp/zm_data
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp/zm_data
+      quota: 200G
+  tags:
+    - zfs
+
+- name: zfs tank/zm_db
+  become: yes
+  zfs:
+    name: tank/zm_db
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/zm_db
+      recordsize: 16K
+      logbias: throughput
+      primarycache: metadata
+      quota: 40G
+  tags:
+    - zfs
+
+- name: zfs tank/comp/micd
+  become: yes
+  zfs:
+    name: tank/comp/micd
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp/micd
+      recordsize: 4K
+      quota: 20G
+  tags:
+    - zfs
+
+- name: zfs tank/comp/kanidm
+  become: yes
+  zfs:
+    name: tank/comp/kanidm
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp/kanidm
+      recordsize: 64K
+      quota: 40G
+      copies: 2
+      primarycache: metadata
+  tags:
+    - zfs
+
+- name: zfs tank/comp/home
+  become: yes
+  zfs:
+    name: tank/comp/home
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp/home
+      quota: 1500G
+  tags:
+    - zfs
+
+- name: zfs tank/comp/home/*
+  become: yes
+  zfs:
+    name: "tank/comp/home/{{ item }}"
+    state: present
+    extra_zfs_properties:
+      mountpoint: "/mnt/comp/home/{{ item }}"
+  with_items:
+    - charcol
+    - william
+    - scanner
+  tags:
+    - zfs
+
+- name: zfs tank/comp/home/charcol/important
+  become: yes
+  zfs:
+    name: tank/comp/home/charcol/important
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp/home/charcol/important
+      copies: 2
+  tags:
+    - zfs
+
+- name: zfs tank/libvirt settings
+  become: yes
+  zfs:
+    name: tank/libvirt
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/libvirt
+      primarycache: metadata
+  tags:
+    - zfs
+
+- name: zfs tank/libvirt/iso settings
+  become: yes
+  zfs:
+    name: tank/libvirt/iso
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/libvirt/iso
+      recordsize: 1M
+  tags:
+    - zfs
+
+- name: zfs tank/libvirt/img settings
+  become: yes
+  zfs:
+    name: tank/libvirt/img
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/libvirt/img
+      recordsize: 4K
+  tags:
+    - zfs
+

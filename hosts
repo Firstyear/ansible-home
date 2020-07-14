@@ -13,12 +13,14 @@ adularia.prd.blackhats.net.au
 barite.prd.blackhats.net.au
 pyrite.suse.blackhats.net.au
 nuc.dev.blackhats.net.au
+mion.prd.blackhats.net.au
 
 [container]
 amber.prd.blackhats.net.au
 lazuli.prd.blackhats.net.au
 nuc.dev.blackhats.net.au
 pyrite.suse.blackhats.net.au
+mion.prd.blackhats.net.au
 
 [atomic:vars]
 ansible_python_interpreter=/usr/bin/python3
