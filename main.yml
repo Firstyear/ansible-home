@@ -7,12 +7,18 @@
     - ~/secure/ansible_home_secrets.yml
   vars:
     fileserver_nrpe_disks:
-      - vda2
-      - nextcloud
-      - backup
-      - home
+      - comp/backups
+      - comp/home
+      - comp/kanidm
+      - comp/micd
+      - comp/nextcloud
+      - comp/pub
+      - comp/zm_data
+      - libvirt/img
+      - libvirt/iso
       - nextcloud_db
-      - pub
+      - unifi_data
+      - zm_db
 
 
 

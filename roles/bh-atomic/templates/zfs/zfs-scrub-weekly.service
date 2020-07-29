@@ -1,0 +1,6 @@
+# See systemd.timers and systemd.time manpages for details
+[Unit]
+Description=ZFS weekly scrub service
+
+[Service]
+ExecStart=/usr/sbin/zpool scrub tank

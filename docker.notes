@@ -1,0 +1,9 @@
+root@mion:/home/william # cat /etc/systemd/system/docker.service.d/override.conf
+[Service]
+ExecStartPost=/root/iptables.sh
+root@mion:/home/william # cat /root/iptables.sh
+#!/bin/sh
+iptables -I DOCKER-USER -i net_20 -j ACCEPT
+iptables -I DOCKER-USER -i net_10 -j ACCEPT
+
+

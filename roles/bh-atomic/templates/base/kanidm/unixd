@@ -9,9 +9,10 @@ conn_timeout = 8
 cache_timeout = 60
 {% endif %}
 
-{% if ansible_distribution_major_version <= '15.1' and ansible_distribution == "openSUSE Leap" %}
-# Older leap doesn't have a needed systemd feature.
+{% if ansible_distribution_major_version <= '15.2' and ansible_distribution == "openSUSE Leap" %}
+# Older leap doesn't have a needed systemd feature, so we use in memory db instead.
 db_path = "/dev/shm/kanidm.cache.db"
+# db_path = ""
 {% endif %}
 
 home_attr = "name"

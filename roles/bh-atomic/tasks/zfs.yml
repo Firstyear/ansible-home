@@ -4,6 +4,35 @@
   tags:
     - zfs
 
+- name: zfs monitoring config
+  become: yes
+  template: src=nagios/fileserver-nrpe.cfg dest=/etc/nrpe.d/fileserver-nrpe.cfg owner=root group=root mode=0644
+  tags:
+    - nrpe
+    - zfs
+
+- name: zfs unit files
+  become: yes
+  template: src=zfs/{{ item }} dest=/etc/systemd/system/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - zfs-auto-snapshot-hourly.timer
+    - zfs-auto-snapshot-hourly.service
+    - zfs-scrub-weekly.timer
+    - zfs-scrub-weekly.service
+  tags:
+    - zfs
+    - zfstasks
+
+- name: zfs timers enabled
+  become: yes
+  service: name={{ item }} enabled=yes state=started
+  with_items:
+    - zfs-auto-snapshot-hourly.timer
+    - zfs-scrub-weekly.timer
+  tags:
+    - zfs
+    - zfstasks
+
 - name: zfs tank settings
   become: yes
   zfs:
@@ -38,6 +67,7 @@
     extra_zfs_properties:
       mountpoint: /mnt/comp/pub
       recordsize: 1M
+      quota: 4T
   tags:
     - zfs
 
@@ -53,57 +83,6 @@
   tags:
     - zfs
 
-- name: zfs tank/comp/zm_data
-  become: yes
-  zfs:
-    name: tank/comp/zm_data
-    state: present
-    extra_zfs_properties:
-      mountpoint: /mnt/comp/zm_data
-      quota: 200G
-  tags:
-    - zfs
-
-- name: zfs tank/zm_db
-  become: yes
-  zfs:
-    name: tank/zm_db
-    state: present
-    extra_zfs_properties:
-      mountpoint: /mnt/zm_db
-      recordsize: 16K
-      logbias: throughput
-      primarycache: metadata
-      quota: 40G
-  tags:
-    - zfs
-
-- name: zfs tank/comp/micd
-  become: yes
-  zfs:
-    name: tank/comp/micd
-    state: present
-    extra_zfs_properties:
-      mountpoint: /mnt/comp/micd
-      recordsize: 4K
-      quota: 20G
-  tags:
-    - zfs
-
-- name: zfs tank/comp/kanidm
-  become: yes
-  zfs:
-    name: tank/comp/kanidm
-    state: present
-    extra_zfs_properties:
-      mountpoint: /mnt/comp/kanidm
-      recordsize: 64K
-      quota: 40G
-      copies: 2
-      primarycache: metadata
-  tags:
-    - zfs
-
 - name: zfs tank/comp/home
   become: yes
   zfs:
@@ -112,6 +91,7 @@
     extra_zfs_properties:
       mountpoint: /mnt/comp/home
       quota: 1500G
+      snapdir: visible
   tags:
     - zfs
 
@@ -148,6 +128,7 @@
     extra_zfs_properties:
       mountpoint: /mnt/libvirt
       primarycache: metadata
+      quota: 1T
   tags:
     - zfs
 

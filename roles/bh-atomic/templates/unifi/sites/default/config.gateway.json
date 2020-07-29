@@ -271,6 +271,17 @@
                         "172.24.20.0/24",
                         "172.24.16.0/24"
                     ]
+                },
+                "dest_suse_vpn_network_nat": {
+                    "description": "Dest suse networks.",
+                    "network": [
+                        "10.0.0.0/8",
+                        "137.65.0.0/16",
+                        "147.2.0.0/16",
+                        "149.44.0.0/16",
+                        "151.155.128.0/17",
+                        "164.99.0.0/16"
+                    ]
                 }
             },
             "port-group": {
@@ -1750,6 +1761,7 @@
             },
             "vtun5": {
                 "description": "VPN site to site SUSE corp",
+                "disable": "''",
                 "firewall": {
                     "in": {
                         "ipv6-name": "LANv6_IN",
@@ -1765,18 +1777,19 @@
                     }
                 },
                 "mode": "client",
-                "remote-host": "195.135.221.12",
+                "remote-host": "195.135.221.11",
                 "openvpn-option": [
+                    "--remote 195.135.221.10",
+                    "--remote-random",
                     "--persist-tun",
                     "--tun-ipv6",
-                    "--keepalive 10 60",
+                    "--keepalive 10 30",
                     "--user nobody",
                     "--group nogroup",
                     "--proto udp",
                     "--port 1194",
                     "--auth SHA512",
                     "--cipher AES-256-CBC",
-                    "--tls-cipher TLS-DHE-RSA-WITH-AES-256-CBC-SHA",
                     "--tls-auth /config/auth/openvpn/suse/ta.key 1",
                     "--auth-user-pass /config/auth/openvpn/suse/creds",
                     "--ns-cert-type server",
@@ -1852,12 +1865,30 @@
             "rule": {
                 "7000": {
                     "description": "MASQ corporate_network to SUSE VPN",
+                    "disable": "''",
                     "log": "disable",
                     "outbound-interface": "vtun5",
                     "protocol": "all",
                     "source": {
                             "group": {
                                     "network-group": "allow_suse_vpn_network_nat"
+                            }
+                    },
+                    "type": "masquerade"
+                },
+                "7005": {
+                    "description": "MASQ to molly ",
+                    "log": "disable",
+                    "outbound-interface": "eth0",
+                    "protocol": "all",
+                    "source": {
+                            "group": {
+                                    "network-group": "allow_suse_vpn_network_nat"
+                            }
+                    },
+                    "destination": {
+                            "group": {
+                                    "network-group": "dest_suse_vpn_network_nat"
                             }
                     },
                     "type": "masquerade"

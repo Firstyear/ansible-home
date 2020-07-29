@@ -6,8 +6,6 @@
 # zypper ar -f -c http://download.opensuse.org/update/tumbleweed/ repo-update
 # zypper ar obs://home:firstyear:kanidm home_firstyear_kanidm
 # zypper mr -f home_firstyear_kanidm
-# zypper ar obs://home:firstyear home_firstyear
-# zypper mr -f home_firstyear
 # zypper ref
 #
 # in nmcli
@@ -39,10 +37,20 @@
   with_items:
     - 01-uofa.conf
 
+# UPS monitoring
+- name: UPS
+  become: yes
+  template: src=base/apcupsd.conf dest=/etc/apcupsd/apcupsd.conf owner=root group=root mode=0644
+  when: "'mion' in inventory_hostname"
+  tags:
+    - apcupsd
+
 # Add systemd-netlogd when more confident later.
 # transactional-update pkg install nrpe yast2-network tmux docker zsh ipcalc python3-docker avahi borgbackup kanidm-clients kanidm-unixd-clients nmap tcpdump libvirt-daemon qemu-kvm 
 # zfs zfs-kmp-default 
 # bridge-utils apcupsd monitoring-plugins-apcupsd libvirt-client libvirt-daemon-qemu
+# iotop virt-install avahi-utils
+#
 - name: Configure SUSE packages
   become: yes
   ignore_errors: yes
@@ -53,7 +61,7 @@
 
 - name: Configure Kanidm configuration
   become: yes
-  template: src=base/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0644
+  template: src=base/{{ item }} dest=/etc/{{ item }} owner=root group=root mode=0444
   with_items:
     - kanidm/config
     - kanidm/unixd

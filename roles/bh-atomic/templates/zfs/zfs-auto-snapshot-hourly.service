@@ -1,0 +1,5 @@
+[Unit]
+Description=ZFS hourly snapshot service
+
+[Service]
+ExecStart=/root/zfs-auto-snapshot -d -k 72 tank

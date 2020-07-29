@@ -183,6 +183,51 @@
     - dns64
     - nat64
 
+## MICD
+
+- name: zfs tank/comp/micd
+  become: yes
+  zfs:
+    name: tank/comp/micd
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp/micd
+      recordsize: 4K
+      quota: 20G
+  tags:
+    - zfs
+    - docker
+    - micd
+
+- name: Create micd controller
+  become: true
+  docker_container:
+    name: micd
+    image: firstyear/micd:latest
+    restart_policy: unless-stopped
+    pull: yes
+    user: 1006:1006
+    memory: 400M
+    cpu_period: 100000
+    cpu_quota: 100000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v18_ios
+        ipv4_address: 172.24.18.140
+        ipv6_address: 2001:44b8:2155:2c18::1001
+      - name: dk_v10_mgmt
+        ipv4_address: 172.24.10.130
+        ipv6_address: 2001:44b8:2155:2c10::1002
+    volumes:
+      - "/mnt/comp/micd:/data"
+    env:
+      RUST_LOG: "actix=info,micd=info,mic=info"
+  tags:
+    - docker
+    - micd
+
+
 ## LIFX
 
 - name: Create lifx controller
@@ -210,6 +255,134 @@
   tags:
     - docker
     - lifx
+
+### Kanidm
+
+- name: zfs tank/comp/kanidm
+  become: yes
+  zfs:
+    name: tank/comp/kanidm
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp/kanidm
+      recordsize: 64K
+      quota: 40G
+      copies: 2
+      primarycache: metadata
+  tags:
+    - zfs
+    - docker
+    - kanidm
+
+- name: Secure kanidm dir
+  become: yes
+  file:
+    path: /mnt/comp/kanidm
+    owner: root
+    group: '1400'
+    mode: '0770'
+  tags:
+    - zfs
+    - docker
+    - kanidm
+
+- name: Create private kanidm network
+  become: true
+  docker_network:
+    name: kanidm_net
+    ipam_config:
+      - gateway: 172.16.2.1
+        iprange: 172.16.2.64/26
+        subnet: 172.16.2.0/24
+  tags:
+    - docker
+    - kanidm
+
+- name: Deploy kanidm server.toml
+  become: yes
+  template: src=base/kanidm/server.toml dest=/mnt/comp/kanidm/server.toml owner=root group='1400' mode=0440
+  tags:
+    - docker
+    - kanidm
+
+- name: Create kanidmd
+  become: true
+  docker_container:
+    name: kanidmd
+    image: kanidm/server:devel
+    restart_policy: unless-stopped
+    pull: yes
+    user: 1400:1400
+    memory: 4096M
+    cpu_period: 100000
+    cpu_quota: 400000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: kanidm_net
+        ipv4_address: 172.16.2.120
+    volumes:
+      - "/mnt/comp/kanidm:/data"
+    env:
+      RUST_BACKTRACE: full
+  tags:
+    - docker
+    - kanidm
+
+- name: Create docker volume for haproxy_certs_le
+  become: true
+  docker_volume:
+    name: kanidm_haproxy_certs_le
+  tags:
+    - docker
+    - haproxy
+    - kanidm
+
+- name: Create docker volume for haproxy_certs_cb
+  become: true
+  docker_volume:
+    name: kanidm_haproxy_certs_cb
+  tags:
+    - docker
+    - haproxy
+    - kanidm
+
+- name: Create kanidm-haproxy
+  become: true
+  docker_container:
+    name: kanidm-haproxy
+    image: firstyear/haproxy-linode-dns:latest
+    restart_policy: unless-stopped
+    pull: yes
+    memory: 1024M
+    cpu_period: 100000
+    cpu_quota: 100000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: kanidm_net
+      - name: dk_v11_srvs
+        ipv4_address: 172.24.11.129
+        ipv6_address: 2001:44b8:2155:2c11::1001
+    volumes:
+      - "kanidm_haproxy_certs_le:/etc/letsencrypt"
+      - "kanidm_haproxy_certs_cb:/etc/certbot"
+    env:
+      HAPROXY_TARGET: kanidmd
+      HAPROXY_TARGET_PORT: "8080"
+      HAPROXY_HOSTNAME: idm.blackhats.net.au
+      HAPROXY_LINODE_KEY: "{{ haproxy_linode_key }}"
+      HAPROXY_RAW_TARGET_PORT: "3389"
+      HAPROXY_RAW_LISTEN_PORT: "636"
+  tags:
+    - docker
+    - haproxy
+    - kanidm
+  # ports:
+  #   - "8000:80"
+  #   - "8443:443"
+  #   - "8081:8080"
+  #   - "636:636"
 
 ## Nextcloud
 - name: zfs tank/comp/nexcloud
@@ -398,8 +571,8 @@
         ipv4_address: 172.24.11.131
         ipv6_address: 2001:44b8:2155:2c11::1003
     volumes:
-      - "/etc/nsswitch.conf:/etc/nsswitch.conf"
-      - "samba_config:/etc/samba"
+      - "/etc/nsswitch.conf:/etc/nsswitch.conf:ro"
+      - "samba_config:/etc/samba:ro"
       - "/mnt/samba_db:/var/lib/samba"
       - "/mnt/comp/home:/home"
       - "/mnt/comp/pub:/var/data/pub"
@@ -408,6 +581,40 @@
   tags:
     - docker
     - samba
+
+## RSYNCD
+
+- name: Deploy rsyncd config
+  become: yes
+  template: src=samba/rsyncd.conf dest=/etc/rsyncd.conf owner=root group=root mode=0644
+  tags:
+    - docker
+    - rsyncd
+
+- name: Create rsyncd container
+  become: true
+  docker_container:
+    name: rsyncd
+    image: firstyear/rsyncd:latest
+    restart_policy: unless-stopped
+    pull: yes
+    memory: 1024M
+    cpu_period: 100000
+    cpu_quota: 100000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v11_srvs
+        ipv4_address: 172.24.11.132
+        ipv6_address: 2001:44b8:2155:2c11::1004
+    volumes:
+      - "/etc/nsswitch.conf:/etc/nsswitch.conf:ro"
+      - "/etc/rsyncd.conf:/etc/rsyncd.conf:ro"
+      - "/mnt/comp/pub:/var/data/pub:ro"
+      - "/run/kanidm-unixd:/run/kanidm-unixd"
+  tags:
+    - docker
+    - rsyncd
 
 ## Radiusd
 
@@ -533,6 +740,21 @@
 # set-inform http://<host_ip>:8080/inform
 # set-inform http://172.24.10.134:8080/inform
 #
+# https://help.ui.com/hc/en-us/articles/205202560-EdgeRouter-Add-Debian-Packages-to-EdgeOS
+#
+# set system package repository wheezy components 'main contrib non-free'
+# set system package repository wheezy distribution wheezy
+# set system package repository wheezy url http://archive.debian.org/debian
+#
+# set system package repository wheezy-backports components 'main contrib non-free'
+# set system package repository wheezy-backports distribution wheezy-backports
+# set system package repository wheezy-backports url http://archive.debian.org/debian
+#
+# commit ; save
+# sudo apt-get update
+# sudo apt-cache search dnsutils
+# sudo apt-get install dnsutils
+# 
 
 - name: zfs tank/unifi_data
   become: yes
@@ -593,5 +815,118 @@
     - docker
     - unifi
 
+#### Zone Minder
 
+- name: zfs tank/comp/zm_data
+  become: yes
+  zfs:
+    name: tank/comp/zm_data
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp/zm_data
+      quota: 200G
+  tags:
+    - zfs
+    - docker
+    - zm
+
+- name: zfs tank/zm_db
+  become: yes
+  zfs:
+    name: tank/zm_db
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/zm_db
+      recordsize: 16K
+      logbias: throughput
+      primarycache: metadata
+      quota: 40G
+  tags:
+    - zfs
+    - docker
+    - zm
+
+- name: Create zm volumes
+  become: true
+  docker_volume:
+    name: '{{ item }}'
+  with_items:
+    - zm_logs
+  tags:
+    - docker
+    - zm
+
+- name: Create zm container
+  become: true
+  docker_container:
+    name: zm
+    image: zoneminderhq/zoneminder:latest-el7
+    restart_policy: unless-stopped
+    # pull: yes
+    memory: 2048M
+    cpu_period: 100000
+    # Use 2x cpu
+    cpu_quota: 400000
+    # device_read_bps:
+    # device_read_iops:
+    # device_write_bps:
+    #   - path: 20M
+    # device_write_iops:
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v10_mgmt
+        ipv4_address: 172.24.10.129
+        ipv6_address: 2001:44b8:2155:2c10::1001
+    shm_size: 1024M
+    volumes:
+      - "/mnt/comp/zm_data:/var/lib/zoneminder/events"
+      - "/mnt/zm_db:/var/lib/mysql"
+      - "zm_logs:/var/log/zm"
+    env:
+      TZ: "Australia/Brisbane"
+  tags:
+    - docker
+    - zm
+
+### Avahi
+
+- name: zfs tank/comp/avahi
+  become: yes
+  zfs:
+    name: tank/comp/avahi
+    state: present
+    extra_zfs_properties:
+      mountpoint: /mnt/comp/avahi
+      quota: 8G
+  tags:
+    - docker
+    - avahi
+    - zfs
+
+# Deploy config here!
+
+- name: Create avahi container
+  become: true
+  docker_container:
+    name: avahi
+    image: firstyear/avahi:latest
+    restart_policy: unless-stopped
+    pull: yes
+    memory: 1024M
+    cpu_period: 100000
+    cpu_quota: 100000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: dk_v11_srvs
+        ipv4_address: 172.24.11.133
+        ipv6_address: 2001:44b8:2155:2c11::1005
+    volumes:
+      - "/etc/nsswitch.conf:/etc/nsswitch.conf:ro"
+      - "/mnt/comp/avahi/avahi-daemon.conf:/etc/avahi/avahi-daemon.conf:ro"
+      - "/mnt/comp/avahi/services:/etc/avahi/services:ro"
+  tags:
+    - docker
+    - avahi
 
