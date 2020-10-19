@@ -42,26 +42,58 @@
 # is really for building/host mode/other routing
 
 # Add an ipv6nat capable daemon.json.
-# - name: Create ipv6nat infra
-#   become: true
-#   docker_container:
-#     name: ipv6nat
-#     image: robbertkl/ipv6nat:latest
-#     network_mode: host
-#     volumes:
-#       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-#       - "/lib/modules:/lib/modules:ro"
-#     restart_policy: always
-#     pull: yes
-#     log_driver: journald
-#     capabilities:
-#       - NET_ADMIN
-#       - SYS_MODULE
-#       - NET_RAW
-#   tags:
-#     - docker
-#     - ipv6nat
-# 
+- name: Create ipv6nat infra
+  become: true
+  docker_container:
+    name: ipv6nat
+    image: robbertkl/ipv6nat:latest
+    network_mode: host
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/lib/modules:/lib/modules:ro"
+    restart_policy: always
+    pull: yes
+    log_driver: journald
+    capabilities:
+      - NET_ADMIN
+      - SYS_MODULE
+      - NET_RAW
+  when: "'pyrite' in inventory_hostname"
+  tags:
+    - docker
+    - ipv6nat
+
+# Configure redis with persistent for pyrite scc caching.
+- name: Create redis persistence volume
+  become: true
+  docker_volume:
+    name: redis_data
+  when: "'pyrite' in inventory_hostname"
+  tags:
+    - docker
+    - redis
+
+- name: Create redis server
+  become: true
+  docker_container:
+    name: sccache_redis
+    image: redis:6
+    restart_policy: unless-stopped
+    pull: yes
+    user: 1009:1009
+    memory: 2048M
+    # purge_networks: yes
+    ports:
+      - "6379:6379"
+    log_driver: journald
+    volumes:
+      - "redis_data:/data"
+    command: "redis-server --bind 0.0.0.0 --port 6379 --protected-mode no --save 300 10 --maxmemory 1536mb --maxmemory-policy allkeys-lru"
+  when: "'pyrite' in inventory_hostname"
+  tags:
+    - docker
+    - redis
+
 
 - include: manage_mion.yml
   when: "'mion' in inventory_hostname"

@@ -14,10 +14,6 @@
 # certbot --test-cert certonly -m william@blackhats.net.au --manual --preferred-challenges=dns --manual-public-ip-logging-ok --agree-tos -d test-cert.net.blackhats.net.au
 # After the DNS challenge is done, then all good to go
 
-- name: Fix SUSE admin groups
-  become: yes
-  user: name=admin groups=wheel append=yes
-
 - name: Detect if we are transactional SUSE install
   become: yes
   stat: path=/usr/sbin/transactional-update
@@ -55,9 +51,14 @@
   become: yes
   ignore_errors: yes
   zypper:
-    name: ['tmux', 'docker', 'zsh', 'ipcalc', 'python3-docker', 'mozilla-nss-tools', 'avahi', 'borgbackup', 'kanidm-clients', 'kanidm-unixd-clients', 'nmap', 'tcpdump', 'clatd']
+    name: ['tmux', 'docker', 'zsh', 'ipcalc', 'python3-docker', 'mozilla-nss-tools', 'avahi', 'borgbackup', 'kanidm-clients', 'kanidm-unixd-clients', 'nmap', 'tcpdump', 'clatd', 'sudo', 'system-group-wheel']
     state: present
   when: "ansible_os_family == 'Suse' and trans_suse.stat.exists == False"
+
+- name: Fix SUSE admin groups
+  become: yes
+  ignore_errors: yes
+  user: name=admin groups=wheel append=yes
 
 - name: Configure Kanidm configuration
   become: yes

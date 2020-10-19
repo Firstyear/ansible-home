@@ -1,4 +1,6 @@
 {
+  "experimental": true,
+  {% if 'pyrite' in inventory_hostname or 'vienna' in inventory_hostname %}"hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2376"],{% endif %}
   "ipv6": true,
   "fixed-cidr-v6": "fc00::/64",
   "log-level": "warn",

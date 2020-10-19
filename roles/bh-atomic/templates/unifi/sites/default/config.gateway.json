@@ -10,6 +10,12 @@
                     ],
                     "description": "host4_status"
                 },
+                "host4_idm.prd": {
+                    "description": "host4_idm.prd.blackhats.net.au",
+                    "address": [
+                        "172.24.11.129"
+                    ]
+                },
                 "net4_app_servers": {
                     "address": [
                         "172.24.11.0/24"
@@ -667,6 +673,22 @@
                             }
                         }
                     },
+                    "1108": {
+                        "action": "accept",
+                        "description": "net6_priv to net6_suse_internal (ssh)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_suse_internal",
+                                "port-group": "ssh"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_priv"
+                            }
+                        }
+                    },
                     "1110": {
                         "action": "accept",
                         "description": "net6_priv to net6_app_servers",
@@ -776,8 +798,8 @@
                         }
                     },
                     "1185": {
-                        "action": "reject",
-                        "description": "net6_suse_internal to net6_suse_corp (TEMP REJECT)",
+                        "action": "accept",
+                        "description": "net6_suse_internal to net6_suse_corp",
                         "destination": {
                             "group": {
                                 "ipv6-address-group": "net6_suse_corp"
@@ -955,6 +977,23 @@
                             "invalid": "disable",
                             "new": "disable",
                             "related": "enable"
+                        }
+                    },
+                    "1010": {
+                        "action": "accept",
+                        "description": "any guest to host4_idm.prd (https_alt_idm)",
+                        "destination": {
+                            "group": {
+                                "address-group": "host4_idm.prd",
+                                "port-group": "https_alt_idm"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "state": {
+                            "established": "disable",
+                            "invalid": "disable",
+                            "new": "enable",
+                            "related": "disable"
                         }
                     },
                     "1020": {
@@ -1185,6 +1224,21 @@
                         "source": {
                             "group": {
                                 "address-group": "net4_priv"
+                            }
+                        }
+                    },
+                    "1125": {
+                        "action": "accept",
+                        "description": "net4_users to net4_micolous",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_micolous_all"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_users"
                             }
                         }
                     },
@@ -1836,8 +1890,6 @@
                 "cache-size": "256",
                 "except-interface": [
                     "pppoe0",
-                    "eth3.14",
-                    "eth3.19",
                     "vtun5"
                 ],
                 "name-server": [

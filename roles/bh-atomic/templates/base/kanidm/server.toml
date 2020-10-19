@@ -1,4 +1,5 @@
 bindaddress = "0.0.0.0:8080"
 ldapbindaddress = "0.0.0.0:3389"
 db_path = "/data/kanidm.db"
+db_fs_type = "zfs"
 log_level = "perfbasic"

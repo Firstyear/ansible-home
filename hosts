@@ -12,10 +12,12 @@ barite.prd.blackhats.net.au
 pyrite.suse.blackhats.net.au
 mion.prd.blackhats.net.au
 molly.net.blackhats.net.au
+vienna.suse.blackhats.net.au
 
 [container]
 pyrite.suse.blackhats.net.au
 mion.prd.blackhats.net.au
+vienna.suse.blackhats.net.au
 
 [atomic:vars]
 ansible_python_interpreter=/usr/bin/python3

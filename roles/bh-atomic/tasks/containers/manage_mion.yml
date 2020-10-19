@@ -480,6 +480,7 @@
   tags:
     - docker
     - haproxy
+    - nextcloud
 
 - name: Create docker volume for haproxy_certs_cb
   become: true
@@ -488,11 +489,12 @@
   tags:
     - docker
     - haproxy
+    - nextcloud
 
 - name: Create nextcloud-haproxy
   become: true
   docker_container:
-    name: haproxy
+    name: nextcloud-haproxy
     image: firstyear/haproxy-linode-dns:latest
     restart_policy: unless-stopped
     pull: yes
@@ -625,6 +627,7 @@
   tags:
     - docker
     - radius
+    - radiusbne1
     - kanidm
 
 - name: Configure kanidm radiusd (bne1)
@@ -645,13 +648,14 @@
   tags:
     - docker
     - radius
+    - radiusbne1
     - kanidm
 
 - name: Create kanidm radiusd controller (bne1)
   become: true
   docker_container:
     name: radiusd_bne1
-    image: kanidm/radius:latest
+    image: kanidm/radius:devel
     restart_policy: unless-stopped
     pull: yes
     # user: 1008:1008
@@ -673,6 +677,7 @@
     - docker
     - kanidm
     - radius
+    - radiusbne1
 
 - name: Create kanidm radiusd volume (bne2)
   become: true
@@ -793,7 +798,7 @@
   become: true
   docker_container:
     name: unifi
-    image: jacobalberty/unifi:stable
+    image: jacobalberty/unifi:stable-5
     restart_policy: unless-stopped
     pull: yes
     memory: 2048M
@@ -856,6 +861,18 @@
     - docker
     - zm
 
+- name: Create private zm network
+  become: true
+  docker_network:
+    name: zm_net
+    ipam_config:
+      - gateway: 172.16.3.1
+        iprange: 172.16.3.64/26
+        subnet: 172.16.3.0/24
+  tags:
+    - docker
+    - zm
+
 - name: Create zm container
   become: true
   docker_container:
@@ -874,19 +891,71 @@
     # device_write_iops:
     purge_networks: yes
     log_driver: journald
+    exposed_ports:
+      - '80'
+      - '443'
     networks:
-      - name: dk_v10_mgmt
-        ipv4_address: 172.24.10.129
-        ipv6_address: 2001:44b8:2155:2c10::1001
+      - name: zm_net
+      # - name: dk_v10_mgmt
+      #   ipv4_address: 172.24.10.129
+      #   ipv6_address: 2001:44b8:2155:2c10::1001
     shm_size: 1024M
     volumes:
       - "/mnt/comp/zm_data:/var/lib/zoneminder/events"
+      - "/mnt/comp/zm_data/zoneminder.conf:/etc/httpd/conf.d/zoneminder.conf"
       - "/mnt/zm_db:/var/lib/mysql"
       - "zm_logs:/var/log/zm"
     env:
       TZ: "Australia/Brisbane"
   tags:
     - docker
+    - zm
+
+- name: Create docker volume for zm_haproxy_certs_le
+  become: true
+  docker_volume:
+    name: zm_haproxy_certs_le
+  tags:
+    - docker
+    - haproxy
+    - zm
+
+- name: Create docker volume for zm_haproxy_certs_cb
+  become: true
+  docker_volume:
+    name: zm_haproxy_certs_cb
+  tags:
+    - docker
+    - haproxy
+    - zm
+
+- name: Create zm-haproxy
+  become: true
+  docker_container:
+    name: zm-haproxy
+    image: firstyear/haproxy-linode-dns:latest
+    restart_policy: unless-stopped
+    pull: yes
+    memory: 1024M
+    cpu_period: 100000
+    cpu_quota: 100000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: zm_net
+      - name: dk_v10_mgmt
+        ipv4_address: 172.24.10.129
+        ipv6_address: 2001:44b8:2155:2c10::1001
+    volumes:
+      - "zm_haproxy_certs_le:/etc/letsencrypt"
+      - "zm_haproxy_certs_cb:/etc/certbot"
+    env:
+      HAPROXY_TARGET: zm
+      HAPROXY_HOSTNAME: zm.fy.blackhats.net.au
+      HAPROXY_LINODE_KEY: "{{ haproxy_linode_key }}"
+  tags:
+    - docker
+    - haproxy
     - zm
 
 ### Avahi
