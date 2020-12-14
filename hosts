@@ -6,18 +6,19 @@ mion.prd.blackhats.net.au patch_day=never ansible_virtualization_role=physical
 
 [atomic]
 topaz.prd.blackhats.net.au
-robin.prd.blackhats.net.au
 adularia.prd.blackhats.net.au
 barite.prd.blackhats.net.au
 pyrite.suse.blackhats.net.au
 mion.prd.blackhats.net.au
 molly.net.blackhats.net.au
 vienna.suse.blackhats.net.au
+mcp.prd.blackhats.net.au
 
 [container]
 pyrite.suse.blackhats.net.au
 mion.prd.blackhats.net.au
 vienna.suse.blackhats.net.au
+mcp.prd.blackhats.net.au
 
 [atomic:vars]
 ansible_python_interpreter=/usr/bin/python3
@@ -33,7 +34,7 @@ barite.prd.blackhats.net.au
 mion.prd.blackhats.net.au
 
 [linode_servers]
-robin.prd.blackhats.net.au
+# robin.prd.blackhats.net.au
 
 [linode_servers:children]
 email_relay_servers

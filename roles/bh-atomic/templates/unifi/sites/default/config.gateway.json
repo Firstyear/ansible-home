@@ -16,6 +16,12 @@
                         "172.24.11.129"
                     ]
                 },
+                "host4_mcp.prd": {
+                    "description": "host4_mcp.prd.blackhats.net.au",
+                    "address": [
+                        "172.24.10.21"
+                    ]
+                },
                 "net4_app_servers": {
                     "address": [
                         "172.24.11.0/24"
@@ -137,6 +143,12 @@
                     "description": "host6_idm.prd.blackhats.net.au",
                     "ipv6-address": [
                         "2001:44b8:2155:2c11::1001"
+                    ]
+                },
+                "host6_mcp.prd": {
+                    "description": "host6_mcp.prd.blackhats.net.au",
+                    "ipv6-address": [
+                        "2001:44b8:2155:2c10::201"
                     ]
                 },
                 "host6_status": {
@@ -323,6 +335,12 @@
                     "port": [
                         "443",
                         "8443"
+                    ]
+                },
+                "mcp": {
+                    "description": "mcp",
+                    "port": [
+                        "25565"
                     ]
                 },
                 "nrpe": {
@@ -923,6 +941,23 @@
                                 "ipv6-address-group": "net6_external_idm_trust"
                             }
                         },
+                        "state": {
+                            "established": "enable",
+                            "invalid": "disable",
+                            "new": "enable",
+                            "related": "enable"
+                        }
+                    },
+                    "1010" : {
+                        "action": "accept",
+                        "description": "any -> host6_mcp.prd (mcp)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "host6_mcp.prd",
+                                "port-group": "mcp"
+                            }
+                        },
+                        "protocol": "tcp",
                         "state": {
                             "established": "enable",
                             "invalid": "disable",

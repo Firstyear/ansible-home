@@ -101,3 +101,8 @@
 - include: manage_mion.yml
   when: "'mion' in inventory_hostname"
 
+- include: mcp.yml
+  when: "'mcp' in inventory_hostname"
+
+
+

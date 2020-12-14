@@ -1,0 +1,40 @@
+
+- name: Create mc persistence
+  become: true
+  docker_volume:
+    name: mc_data
+  tags:
+    - docker
+    - mc
+
+# https://github.com/itzg/docker-minecraft-server
+- name: Create mc server
+  become: true
+  docker_container:
+    name: mc
+    image: itzg/minecraft-server:latest
+    restart_policy: unless-stopped
+    pull: yes
+    user: 1000:1000
+    memory: 8192M
+    ports:
+      - "25565:25565"
+      - "25575:25575"
+      # - "25566:25566"
+    log_driver: journald
+    volumes:
+      - "mc_data:/data"
+    env:
+      EULA: "TRUE"
+      OVERRIDE_SERVER_PROPERTIES: "true"
+      SERVER_NAME: "Picture Element Domain"
+      WHITELIST: "firstyear6538,pyx3ll"
+      SPAWN_PROTECTION: "0"
+      OPS: "firstyear6538"
+      SNOOPER_ENABLED: "false"
+      MEMORY: "4G"
+      USE_AIKAR_FLAGS: "true"
+      USE_LARGE_PAGES: "true"
+  tags:
+    - docker
+    - mc

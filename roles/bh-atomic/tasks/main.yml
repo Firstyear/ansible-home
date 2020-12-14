@@ -4,7 +4,7 @@
 # zypper ar -f -c http://download.opensuse.org/tumbleweed/repo/non-oss repo-non-oss
 # zypper ar -f -c http://download.opensuse.org/tumbleweed/repo/debug repo-debug
 # zypper ar -f -c http://download.opensuse.org/update/tumbleweed/ repo-update
-# zypper ar obs://home:firstyear:kanidm home_firstyear_kanidm
+# zypper ar -f obs://home:firstyear:kanidm home_firstyear_kanidm
 # zypper mr -f home_firstyear_kanidm
 # zypper ref
 #
@@ -42,12 +42,11 @@
     - apcupsd
 
 # Add systemd-netlogd when more confident later.
-# transactional-update pkg install nrpe yast2-network tmux docker zsh ipcalc python3-docker avahi borgbackup kanidm-clients kanidm-unixd-clients nmap tcpdump libvirt-daemon qemu-kvm 
+# transactional-update pkg install nrpe yast2-network tmux docker zsh ipcalc python3-docker avahi borgbackup kanidm-clients kanidm-unixd-clients nmap tcpdump iotop avahi-utils conntrack-tools 
+# libvirt-daemon qemu-kvm 
 # zfs zfs-kmp-default 
-# bridge-utils apcupsd monitoring-plugins-apcupsd libvirt-client libvirt-daemon-qemu
-# iotop virt-install avahi-utils
+# bridge-utils apcupsd monitoring-plugins-apcupsd libvirt-client libvirt-daemon-qemu virt-install
 #
-# conntrack-tools 
 #
 - name: Configure SUSE packages
   become: yes
