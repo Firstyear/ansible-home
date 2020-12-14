@@ -79,7 +79,8 @@
     extra_zfs_properties:
       mountpoint: /mnt/comp/backups
       recordsize: 4K
-      quota: 3000G
+      quota: 5T
+      dedup: verify
   tags:
     - zfs
 

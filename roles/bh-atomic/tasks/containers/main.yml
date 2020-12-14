@@ -38,6 +38,9 @@
     - docker
     - ipv6nat
 
+
+#     - 70-yast.conf
+
 #### Remember that anything that uses an expose DOESN'T need ipv6, and the ipv6nat
 # is really for building/host mode/other routing
 

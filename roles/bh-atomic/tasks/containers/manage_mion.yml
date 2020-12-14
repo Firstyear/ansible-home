@@ -406,7 +406,7 @@
     extra_zfs_properties:
       mountpoint: /mnt/nextcloud_db
       recordsize: 8K
-      logbias: throughput
+      logbias: latency
       primarycache: metadata
       quota: 40G
   tags:
@@ -620,6 +620,16 @@
 
 ## Radiusd
 
+- name: Create kanidm radiusd LE volume (bne1)
+  become: true
+  docker_volume:
+    name: kanidm_radiusd_bne1_le
+  tags:
+    - docker
+    - radius
+    - radiusbne1
+    - kanidm
+
 - name: Create kanidm radiusd volume (bne1)
   become: true
   docker_volume:
@@ -630,6 +640,33 @@
     - radiusbne1
     - kanidm
 
+- name: Create kanidm radiusd lets encrypt (bne1)
+  become: true
+  docker_container:
+    name: radiusd_le_bne1
+    image: firstyear/le-linode-dns:devel
+    restart_policy: unless-stopped
+    pull: yes
+    memory: 1024MB
+    cpu_period: 100000
+    cpu_quota: 200000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: bridge
+    volumes:
+      - "kanidm_radiusd_bne1_le:/etc/letsencrypt"
+      - "/etc/resolv.conf:/etc/resolv.conf"
+    env:
+      DEBUG: "true"
+      LE_LINODE_KEY: "{{ haproxy_linode_key }}"
+      LE_HOSTNAME: "radius.bne1.net.blackhats.net.au"
+  tags:
+    - docker
+    - kanidm
+    - radius
+    - radiusbne1
+
 - name: Configure kanidm radiusd (bne1)
   become: true
   template:
@@ -639,12 +676,9 @@
     group: root
     mode: '0644'
   with_items:
-    - ca.pem
-    - cert.pem
     - config.ini
     - dh
     - kanidm_ca.pem
-    - key.pem
   tags:
     - docker
     - radius
@@ -670,6 +704,7 @@
         ipv6_address: 2001:44b8:2155:2c10::1004
     volumes:
       - "kanidm_radiusd_bne1:/data"
+      - "kanidm_radiusd_bne1_le:/le"
       - "/etc/resolv.conf:/etc/resolv.conf"
     env:
       DEBUG: "true"
@@ -679,6 +714,16 @@
     - radius
     - radiusbne1
 
+- name: Create kanidm radiusd LE volume (bne2)
+  become: true
+  docker_volume:
+    name: kanidm_radiusd_bne2_le
+  tags:
+    - docker
+    - radius
+    - radiusbne2
+    - kanidm
+
 - name: Create kanidm radiusd volume (bne2)
   become: true
   docker_volume:
@@ -686,6 +731,7 @@
   tags:
     - docker
     - radius
+    - radiusbne2
     - kanidm
 
 - name: Configure kanidm radiusd (bne2)
@@ -697,16 +743,41 @@
     group: root
     mode: '0644'
   with_items:
-    - ca.pem
-    - cert.pem
     - config.ini
     - dh
     - kanidm_ca.pem
-    - key.pem
   tags:
     - docker
     - radius
+    - radiusbne2
     - kanidm
+
+- name: Create kanidm radiusd lets encrypt (bne2)
+  become: true
+  docker_container:
+    name: radiusd_le_bne2
+    image: firstyear/le-linode-dns:devel
+    restart_policy: unless-stopped
+    pull: yes
+    memory: 1024MB
+    cpu_period: 100000
+    cpu_quota: 200000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: bridge
+    volumes:
+      - "kanidm_radiusd_bne2_le:/etc/letsencrypt"
+      - "/etc/resolv.conf:/etc/resolv.conf"
+    env:
+      DEBUG: "true"
+      LE_LINODE_KEY: "{{ haproxy_linode_key }}"
+      LE_HOSTNAME: "radius.bne2.net.blackhats.net.au"
+  tags:
+    - docker
+    - kanidm
+    - radius
+    - radiusbne2
 
 - name: Create kanidm radiusd controller (bne2)
   become: true
@@ -727,6 +798,7 @@
         ipv6_address: 2001:44b8:2155:2c10::1005
     volumes:
       - "kanidm_radiusd_bne2:/data"
+      - "kanidm_radiusd_bne2_le:/le"
       - "/etc/resolv.conf:/etc/resolv.conf"
     env:
       DEBUG: "true"
@@ -734,6 +806,7 @@
     - docker
     - kanidm
     - radius
+    - radiusbne2
 
 ## UNIFI
 # check: python -m json.tool config.gateway.json
@@ -830,6 +903,7 @@
     extra_zfs_properties:
       mountpoint: /mnt/comp/zm_data
       quota: 200G
+      primarycache: metadata
   tags:
     - zfs
     - docker
@@ -843,7 +917,7 @@
     extra_zfs_properties:
       mountpoint: /mnt/zm_db
       recordsize: 16K
-      logbias: throughput
+      logbias: latency
       primarycache: metadata
       quota: 40G
   tags:

@@ -111,9 +111,9 @@ ChallengeResponseAuthentication no
 #AllowTcpForwarding yes
 #GatewayPorts no
 #X11Forwarding no
-#X11Forwarding yes
+X11Forwarding yes
 #X11DisplayOffset 10
-#X11UseLocalhost yes
+X11UseLocalhost no
 #PrintMotd yes
 #PrintLastLog yes
 #TCPKeepAlive yes

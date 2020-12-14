@@ -47,6 +47,8 @@
 # bridge-utils apcupsd monitoring-plugins-apcupsd libvirt-client libvirt-daemon-qemu
 # iotop virt-install avahi-utils
 #
+# conntrack-tools 
+#
 - name: Configure SUSE packages
   become: yes
   ignore_errors: yes
