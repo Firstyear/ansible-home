@@ -39,3 +39,10 @@ mion.prd.blackhats.net.au
 [linode_servers:children]
 email_relay_servers
 
+[bne1_servers]
+topaz.prd.blackhats.net.au
+pyrite.suse.blackhats.net.au
+molly.net.blackhats.net.au
+mcp.prd.blackhats.net.au
+vienna.suse.blackhats.net.au
+mion.prd.blackhats.net.au
