@@ -799,6 +799,37 @@
                             }
                         }
                     },
+                    "1165": {
+                        "action": "accept",
+                        "description": "allow net6_external_vpn to net6_app_servers",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_app_servers"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_external_vpn"
+                            }
+                        }
+                    },
+                    "1170": {
+                        "action": "accept",
+                        "description": "allow net6_external_vpn to net6_suse_internal (ssd)",
+                        "destination": {
+                            "group": {
+                                "ipv6-address-group": "net6_suse_internal",
+                                "port-group": "ssh"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "ipv6-address-group": "net6_external_vpn"
+                            }
+                        }
+                    },
                     "1180": {
                         "action": "accept",
                         "description": "allow net6_suse_internal to host6_idm.prd (https_alt_idm)",
@@ -1141,6 +1172,21 @@
                             }
                         }
                     },
+                    "1045": {
+                        "action": "accept",
+                        "description": "net4_users to host4_mcp.prd",
+                        "destination": {
+                            "group": {
+                                "address-group": "host4_mcp.prd"
+                            }
+                        },
+                        "protocol": "all",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_users"
+                            }
+                        }
+                    },
                     "1050": {
                         "action": "accept",
                         "description": "net4_users to host4_status (https)",
@@ -1313,6 +1359,22 @@
                         "destination": {
                             "group": {
                                 "address-group": "net4_app_servers"
+                            }
+                        },
+                        "protocol": "tcp",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_external_vpn"
+                            }
+                        }
+                    },
+                    "1155": {
+                        "action": "accept",
+                        "description": "net4_external_vpn to net4_suse_internal (ssh)",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_suse_internal",
+                                "port-group": "ssh"
                             }
                         },
                         "protocol": "tcp",
@@ -1632,6 +1694,27 @@
         }
     },
     "interfaces": {
+        "ethernet": {
+            "eth2": {
+                "vif": {
+                    "2": {
+                        "pppoe": {
+                            "2": {
+                                "dhcpv6-pd": {
+                                    "no-dns": "''",
+                                    "pd": {
+                                        "0": {
+                                            "prefix-length": "56"
+                                        }
+                                    },
+                                    "rapid-commit": "enable"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "openvpn": {
             "vtun0": {
                 "description": "VPN endpoint for TCP6",
