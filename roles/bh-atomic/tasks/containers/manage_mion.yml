@@ -783,7 +783,7 @@
   become: true
   docker_container:
     name: radiusd_bne2
-    image: kanidm/radius:latest
+    image: kanidm/radius:devel
     restart_policy: unless-stopped
     pull: yes
     # user: 1008:1008
