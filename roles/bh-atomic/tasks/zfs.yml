@@ -152,6 +152,7 @@
     extra_zfs_properties:
       mountpoint: /mnt/libvirt/img
       recordsize: 4K
+      snapdir: visible
   tags:
     - zfs
 

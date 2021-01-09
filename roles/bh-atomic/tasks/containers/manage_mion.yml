@@ -269,6 +269,7 @@
       quota: 40G
       copies: 2
       primarycache: metadata
+      snapdir: visible
   tags:
     - zfs
     - docker
@@ -393,6 +394,8 @@
     extra_zfs_properties:
       mountpoint: /mnt/comp/nextcloud
       quota: 1200G
+      snapdir: visible
+      # snapdir: hidden
   tags:
     - docker
     - zfs
@@ -409,6 +412,7 @@
       logbias: latency
       primarycache: metadata
       quota: 40G
+      snapdir: visible
   tags:
     - docker
     - zfs
@@ -551,6 +555,7 @@
       mountpoint: /mnt/samba_db
       recordsize: 4K
       quota: 8G
+      snapdir: visible
   tags:
     - docker
     - samba
@@ -843,6 +848,7 @@
       mountpoint: /mnt/unifi_data
       recordsize: 4K
       quota: 80G
+      snapdir: visible
   tags:
     - docker
     - unifi
@@ -867,11 +873,44 @@
     - docker
     - unifi
 
+- name: Create unifi LE volume
+  become: true
+  docker_volume:
+    name: unifi_le
+  tags:
+    - docker
+    - unifi
+
+- name: Create unifi lets encrypt
+  become: true
+  docker_container:
+    name: unifi_le
+    image: firstyear/le-linode-dns:devel
+    restart_policy: unless-stopped
+    pull: yes
+    memory: 1024MB
+    cpu_period: 100000
+    cpu_quota: 200000
+    purge_networks: yes
+    log_driver: journald
+    networks:
+      - name: bridge
+    volumes:
+      - "unifi_le:/etc/letsencrypt"
+      - "/etc/resolv.conf:/etc/resolv.conf"
+    env:
+      DEBUG: "true"
+      LE_LINODE_KEY: "{{ haproxy_linode_key }}"
+      LE_HOSTNAME: "unifi.net.blackhats.net.au"
+  tags:
+    - docker
+    - unifi
+
 - name: Create unifi controller
   become: true
   docker_container:
     name: unifi
-    image: jacobalberty/unifi:stable-5
+    image: jacobalberty/unifi:stable-6
     restart_policy: unless-stopped
     pull: yes
     memory: 2048M
@@ -886,9 +925,13 @@
     volumes:
       - "/mnt/unifi_data:/unifi/data"
       - "unifi_log:/unifi/log"
+      - "unifi_le:/unifi/cert:ro"
       - "/etc/localtime:/etc/localtime:ro"
-    # env:
-    #   TZ: "Australia/Brisbane"
+    env:
+      CERT_PRIVATE_NAME: "live/unifi.net.blackhats.net.au/privkey.pem"
+      CERTNAME: "live/unifi.net.blackhats.net.au/fullchain.pem"
+      CERT_IS_CHAIN: "true"
+      # TZ: "Australia/Brisbane"
   tags:
     - docker
     - unifi

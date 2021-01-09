@@ -8,7 +8,11 @@ GRUB_DEFAULT=saved
 GRUB_HIDDEN_TIMEOUT=0
 GRUB_HIDDEN_TIMEOUT_QUIET=true
 GRUB_TIMEOUT=5
+{% if 'mcp' in inventory_hostname %}
+GRUB_CMDLINE_LINUX_DEFAULT="splash=silent mitigations=auto quiet console=ttyS0,115200 nohz=off highres=off"
+{% else %}
 GRUB_CMDLINE_LINUX_DEFAULT="splash=silent mitigations=auto quiet console=ttyS0,115200"
+{% endif %}
 GRUB_CMDLINE_LINUX=""
 
 # Uncomment to automatically save last booted menu entry in GRUB2 environment

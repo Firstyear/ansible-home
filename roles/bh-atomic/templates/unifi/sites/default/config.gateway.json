@@ -44,8 +44,7 @@
                 "net4_char_mgmt": {
                     "address": [
                         "172.24.252.16/29",
-                        "172.30.1.0/24",
-                        "192.168.0.0/24"
+                        "172.30.1.0/24"
                     ],
                     "description": "net4_char_mgmt"
                 },
@@ -1140,6 +1139,22 @@
                             "type-name": "any"
                         },
                         "protocol": "icmp"
+                    },
+                    "1025": {
+                        "action": "accept",
+                        "description": "net4_char_mgmt to net4_mgmt (syslog)",
+                        "destination": {
+                            "group": {
+                                "address-group": "net4_mgmt",
+                                "port-group": "syslog"
+                            }
+                        },
+                        "protocol": "tcp_udp",
+                        "source": {
+                            "group": {
+                                "address-group": "net4_char_mgmt"
+                            }
+                        }
                     },
                     "1030": {
                         "action": "accept",

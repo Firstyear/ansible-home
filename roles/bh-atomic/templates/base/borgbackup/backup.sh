@@ -9,6 +9,7 @@ borg create                         \
     --stats                         \
     --show-rc                       \
     --exclude-caches                \
+    --exclude '*/.zfs'               \
     --exclude '/home/*/.cache/*'    \
     --exclude '/var/cache/*'        \
     --exclude '/var/tmp/*'          \
